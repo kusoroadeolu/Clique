@@ -6,7 +6,10 @@ import io.github.kusoroadeolu.clique.internal.exception.NoSuchThemeException;
 import io.github.kusoroadeolu.clique.internal.loader.ThemeLoader;
 import io.github.kusoroadeolu.clique.spi.AnsiCode;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
 
 /**
  * A scoped registry of custom markup styles, mapping markup names to {@link AnsiCode}
