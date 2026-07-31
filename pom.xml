@@ -7,7 +7,7 @@
 
     <groupId>io.github.kusoroadeolu</groupId>
     <artifactId>clique</artifactId>
-    <version>4.0.2</version>
+    <version>4.0.3</version>
     <packaging>pom</packaging>
 
     <name>Clique</name>
@@ -49,8 +49,8 @@
         <maven.compiler.release>21</maven.compiler.release>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-        <clique-core.version>4.0.2</clique-core.version>
-        <clique-spi.version>2.0.2</clique-spi.version>
+        <clique-core.version>4.0.3</clique-core.version>
+        <clique-spi.version>2.0.3</clique-spi.version>
         <junit.version>6.0.3</junit.version>
         <clique-themes.version>1.0.1</clique-themes.version>
     </properties>

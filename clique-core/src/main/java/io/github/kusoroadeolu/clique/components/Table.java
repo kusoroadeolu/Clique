@@ -36,10 +36,16 @@ public sealed interface Table extends Component permits AbstractTable{
 
 
     /**
+     * Appends a new row to the end of the table.
+     *
+     * @param row the cell contents for the new row
+     * @return this table instance for method chaining
+     * @throws NullPointerException if {@code row} or any element is {@code null}
      * @deprecated in favor of the {@link SequencedCollection} overload
      * */
     @Deprecated(since = "4.0.3")
     Table row(Collection<String> row);
+
 
     /**
      * Appends a new row to the end of the table using the provided sequenced collection.

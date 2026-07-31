@@ -230,8 +230,6 @@ _(no changes noted)_
 ## clique-themes [1.0.1] - 2026-04-10
 - Registered theme ansi codes now align with the updated interface contract. No breaking changes
 
-# Changelogs
-
 ## Clique [4.0.1] - 2026-04-12
 ### Added
 - `Ink#hyperlink(String url)` — wraps rendered text in OSC 8 escape sequences for clickable links in supported terminals
@@ -243,9 +241,8 @@ _(no changes noted)_
 _(no changes noted)_
 
 
-# Changelogs
-
 ## Clique [4.0.2] - 2026-04-29
+### Added
 - `ProgressBar#tick(boolean render)` overloads to all tick methods to control if a tick should print to `System.out`
 - `ProgressBarConfiguration#ticksPerUnit(int)` with `:units` and `:total-units` format tokens, derived automatically from tick count
 - `IterableProgressBar#printStream(PrintStream stream)` method for more control on iterable progress bar `PrintStream`
@@ -255,13 +252,31 @@ _(no changes noted)_
 - `Ink#bgHex(String hexCode)` for applying a 24-bit RGB background color via a `#RRGGBB` hex string
 - `Clique#hex(String hexCode)` and `Clique#hex(String hexCode, boolean background)` facade methods for hex color creation
 - `Clique#compose(AnsiCode...)` and `Clique#compose(Collection<AnsiCode>)` for combining multiple ANSI codes into one
-- Updated `CharWidth` utility to better support Unicode 17.0, specifically focusing on accurate column measurement for complex emojis.
-- Fixed ZWJ Sequence Over-counting. Resolved an issue where multi-person ZWJ sequences (e.g., families or modern 17.0 clusters) were incorrectly measured as multiple characters.
 - `ItemList#item(String content)` overload that reuses the last set symbol
+
+## Updated
+- Updated `CharWidth` utility to better support Unicode 17.0, specifically focusing on accurate column measurement for complex emojis.
+
+## Fixed
+- Fixed ZWJ Sequence Over-counting. Resolved an issue where multi-person ZWJ sequences (e.g., families or modern 17.0 clusters) were incorrectly measured as multiple characters.
 - Fixed ItemList to recursively set configuration now propagates to all descendants, not just immediate children
 - Fixed `Table#remove` to now be index-based to avoid removing wrong cell when duplicates exist
 
 
 
 ## clique-spi [2.0.2] - 2026-04-29
+_(no changes noted)_
+
+
+## Clique [4.0.3] - 2026-07-31
+### Added
+- `PendingTable#fromColumns(SequencedMap<String, ? extends SequencedCollection<String>> columns)` to build the table in one call instead of chaining
+- `PendingTable#fromRows(SequencedCollection<? extends SequencedCollection<String>> rows)` to build the table in one call instead of chaining
+- `StyleContext#fromTheme(String theme)` to create a style context from a theme
+
+### Deprecated
+- `PendingTable#headers(Collection<String> headers)` in favor of `PendingTable#headers(SequencedCollection<String> headers)`
+- `Table#row(Collection<String> row)` in favor of `Table#row(SequencedCollection<String> row)`
+
+## clique-spi [2.0.3] - 2026-07-31
 _(no changes noted)_

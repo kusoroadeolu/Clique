@@ -22,6 +22,10 @@ public interface PendingTable {
     Table headers(String... headers);
 
     /**
+     * Sets the table headers.
+     *
+     * @param headers the header labels
+     * @return the initialized {@link Table}
      * @deprecated in favor of the {@link SequencedCollection} overload
      * */
     @Deprecated(since = "4.0.3")
