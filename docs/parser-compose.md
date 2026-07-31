@@ -48,8 +48,8 @@ public class CompositeStyle implements AnsiCode {
 
     public CompositeStyle(AnsiCode... codes) {
         var sb = new StringBuilder();
-        for (AnsiCode c : codes) sb.append(c);
-        this.code = sb.ansiSequence();
+        for (AnsiCode c : codes) sb.append(c.ansiSequence());
+        this.code = sb.toString();
     }
 
     @Override
@@ -84,7 +84,7 @@ public static void registerGradient(String name, int[] from, int[] to, int steps
     Clique.registerStyles(gradient);
 }
 
-// Coral → purple, 5 steps
+// Coral to purple, 5 steps
 registerGradient("sunset", new int[]{255, 94, 77}, new int[]{138, 35, 135}, 5);
 
 Clique.parser().print("[sunset-0]█[/][sunset-1]█[/][sunset-2]█[/][sunset-3]█[/][sunset-4]█[/]");
