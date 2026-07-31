@@ -3,7 +3,6 @@ package io.github.kusoroadeolu.clique.components;
 import io.github.kusoroadeolu.clique.internal.documentation.Stable;
 
 import java.util.Collection;
-import java.util.List;
 import java.util.SequencedCollection;
 import java.util.SequencedMap;
 

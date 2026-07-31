@@ -77,7 +77,7 @@ public class TableHeaderBuilder implements PendingTable {
                 throw new IllegalArgumentException("Rows cannot be null or empty");
 
             List<? extends SequencedCollection<String>> list = rows.stream().toList();
-            Table table = headers(list.getFirst());
+            headers(list.getFirst());
 
             for (int i = 1; i < list.size(); ++i) table.row(list.get(i));
 

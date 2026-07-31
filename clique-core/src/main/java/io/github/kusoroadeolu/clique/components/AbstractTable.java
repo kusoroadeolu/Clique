@@ -74,9 +74,9 @@ abstract non-sealed class AbstractTable implements Table {
         return this;
     }
 
-    public Table removeCell(int row, int col) {
-        validateHeaders(row);
-        updateCell(row, col, configuration.getNullReplacement());
+    public Table removeCell(int rowIndex, int columnIndex) {
+        validateHeaders(rowIndex);
+        updateCell(rowIndex, columnIndex, configuration.getNullReplacement());
         return this;
     }
 
