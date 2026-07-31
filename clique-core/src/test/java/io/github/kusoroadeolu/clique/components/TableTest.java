@@ -6,8 +6,10 @@ import io.github.kusoroadeolu.clique.configuration.TableConfiguration;
 import io.github.kusoroadeolu.clique.configuration.TableType;
 import org.junit.jupiter.api.Test;
 
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.SequencedMap;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -131,7 +133,7 @@ class TableTest {
     }
 
     @Test
-    void assertNotSame_onSubsequentGetCalls_onRowCall(){
+    void assertNotSame_onSubsequentGetCalls_onRowCall() {
         Table table = Clique.table(TableType.ASCII)
                 .headers("A", "B")
                 .row("1", "2");

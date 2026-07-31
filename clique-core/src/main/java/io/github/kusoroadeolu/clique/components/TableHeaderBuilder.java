@@ -65,7 +65,7 @@ public class TableHeaderBuilder implements PendingTable {
                 transposedRows.add(row);
             }
 
-            Table table = headers(headers);
+            headers(headers);
             transposedRows.forEach(table::row);
             return table;
         }
