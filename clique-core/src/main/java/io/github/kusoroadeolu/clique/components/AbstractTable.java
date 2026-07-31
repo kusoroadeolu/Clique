@@ -6,10 +6,7 @@ import io.github.kusoroadeolu.clique.internal.Cell;
 import io.github.kusoroadeolu.clique.internal.WidthAwareList;
 import io.github.kusoroadeolu.clique.internal.documentation.InternalApi;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 import static io.github.kusoroadeolu.clique.internal.utils.StringUtils.parseToCell;
 import static io.github.kusoroadeolu.clique.internal.utils.TableUtils.*;
@@ -33,28 +30,32 @@ abstract non-sealed class AbstractTable implements Table {
     }
 
     public Table row(Collection<String> rows) {
-        return this.row(rows.toArray(String[]::new));
+        return row(rows.toArray(String[]::new));
     }
 
-    public Table row(String... rows) {
-        Objects.requireNonNull(rows, "Rows cannot be null");
+    public Table row(SequencedCollection<String> rows) {
+        return row(rows.toArray(String[]::new));
+    }
+
+    public Table row(String... row) {
+        Objects.requireNonNull(row, "Given row cannot be null");
         //Get the header's size
         final int headerSize = this.rows.getFirst().size();
         final WidthAwareList rowList = new WidthAwareList();
         this.rows.add(rowList);
 
         for (int i = 0; i < headerSize; i++) {
-            String row;
+            String cell;
             //Pad the cells with null replacements
-            if (i >= rows.length) row = this.configuration.getNullReplacement();
+            if (i >= row.length) cell = configuration.getNullReplacement();
             else {
-                row = rows[i];
-                row = handleNulls(row, this.configuration.getNullReplacement());
+                cell = row[i];
+                cell = handleNulls(cell, configuration.getNullReplacement());
             }
 
-            final Cell c = parseToCell(row, this.configuration.getParser());
+            final Cell c = parseToCell(cell, configuration.getParser());
             rowList.add(c);
-            final WidthAwareList colList = this.columns.get(i);
+            final WidthAwareList colList = columns.get(i);
             colList.add(c);
         }
         nullCachedString();
@@ -63,29 +64,29 @@ abstract non-sealed class AbstractTable implements Table {
 
     public Table removeRow(int index) {
         validateHeaders(index);
-        validateRowIndex(index, this.rows);
+        validateRowIndex(index, rows);
 
-        this.rows.remove(index);
-        for (WidthAwareList cl : this.columns) {
+        rows.remove(index);
+        for (WidthAwareList cl : columns) {
             cl.remove(index);
         }
         nullCachedString();
         return this;
     }
 
-    public Table removeCell(int row, int col) {
-        validateHeaders(row);
-        updateCell(row, col, this.configuration.getNullReplacement());
+    public Table removeCell(int rowIndex, int columnIndex) {
+        validateHeaders(rowIndex);
+        updateCell(rowIndex, columnIndex, configuration.getNullReplacement());
         return this;
     }
 
     public Table updateCell(int row, int col, String text) {
-        validateRowIndex(row, this.rows);
-        validateColumnIndex(col, this.columns);
+        validateRowIndex(row, rows);
+        validateColumnIndex(col, columns);
 
-        final WidthAwareList rl = this.rows.get(row);
-        final WidthAwareList cl = this.columns.get(col);
-        final Cell c = parseToCell(text, this.configuration.getParser());
+        final WidthAwareList rl = rows.get(row);
+        final WidthAwareList cl = columns.get(col);
+        final Cell c = parseToCell(text, configuration.getParser());
         rl.update(col, c);
         cl.update(row, c);
         nullCachedString();

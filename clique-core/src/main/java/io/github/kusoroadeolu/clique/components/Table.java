@@ -3,6 +3,7 @@ package io.github.kusoroadeolu.clique.components;
 import io.github.kusoroadeolu.clique.internal.documentation.Stable;
 
 import java.util.Collection;
+import java.util.SequencedCollection;
 
 /**
  * A component for displaying structured, multi-column data in the terminal.
@@ -26,21 +27,29 @@ public sealed interface Table extends Component permits AbstractTable{
     /**
      * Appends a new row to the end of the table.
      *
-     * @param rows the cell contents for the new row
+     * @param row the cell contents for the new row
      * @return this table instance for method chaining
      * @throws NullPointerException if the varargs array or any element is {@code null}
      */
-    Table row(String... rows);
+    Table row(String... row);
+
+
 
     /**
-     * Appends a new row to the end of the table using the provided collection.
+     * @deprecated in favor of the {@link SequencedCollection} overload
+     * */
+    @Deprecated(since = "4.0.3")
+    Table row(Collection<String> row);
+
+    /**
+     * Appends a new row to the end of the table using the provided sequenced collection.
      *
-     * @param rows a collection of strings representing the cells of the row;
+     * @param row a collection of strings representing the cells of the row;
      * must not be {@code null}
      * @return this table instance for method chaining
      * @throws NullPointerException if {@code rows} or any element is {@code null}
      */
-    Table row(Collection<String> rows);
+    Table row(SequencedCollection<String> row);
 
     /**
      * Removes the row at the specified index.
@@ -48,22 +57,22 @@ public sealed interface Table extends Component permits AbstractTable{
      * <p><b>Scoping:</b> Indices are 0-based. The header row (index 0)
      * cannot be removed via this method.
      *
-     * @param index the 0-based index of the row to remove
+     * @param rowIndex the 0-based index of the row to remove
      * @return this table instance for method chaining
      * @throws IndexOutOfBoundsException if the index is out of range
      */
-    Table removeRow(int index);
+    Table removeRow(int rowIndex);
 
     /**
      * Removes the content of a specific cell and replaces it with the
      * configured {@code nullReplacement} value.
      *
-     * @param row the 0-based row index
-     * @param col the 0-based column index
+     * @param rowIndex the 0-based row index
+     * @param columnIndex the 0-based column index
      * @return this table instance for method chaining
      * @throws IndexOutOfBoundsException if row or column indices are out of range
      */
-    Table removeCell(int row, int col);
+    Table removeCell(int rowIndex, int columnIndex);
 
     /**
      * Updates the content of a specific cell.
@@ -71,12 +80,12 @@ public sealed interface Table extends Component permits AbstractTable{
      * <p>The provided {@code text} is immediately eligible for markup parsing
      * during the next render cycle.
      *
-     * @param row the 0-based row index
-     * @param col the 0-based column index
+     * @param rowIndex the 0-based row index
+     * @param columnIndex the 0-based column index
      * @param text the new content for the cell; must not be {@code null}
      * @return this table instance for method chaining
      * @throws NullPointerException if {@code text} is {@code null}
      * @throws IndexOutOfBoundsException if row or column indices are out of range
      */
-    Table updateCell(int row, int col, String text);
+    Table updateCell(int rowIndex, int columnIndex, String text);
 }

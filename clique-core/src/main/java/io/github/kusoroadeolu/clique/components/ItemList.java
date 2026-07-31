@@ -58,16 +58,16 @@ public class ItemList implements Component {
      *
      * @param symbol the character or string to use as the item marker (e.g., "*", "-")
      * @param content the text content of the item
-     * @param itemList the nested sublist; must not be {@code null}
+     * @param subList the nested sublist; must not be {@code null}
      * @return this list instance for method chaining
-     * @throws IllegalArgumentException if {@code itemList} is this instance
-     * @throws NullPointerException if {@code itemList} is {@code null}
+     * @throws IllegalArgumentException if {@code subList} is this instance
+     * @throws NullPointerException if {@code subList} is {@code null}
      */
-    public ItemList item(String symbol, String content, ItemList itemList){
-        Objects.requireNonNull(itemList, "Sublist cannot be null");
+    public ItemList item(String symbol, String content, ItemList subList){
+        Objects.requireNonNull(subList, "Sublist cannot be null");
         lastSymbol = symbol;
-        assertNotSelf(itemList);
-        items.add(new ListItem(symbol, content, itemList.recursivelySetConfiguration(configuration)));
+        assertNotSelf(subList);
+        items.add(new ListItem(symbol, content, subList.recursivelySetConfiguration(configuration)));
         return this;
     }
 

@@ -131,7 +131,7 @@ class TableTest {
     }
 
     @Test
-    void assertNotSame_onSubsequentGetCalls_onRowCall(){
+    void assertNotSame_onSubsequentGetCalls_onRowCall() {
         Table table = Clique.table(TableType.ASCII)
                 .headers("A", "B")
                 .row("1", "2");

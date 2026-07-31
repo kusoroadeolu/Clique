@@ -81,6 +81,46 @@ Table table = Clique.table(TableType.BOX_DRAW)
 table.render();
 ```
 
+### Initializing from Existing Data
+
+If your data already exists as rows or columns, `fromRows()` and `fromColumns()` build the table in one call instead of chaining `.row()` repeatedly.
+
+#### From Rows
+
+The first row is treated as headers; every row after that is added as data:
+
+```java
+SequencedCollection<List<String>> rows = List.of(
+        List.of("Name", "Age", "Class"),
+        List.of("John", "25", "Class A"),
+        List.of("Doe", "26", "Class B")
+);
+
+Table table = Clique.table(TableType.ASCII)
+    .fromRows(rows);
+
+table.render();
+```
+
+#### From Columns
+
+Maps each header to its column values, top to bottom:
+
+```java
+SequencedMap<String, List<String>> map = new LinkedHashMap();
+map.put("Name", List.of("John", "Doe"));
+map.put("Age", List.of("25", "26"));
+map.put("Class", List.of("Class A", "Class B"));
+Table table = Clique.table(TableType.ASCII)
+    .fromColumns(map);
+
+table.render();
+```
+
+> Columns of differing lengths are padded with the table's configured `nullReplacement` (default: empty string). See [Null Handling](#null-handling).
+
+Both methods throw `IllegalArgumentException` if the given collection/map is null or empty.
+
 ## Table Configuration
 
 Use `TableConfiguration` to customize table appearance and behavior. Access the builder via `TableConfiguration.builder()`, which returns a `TableConfigurationBuilder`.
