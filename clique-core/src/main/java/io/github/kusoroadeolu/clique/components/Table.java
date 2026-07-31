@@ -52,16 +52,6 @@ public sealed interface Table extends Component permits AbstractTable{
     Table row(SequencedCollection<String> row);
 
     /**
-     * Appends a new row to the end of the table using the provided sequenced collection.
-     *
-     * @param rows a collection of strings representing the cells of the row;
-     * must not be {@code null}
-     * @return this table instance for method chaining
-     * @throws NullPointerException if {@code rows} or any element is {@code null}
-     */
-    Table rows(SequencedCollection<? extends SequencedCollection<String>> rows);
-
-    /**
      * Removes the row at the specified index.
      *
      * <p><b>Scoping:</b> Indices are 0-based. The header row (index 0)

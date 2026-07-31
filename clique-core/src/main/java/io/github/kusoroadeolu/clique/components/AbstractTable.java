@@ -37,17 +37,6 @@ abstract non-sealed class AbstractTable implements Table {
         return row(rows.toArray(String[]::new));
     }
 
-
-    @Override
-    public Table rows(SequencedCollection<? extends SequencedCollection<String>> rows) {
-        Objects.requireNonNull(rows, "Rows cannot be null");
-        for (SequencedCollection<String> row : rows) {
-            row(row);
-        }
-
-        return this;
-    }
-
     public Table row(String... row) {
         Objects.requireNonNull(row, "Given row cannot be null");
         //Get the header's size

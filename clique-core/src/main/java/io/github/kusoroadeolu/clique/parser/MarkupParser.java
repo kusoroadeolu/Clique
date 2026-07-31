@@ -14,6 +14,7 @@ import java.util.Objects;
 import static io.github.kusoroadeolu.clique.internal.markup.MarkupPostProcessor.postProcess;
 import static io.github.kusoroadeolu.clique.internal.utils.Constants.EMPTY;
 import static io.github.kusoroadeolu.clique.internal.utils.StringUtils.stripAnsi;
+import static java.util.Objects.isNull;
 
 
 /**
@@ -53,7 +54,7 @@ public record MarkupParser(ParserConfiguration parserConfiguration) {
      * @return the styled string, or the original value if {@code null} or blank
      */
     public String parse(String string) {
-        if (string == null || string.isBlank()) return string;
+        if (isNull(string) || string.isBlank()) return string;
         final ParseResult result = this.getParseResult(string);
         String styled = StyleResolver.resolve(result.tokens(), string, this.parserConfiguration.getEnableAutoReset());
         return postProcess(styled);
@@ -109,7 +110,7 @@ public record MarkupParser(ParserConfiguration parserConfiguration) {
      *         or the original value if {@code null} or blank
      */
     public String getOriginalString(String tokenedString) {
-        if (tokenedString == null || tokenedString.isBlank()) return EMPTY;
+        if (isNull(tokenedString) || tokenedString.isBlank()) return EMPTY;
         ParseResult result = this.getParseResult(tokenedString);
 
         if (!result.isPresent()) {
