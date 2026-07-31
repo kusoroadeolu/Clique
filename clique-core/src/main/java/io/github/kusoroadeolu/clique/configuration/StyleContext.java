@@ -5,7 +5,6 @@ import io.github.kusoroadeolu.clique.internal.documentation.Stable;
 import io.github.kusoroadeolu.clique.internal.exception.NoSuchThemeException;
 import io.github.kusoroadeolu.clique.internal.loader.ThemeLoader;
 import io.github.kusoroadeolu.clique.spi.AnsiCode;
-import io.github.kusoroadeolu.clique.spi.CliqueTheme;
 
 import java.util.*;
 
@@ -102,7 +101,7 @@ public final class StyleContext {
      * @throws NullPointerException if {@code theme} is {@code null}
      * @throws NoSuchThemeException if no theme was found
      */
-    public static StyleContext from(String theme) {
+    public static StyleContext fromTheme(String theme) {
         var opt = ThemeLoader.find(theme);
         if (opt.isEmpty()) throw new NoSuchThemeException("No such theme: %s".formatted(theme));
         var ct = opt.get();

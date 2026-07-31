@@ -124,7 +124,7 @@ StyleContext copy = StyleContext.from(base);
 
 If you have a registered theme and want its colors available as a scoped context instead of globally, look it up by name:
 ```java
-StyleContext ctx = StyleContext.from("catppuccin-mocha");
+StyleContext ctx = StyleContext.fromTheme("catppuccin-mocha");
 ```
 
 This throws `NoSuchThemeException` if no theme with that name can be found.
