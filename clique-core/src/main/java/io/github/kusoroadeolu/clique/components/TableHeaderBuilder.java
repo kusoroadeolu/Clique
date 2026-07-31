@@ -22,12 +22,12 @@ public class TableHeaderBuilder implements PendingTable {
                 throw new IllegalArgumentException("Headers cannot be null or empty");
 
             final var rows = new WidthAwareList();
+            var config = table.configuration;
             table.rows.add(rows);
 
             for (int i = 0; i < headers.length; i++) {
-                String header = headers[i];
-                header = handleNulls(header, table.configuration.getNullReplacement());
-                final var cell = parseToCell(header, table.configuration.getParser());
+                String header = handleNulls(headers[i], config.getNullReplacement());
+                final var cell = parseToCell(header, config.getParser());
                 rows.add(cell);
                 final var columns = new WidthAwareList(); //To keep track of all values in this column
                 columns.add(cell);
@@ -49,16 +49,37 @@ public class TableHeaderBuilder implements PendingTable {
 
         @Override
         public Table fromColumns(SequencedMap<String, ? extends SequencedCollection<String>> columns) {
-            if (isNull(columns) || columns.isEmpty()) {
+            if (isNull(columns) || columns.isEmpty())
                 throw new IllegalArgumentException("Columns cannot be null or empty");
+
+            SequencedCollection<String> headers = columns.sequencedKeySet();
+            List<ArrayList<String>> colValues = columns.sequencedValues().stream().map(ArrayList::new).toList();
+
+            int rowCount = colValues.stream().mapToInt(List::size).max().orElse(0);
+            List<SequencedCollection<String>> transposedRows = new ArrayList<>();
+            for (int r = 0; r < rowCount; r++) {
+                List<String> row = new ArrayList<>();
+                for (List<String> col : colValues) row.add(r < col.size() ? col.get(r)
+                        : table.configuration.getNullReplacement());
+
+                transposedRows.add(row);
             }
 
-            SequencedSet<String> headers = columns.sequencedKeySet();
             Table table = headers(headers);
+            transposedRows.forEach(table::row);
+            return table;
+        }
 
-            for (SequencedCollection<String> row : columns.sequencedValues()) {
-                table.row(row);
-            }
+        @Override
+        public Table fromRows(SequencedCollection<? extends SequencedCollection<String>> rows) {
+
+            if (isNull(rows) || rows.isEmpty())
+                throw new IllegalArgumentException("Rows cannot be null or empty");
+
+            List<? extends SequencedCollection<String>> list = rows.stream().toList();
+            Table table = headers(list.getFirst());
+
+            for (int i = 1; i < list.size(); ++i) table.row(list.get(i));
 
             return table;
         }

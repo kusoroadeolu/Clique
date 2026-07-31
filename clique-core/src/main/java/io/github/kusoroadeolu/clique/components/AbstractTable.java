@@ -64,10 +64,10 @@ abstract non-sealed class AbstractTable implements Table {
 
     public Table removeRow(int index) {
         validateHeaders(index);
-        validateRowIndex(index, this.rows);
+        validateRowIndex(index, rows);
 
-        this.rows.remove(index);
-        for (WidthAwareList cl : this.columns) {
+        rows.remove(index);
+        for (WidthAwareList cl : columns) {
             cl.remove(index);
         }
         nullCachedString();
@@ -76,17 +76,17 @@ abstract non-sealed class AbstractTable implements Table {
 
     public Table removeCell(int row, int col) {
         validateHeaders(row);
-        updateCell(row, col, this.configuration.getNullReplacement());
+        updateCell(row, col, configuration.getNullReplacement());
         return this;
     }
 
     public Table updateCell(int row, int col, String text) {
-        validateRowIndex(row, this.rows);
-        validateColumnIndex(col, this.columns);
+        validateRowIndex(row, rows);
+        validateColumnIndex(col, columns);
 
-        final WidthAwareList rl = this.rows.get(row);
-        final WidthAwareList cl = this.columns.get(col);
-        final Cell c = parseToCell(text, this.configuration.getParser());
+        final WidthAwareList rl = rows.get(row);
+        final WidthAwareList cl = columns.get(col);
+        final Cell c = parseToCell(text, configuration.getParser());
         rl.update(col, c);
         cl.update(row, c);
         nullCachedString();
