@@ -7,81 +7,82 @@ import java.util.List;
 
 @InternalApi(since = "3.2.0")
 public class WidthAwareList {
-    private final List<Cell> list;
+    private final List<Cell> cells;
     private int longest;
 
     public WidthAwareList() {
         this(new ArrayList<>());
     }
 
-    public WidthAwareList(List<Cell> list) {
-        this.list = list;
-        if (list.isEmpty()) longest = 0;
-        else longest = calculateLongest();
+    public WidthAwareList(List<Cell> cells) {
+        this.cells = cells;
+        longest = calculateLongest();
     }
 
 
     public void add(Cell c) {
-        this.updateLongest(c);
-        this.list.add(c);
+        updateLongest(c);
+        cells.add(c);
     }
 
     public void update(int i, Cell c) {
-        this.updateLongest(c);
-        this.list.set(i, c);
+        updateLongest(c);
+        cells.set(i, c);
     }
 
 
     public void updateLongest(Cell c) {
         final int len = c.width();
-        if (len > this.longest) {
-            this.longest = len;
-        }
+        if (len > longest) longest = len;
     }
 
     public void remove(int index) {
-        Cell c = this.list.get(index);
-        this.list.remove(index);
+        Cell c = cells.get(index);
+        cells.remove(index);
 
-        if (this.list.isEmpty()) this.longest = 0;
-        else if (c.width() == this.longest) this.longest = calculateLongest();
+        if (cells.isEmpty()) longest = 0;
+        else if (c.width() == longest) longest = calculateLongest();
     }
 
 
     //Gets the styled text from the table
     public String getStyledText(int pos) {
-        return this.list.get(pos).styledText();
+        return cells.get(pos).styledText();
     }
 
     public Cell get(int pos) {
-        return this.list.get(pos);
+        return cells.get(pos);
     }
 
 
     public int longest() {
-        return this.longest;
+        return longest;
     }
 
     //Get the styled text from the list
     public List<String> list() {
-        return this.list.stream()
+        return cells.stream()
                 .map(Cell::styledText)
                 .toList();
     }
 
     public List<Cell> cells() {
-        return new ArrayList<>(list);
+        return new ArrayList<>(cells);
     }
 
     public int size() {
-        return this.list.size();
+        return cells.size();
     }
 
     private int calculateLongest() {
-        return this.list.stream()
+        return cells.stream()
                 .mapToInt(Cell::width)
                 .max()
                 .orElse(0);
     }
 
+    @Override
+    public String toString() {
+        return "values: " + cells + ", longest: " + longest;
+    }
 }
