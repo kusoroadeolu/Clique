@@ -99,7 +99,8 @@ public final class StyleContext {
      *
      * @param theme the name of the theme to be registered; must not be {@code null}
      * @return a new {@code StyleContext} containing the same styles
-     * @throws NullPointerException if {@code context} is {@code null}
+     * @throws NullPointerException if {@code theme} is {@code null}
+     * @throws NoSuchThemeException if no theme was found
      */
     public static StyleContext from(String theme) {
         var opt = ThemeLoader.find(theme);
