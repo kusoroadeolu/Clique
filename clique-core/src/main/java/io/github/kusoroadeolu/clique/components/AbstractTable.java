@@ -6,10 +6,7 @@ import io.github.kusoroadeolu.clique.internal.Cell;
 import io.github.kusoroadeolu.clique.internal.WidthAwareList;
 import io.github.kusoroadeolu.clique.internal.documentation.InternalApi;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 import static io.github.kusoroadeolu.clique.internal.utils.StringUtils.parseToCell;
 import static io.github.kusoroadeolu.clique.internal.utils.TableUtils.*;
@@ -33,28 +30,43 @@ abstract non-sealed class AbstractTable implements Table {
     }
 
     public Table row(Collection<String> rows) {
-        return this.row(rows.toArray(String[]::new));
+        return row(rows.toArray(String[]::new));
     }
 
-    public Table row(String... rows) {
+    public Table row(SequencedCollection<String> rows) {
+        return row(rows.toArray(String[]::new));
+    }
+
+
+    @Override
+    public Table rows(SequencedCollection<? extends SequencedCollection<String>> rows) {
         Objects.requireNonNull(rows, "Rows cannot be null");
+        for (SequencedCollection<String> row : rows) {
+            row(row);
+        }
+
+        return this;
+    }
+
+    public Table row(String... row) {
+        Objects.requireNonNull(row, "Given row cannot be null");
         //Get the header's size
         final int headerSize = this.rows.getFirst().size();
         final WidthAwareList rowList = new WidthAwareList();
         this.rows.add(rowList);
 
         for (int i = 0; i < headerSize; i++) {
-            String row;
+            String cell;
             //Pad the cells with null replacements
-            if (i >= rows.length) row = this.configuration.getNullReplacement();
+            if (i >= row.length) cell = configuration.getNullReplacement();
             else {
-                row = rows[i];
-                row = handleNulls(row, this.configuration.getNullReplacement());
+                cell = row[i];
+                cell = handleNulls(cell, configuration.getNullReplacement());
             }
 
-            final Cell c = parseToCell(row, this.configuration.getParser());
+            final Cell c = parseToCell(cell, configuration.getParser());
             rowList.add(c);
-            final WidthAwareList colList = this.columns.get(i);
+            final WidthAwareList colList = columns.get(i);
             colList.add(c);
         }
         nullCachedString();

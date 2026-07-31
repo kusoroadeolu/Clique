@@ -3,6 +3,7 @@ package io.github.kusoroadeolu.clique.components;
 import io.github.kusoroadeolu.clique.internal.documentation.Stable;
 
 import java.util.Collection;
+import java.util.SequencedCollection;
 
 /**
  * A component for displaying structured, multi-column data in the terminal.
@@ -26,21 +27,39 @@ public sealed interface Table extends Component permits AbstractTable{
     /**
      * Appends a new row to the end of the table.
      *
-     * @param rows the cell contents for the new row
+     * @param row the cell contents for the new row
      * @return this table instance for method chaining
      * @throws NullPointerException if the varargs array or any element is {@code null}
      */
-    Table row(String... rows);
+    Table row(String... row);
+
+
 
     /**
-     * Appends a new row to the end of the table using the provided collection.
+     * @deprecated in favor of the {@link SequencedCollection} overload
+     * */
+    @Deprecated(since = "4.0.3")
+    Table row(Collection<String> row);
+
+    /**
+     * Appends a new row to the end of the table using the provided sequenced collection.
+     *
+     * @param row a collection of strings representing the cells of the row;
+     * must not be {@code null}
+     * @return this table instance for method chaining
+     * @throws NullPointerException if {@code rows} or any element is {@code null}
+     */
+    Table row(SequencedCollection<String> row);
+
+    /**
+     * Appends a new row to the end of the table using the provided sequenced collection.
      *
      * @param rows a collection of strings representing the cells of the row;
      * must not be {@code null}
      * @return this table instance for method chaining
      * @throws NullPointerException if {@code rows} or any element is {@code null}
      */
-    Table row(Collection<String> rows);
+    Table rows(SequencedCollection<? extends SequencedCollection<String>> rows);
 
     /**
      * Removes the row at the specified index.
