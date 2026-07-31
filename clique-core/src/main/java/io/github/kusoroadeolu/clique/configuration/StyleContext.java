@@ -2,6 +2,8 @@ package io.github.kusoroadeolu.clique.configuration;
 
 import io.github.kusoroadeolu.clique.internal.CompositeColor;
 import io.github.kusoroadeolu.clique.internal.documentation.Stable;
+import io.github.kusoroadeolu.clique.internal.exception.NoSuchThemeException;
+import io.github.kusoroadeolu.clique.internal.loader.ThemeLoader;
 import io.github.kusoroadeolu.clique.spi.AnsiCode;
 
 import java.util.Collection;
@@ -88,7 +90,25 @@ public final class StyleContext {
      */
     public static StyleContext from(StyleContext context) {
         Objects.requireNonNull(context, "Style context cannot be null");
-        return new StyleContextBuilder().add(context.localStyles).build();
+        return StyleContext.from(context.localStyles);
+    }
+
+    /**
+     * Creates a {@code StyleContext} from a CliqueTheme.
+     *
+     * <p>The registered styles are copied; the returned context is independent of
+     * the source.
+     *
+     * @param theme the name of the theme to be registered; must not be {@code null}
+     * @return a new {@code StyleContext} containing the same styles
+     * @throws NullPointerException if {@code theme} is {@code null}
+     * @throws NoSuchThemeException if no theme was found
+     */
+    public static StyleContext fromTheme(String theme) {
+        var opt = ThemeLoader.find(theme);
+        if (opt.isEmpty()) throw new NoSuchThemeException("No such theme: %s".formatted(theme));
+        var ct = opt.get();
+        return StyleContext.from(ct.styles());
     }
 
     /**
@@ -103,7 +123,7 @@ public final class StyleContext {
     }
 
     StyleContext(StyleContextBuilder builder) {
-        this.localStyles = new HashMap<>(builder.localStyles);
+        this.localStyles = builder.localStyles;
     }
 
     StyleContext() {
