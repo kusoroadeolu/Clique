@@ -29,7 +29,7 @@ A dependency-free and extensible CLI library for beautifying Java terminal appli
 <dependency>
     <groupId>io.github.kusoroadeolu</groupId>
     <artifactId>clique-core</artifactId>
-    <version>4.0.2</version>
+    <version>4.0.3</version>
 </dependency>
 ```
 
@@ -37,7 +37,7 @@ A dependency-free and extensible CLI library for beautifying Java terminal appli
 
 ```gradle
 dependencies {
-    implementation 'io.github.kusoroadeolu:clique-core:4.0.2'
+    implementation 'io.github.kusoroadeolu:clique-core:4.0.3'
 }
 ```
 

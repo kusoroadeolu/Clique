@@ -26,7 +26,7 @@ Themes live in a separate package from core. You need both:
 
 ```gradle
 // Gradle
-implementation 'io.github.kusoroadeolu:clique-core:4.0.2'
+implementation 'io.github.kusoroadeolu:clique-core:4.0.3'
 implementation 'io.github.kusoroadeolu:clique-themes:1.0.1'
 ```
 
