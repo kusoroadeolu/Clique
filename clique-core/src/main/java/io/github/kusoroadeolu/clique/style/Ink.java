@@ -24,7 +24,7 @@ import static io.github.kusoroadeolu.clique.internal.markup.PredefinedStyleConte
  * returns a new {@code Ink} instance, leaving the original unchanged. Call {@link #on(String)}
  * to produce the final styled string.
  *
- * <p>Outputs raw ANSI escape sequences directly — no markup parser involved.
+ * <p>Outputs raw ANSI escape sequences directly - no markup parser involved.
  *
  * <p>Usage:
  * <pre>{@code

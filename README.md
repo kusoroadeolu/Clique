@@ -52,7 +52,7 @@ Clique.parser().print("[red, bold]Error:[/] Something went wrong");
 ```
 
 ### Ink
-A lightweight, chainable ANSI string builder — similar in spirit to [Chalk](https://github.com/chalk/chalk). Each method returns a new `Ink` instance, so you can safely reuse base styles:
+A lightweight, chainable ANSI string builder - similar in spirit to [Chalk](https://github.com/chalk/chalk). Each method returns a new `Ink` instance, so you can safely reuse base styles:
 ```java
 Clique.ink().red().bold().on("Error");
 
@@ -117,7 +117,7 @@ Symbol-driven lists with nesting and full markup support. Config cascades from p
 ```java
 Clique.list()
     .item("[green]✓[/]", "Auth service")
-    .item("[yellow]~[/]", "Notification system — in review",
+    .item("[yellow]~[/]", "Notification system - in review",
         Clique.list()
             .item("!", "Waiting on design sign-off")
     )
@@ -146,13 +146,13 @@ for (var file : Clique.progressBar(files)) {
 
 ![Sample Progress Bar](images/sample-pg-bar.png)
 
-> **Thread safety:** Style registration/lookup and config objects (once built) are thread-safe. All other components are not — avoid sharing instances across threads.
+> **Thread safety:** Style registration/lookup and config objects (once built) are thread-safe. All other components are not - avoid sharing instances across threads.
 
 ---
 
 ## Built with Clique
 
-- [Veneer](https://github.com/kusoroadeolu/veneer) — Syntax highlighting for Java, Python, Go, Lua, and JavaScript in the terminal
+- [Veneer](https://github.com/kusoroadeolu/veneer) - Syntax highlighting for Java, Python, Go, Lua, and JavaScript in the terminal
 
 ---
 
