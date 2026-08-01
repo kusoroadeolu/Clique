@@ -152,15 +152,15 @@ for (var file : Clique.progressBar(files)) {
 
 ## Built with Clique
 
-- [Veneer](https://github.com/kusoroadeolu/veneer) - Syntax highlighting for Java, Python, Go, Lua, and JavaScript in the terminal
+- [Veneer](https://github.com/kusoroadeolu/veneer): Syntax highlighting for Java, Python, Go, Lua, and JavaScript in the terminal
 
 ---
 
 ## Documentation
 
-- **[Full Documentation](docs)** — Complete guides for all features
-- **[Markup Reference](docs/markup-reference.md)** — Colors, styles, and syntax
-- **[Examples & Demos](https://github.com/kusoroadeolu/clique-demos)** — Interactive examples
+- **[Full Documentation](docs)**: Complete guides for all features
+- **[Markup Reference](docs/markup-reference.md)**: Colors, styles, and syntax
+- **[Examples & Demos](https://github.com/kusoroadeolu/clique-demos)**: Interactive examples
 
 ---
 
