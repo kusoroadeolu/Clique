@@ -270,13 +270,13 @@ _(no changes noted)_
 
 ## Clique [4.0.3] - 2026-07-31
 ### Added
-- `PendingTable#fromColumns(SequencedMap<String, ? extends SequencedCollection<String>> columns)` to build the table in one call instead of chaining
-- `PendingTable#fromRows(SequencedCollection<? extends SequencedCollection<String>> rows)` to build the table in one call instead of chaining
-- `StyleContext#fromTheme(String theme)` to create a style context from a theme
+- `PendingTable#fromColumns(SequencedMap<String, ? extends SequencedCollection<String>> columns)` - construct a table directly from an existing map of columns, without manually chaining `.headers()`/`.row()` calls
+- `PendingTable#fromRows(SequencedCollection<? extends SequencedCollection<String>> rows)` - construct a table directly from existing row data, same motivation as above
+- `StyleContext#fromTheme(String theme)` - scope an already-registered theme's colors into a StyleContext; throws `NoSuchThemeException` if the theme isn't found/registered
 
 ### Deprecated
-- `PendingTable#headers(Collection<String> headers)` in favor of `PendingTable#headers(SequencedCollection<String> headers)`
-- `Table#row(Collection<String> row)` in favor of `Table#row(SequencedCollection<String> row)`
+- `PendingTable#headers(Collection<String> headers)` in favor of `PendingTable#headers(SequencedCollection<String> headers)` - plain `Collection` doesn't guarantee iteration order, which could silently scramble column order
+- `Table#row(Collection<String> row)` in favor of `Table#row(SequencedCollection<String> row)` same ordering concern for row data
 
 ## clique-spi [2.0.3] - 2026-07-31
 _(no changes noted)_
