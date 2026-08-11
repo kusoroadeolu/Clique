@@ -3,6 +3,7 @@ package io.github.kusoroadeolu.clique.components;
 import io.github.kusoroadeolu.clique.configuration.BoxType;
 import io.github.kusoroadeolu.clique.configuration.FrameAlign;
 import io.github.kusoroadeolu.clique.configuration.FrameConfiguration;
+import io.github.kusoroadeolu.clique.configuration.TitleAlign;
 import io.github.kusoroadeolu.clique.internal.BorderChars;
 import io.github.kusoroadeolu.clique.internal.Cell;
 import io.github.kusoroadeolu.clique.internal.FrameNode;
@@ -43,7 +44,7 @@ public class Frame implements Component {
     private final FrameConfiguration configuration;
     private final BoxType type;
     private String title;
-    private FrameAlign titleAlign;
+    private TitleAlign titleAlign;
     private int width;
     private final BorderChars borderChars;
     private static final int NO_WIDTH_SET = 0;
@@ -54,7 +55,7 @@ public class Frame implements Component {
         this.configuration = Objects.requireNonNull(configuration, "Configuration cannot be null");
         this.type = Objects.requireNonNull(type, "Frame type cannot be null");
         this.title = EMPTY;
-        this.titleAlign = FrameAlign.CENTER;
+        this.titleAlign = TitleAlign.CENTER;
         this.width = NO_WIDTH_SET;
         borderChars = BorderChars.from(type);
         this.colorBorders(borderChars);
@@ -84,12 +85,26 @@ public class Frame implements Component {
      * @throws NullPointerException if {@code title} or {@code titleAlign} is {@code null}
      * @throws InvalidDimensionException if the title is wider than the resolved frame width, thrown at render time via {@link #get()}
      */
-    public Frame title(String title, FrameAlign titleAlign) {
+    public Frame title(String title, TitleAlign titleAlign) {
         Objects.requireNonNull(title, "Title cannot be null");
         Objects.requireNonNull(titleAlign, NULL_FRAME_ALIGN);
         this.title = title;
         this.titleAlign = titleAlign;
         return this;
+    }
+
+    /**
+     * @deprecated use {@link #title(String, TitleAlign)} instead
+     */
+    @Deprecated
+    public Frame title(String title, FrameAlign titleAlign) {
+        Objects.requireNonNull(titleAlign, NULL_FRAME_ALIGN);
+
+        return title(title, switch (titleAlign) {
+            case LEFT -> TitleAlign.LEFT;
+            case RIGHT -> TitleAlign.RIGHT;
+            case CENTER -> TitleAlign.CENTER;
+        });
     }
 
     /**
@@ -102,7 +117,7 @@ public class Frame implements Component {
      * @throws NullPointerException if {@code title} is {@code null}
      */
     public Frame title(String title) {
-        return title(title, FrameAlign.CENTER);
+        return title(title, TitleAlign.CENTER);
     }
 
     /**
@@ -324,7 +339,7 @@ public class Frame implements Component {
                 .orElse(ZERO);
     }
 
-    static int findTitleBlockOffset(int givenWidth, int titleWidth, FrameAlign align) {
+    static int findTitleBlockOffset(int givenWidth, int titleWidth, TitleAlign align) {
         return switch (align) {
             case LEFT -> 1;
             case RIGHT -> (givenWidth - titleWidth) - 1; //20 - 20 - 1, Gives  -1, By adding 1 to the title width, we get

@@ -1,6 +1,7 @@
 package io.github.kusoroadeolu.clique.components;
 
 import io.github.kusoroadeolu.clique.configuration.FrameAlign;
+import io.github.kusoroadeolu.clique.configuration.TitleAlign;
 import io.github.kusoroadeolu.clique.internal.exception.InvalidDimensionException;
 import io.github.kusoroadeolu.clique.internal.utils.StringUtils;
 import org.junit.jupiter.api.BeforeEach;
@@ -98,6 +99,51 @@ class FrameTest {
         assertEquals(ls[0].length(), ls[ls.length - 1].length());
     }
 
+    @Test
+    void titleAlignPositionsTitleCorrectly() {
+        String left = stripAnsi(
+                new Frame()
+                        .width(20)
+                        .title("Title", TitleAlign.LEFT)
+                        .nest("content")
+                        .get()
+        );
+
+        String center = stripAnsi(
+                new Frame()
+                        .width(20)
+                        .title("Title", TitleAlign.CENTER)
+                        .nest("content")
+                        .get()
+        );
+
+        String right = stripAnsi(
+                new Frame()
+                        .width(20)
+                        .title("Title", TitleAlign.RIGHT)
+                        .nest("content")
+                        .get()
+        );
+
+        String leftTop = lines(left)[0];
+        String centerTop = lines(center)[0];
+        String rightTop = lines(right)[0];
+
+        assertTrue(leftTop.indexOf(" Title ") < centerTop.indexOf(" Title "));
+        assertTrue(centerTop.indexOf(" Title ") < rightTop.indexOf(" Title "));
+    }
+
+    @SuppressWarnings("deprecation")
+    @Test
+    void deprecatedFrameAlignTitleStillWorks() {
+        Frame frame = new Frame();
+        assertDoesNotThrow(() ->
+                frame.nest("Hello")
+                        .title("Title", FrameAlign.LEFT)
+                        .get()
+        );
+    }
+
     // -------------------------
     // Nested component tests
     // -------------------------
@@ -186,28 +232,28 @@ class FrameTest {
     @Test
     void test_autosizeFrame_whenTitleWidth_greaterThanFrameContent_andAlignedLeft(){
         Frame frame = new Frame();
-        frame.nest("Hello").title(" ".repeat(20), FrameAlign.LEFT);
+        frame.nest("Hello").title(" ".repeat(20), TitleAlign.LEFT);
         assertDoesNotThrow(frame::get);
     }
 
     @Test
     void test_autosizeFrame_whenTitleWidth_greaterThanFrameContent_andAlignedRight(){
         Frame frame = new Frame();
-        frame.nest("Hello").title(" ".repeat(20), FrameAlign.RIGHT);
+        frame.nest("Hello").title(" ".repeat(20), TitleAlign.RIGHT);
         assertDoesNotThrow(frame::get);
     }
 
     @Test
     void test_autosizeFrame_whenTitleWidth_greaterThanFrameContent_andAlignedCenter(){
         Frame frame = new Frame();
-        frame.nest("Hello").title(" ".repeat(20), FrameAlign.CENTER);
+        frame.nest("Hello").title(" ".repeat(20), TitleAlign.CENTER);
         assertDoesNotThrow(frame::get);
     }
 
     @Test
     void test_givenWidthFrame_whenTitleWidth_equalToContent_andAlignedLeft(){
         Frame frame = new Frame();
-        frame.nest("Hello").title(" ".repeat(5), FrameAlign.LEFT).width(9);
+        frame.nest("Hello").title(" ".repeat(5), TitleAlign.LEFT).width(9);
         assertDoesNotThrow(frame::get);
     }
 }
