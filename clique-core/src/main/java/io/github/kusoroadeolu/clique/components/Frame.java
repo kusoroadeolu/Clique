@@ -110,7 +110,7 @@ public class Frame implements Component {
     /**
      * Sets the frame title with center alignment.
      *
-     * <p>Equivalent to {@code title(title, FrameAlign.CENTER)}.
+     * <p>Equivalent to {@code title(title, TitleAlign.CENTER)}.
      *
      * @param title the title text; must not be {@code null}
      * @return this frame, for chaining
