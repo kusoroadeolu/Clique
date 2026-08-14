@@ -2,6 +2,7 @@ package io.github.kusoroadeolu.clique.components;
 
 import io.github.kusoroadeolu.clique.Clique;
 import io.github.kusoroadeolu.clique.configuration.DividerConfiguration;
+import io.github.kusoroadeolu.clique.configuration.TitleAlign;
 import io.github.kusoroadeolu.clique.internal.exception.UnidentifiedStyleException;
 import io.github.kusoroadeolu.clique.internal.utils.AnsiDetector;
 import io.github.kusoroadeolu.clique.parser.MarkupParser;
@@ -137,6 +138,36 @@ class DividerTest {
 			assertTrue(output.contains(ColorCode.GREEN.ansiSequence() + "Clique rocks" + StyleCode.RESET));
 			assertTrue(output.startsWith(ColorCode.RED.ansiSequence()));
 			assertTrue(output.endsWith(StyleCode.RESET.ansiSequence()));
+		}
+
+		@Test
+		void leftAlignedTitle() {
+			var divider = Clique.divider(20).title("Clique rocks", TitleAlign.LEFT);
+			var output = MarkupParser.DEFAULT.getOriginalString(divider.get());
+			assertEquals(20, output.length());
+			assertEquals("─ Clique rocks ─────", output);
+		}
+
+		@Test
+		void centerAlignedTitle() {
+			var divider = Clique.divider(20).title("Clique rocks", TitleAlign.CENTER);
+			var output = MarkupParser.DEFAULT.getOriginalString(divider.get());
+			assertEquals(20, output.length());
+			assertEquals("─── Clique rocks ───", output);
+		}
+
+		@Test
+		void rightAlignedTitle() {
+			var divider = Clique.divider(20).title("Clique rocks", TitleAlign.RIGHT);
+			var output = MarkupParser.DEFAULT.getOriginalString(divider.get());
+			assertEquals(20, output.length());
+			assertEquals("───── Clique rocks ─", output);
+		}
+
+		@Test
+		void nullTitleAlign() {
+			var divider = Clique.divider(20);
+			assertThrows(NullPointerException.class, () -> divider.title("Clique rocks", null));
 		}
 	}
 }

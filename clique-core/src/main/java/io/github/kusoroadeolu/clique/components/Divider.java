@@ -1,6 +1,7 @@
 package io.github.kusoroadeolu.clique.components;
 
 import io.github.kusoroadeolu.clique.configuration.DividerConfiguration;
+import io.github.kusoroadeolu.clique.configuration.TitleAlign;
 import io.github.kusoroadeolu.clique.internal.documentation.Stable;
 import io.github.kusoroadeolu.clique.internal.utils.StringUtils;
 import io.github.kusoroadeolu.clique.style.StyleBuilder;
@@ -25,6 +26,8 @@ public class Divider implements Component {
 	private final int width;
 
 	private String title;
+
+	private TitleAlign titleAlign = TitleAlign.CENTER;
 
 	/**
 	 * Creates a new Divider with the given width and configuration.
@@ -61,7 +64,13 @@ public class Divider implements Component {
 
 
 		int remaining = width - contentLength;
-		int left = remaining / 2;
+
+		int left = switch (titleAlign) {
+			case LEFT -> 1;
+			case RIGHT -> remaining - 1;
+			case CENTER -> remaining / 2;
+		};
+
 		int right = remaining - left;
 
         var dividerColor = configuration.getDividerColor();
@@ -83,15 +92,24 @@ public class Divider implements Component {
 	 * @return this divider instance
 	 */
 	public Divider title(String title) {
-        Objects.requireNonNull(title, "Divider title cannot be null");
-        String visible = configuration.getParser().getOriginalString(title);
-        if (visible.length() + 2 >= width) {
-            throw new IllegalArgumentException(
-                    "Title's visible length must be less than divider width."
-            );
-        }
-        this.title = title;
-        return this;
+       return title(title, TitleAlign.CENTER);
+	}
+
+	public Divider title(String title, TitleAlign titleAlign) {
+		Objects.requireNonNull(title, "Divider title cannot be null");
+		Objects.requireNonNull(titleAlign, "Title align cannot be null");
+
+		String visible = configuration.getParser().getOriginalString(title);
+
+		if (visible.length() + 2 >= width) {
+			throw new IllegalArgumentException(
+					"Title's visible length must be less than divider width."
+			);
+		}
+
+		this.title = title;
+		this.titleAlign = titleAlign;
+		return this;
 	}
 
 	@Override
