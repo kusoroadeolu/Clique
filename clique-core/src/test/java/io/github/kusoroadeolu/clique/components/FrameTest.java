@@ -14,11 +14,11 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class FrameTest {
 
-    private Frame sharedFrame;
+    private Frame frame;
 
     @BeforeEach
     void setup(){
-        this.sharedFrame = new Frame();
+        this.frame = new Frame();
     }
 
     private static Component component(String output) {
@@ -36,40 +36,38 @@ class FrameTest {
 
     @Test
     void throwsWhenTitleWiderThanFrameAtRenderTime() {
-        sharedFrame.width(5).title("This title is way too long");
-        assertThrows(InvalidDimensionException.class, () -> sharedFrame.get());
+        frame.width(5).title("This title is way too long");
+        assertThrows(InvalidDimensionException.class, () -> frame.get());
     }
 
     @Test
     void throwsWhenNodeContentWiderThanExplicitWidth() {
-        sharedFrame.width(3).nest("this string is too wide");
+        frame.width(3).nest("this string is too wide");
         assertThrows(InvalidDimensionException.class, () ->
-                sharedFrame.get()
+                frame.get()
         );
     }
 
     @Test
     void throwsWhenWidthIsNegative() {
         assertThrows(InvalidDimensionException.class, () ->
-                sharedFrame.width(-1)
+                frame.width(-1)
         );
     }
 
     @Test
     void throwsWhenSelfNested(){
         assertThrows(IllegalArgumentException.class, () ->
-                sharedFrame.nest(sharedFrame)
+                frame.nest(frame)
         );
     }
 
-    // -------------------------
     // Title rendering tests
-    // -------------------------
 
     @Test
     void frameWithNoTitleHasPlainTopBorder() {
         String rendered = stripAnsi(
-                sharedFrame.nest("hello")
+                frame.nest("hello")
                         .get()
         );
         String topLine = lines(rendered)[0];
@@ -80,7 +78,7 @@ class FrameTest {
     @Test
     void titleIsSurroundedBySpacesInTopBorder() {
         String rendered = stripAnsi(
-                sharedFrame.title("T")
+                frame.title("T")
                         .nest("some content")
                         .get()
         );
@@ -91,7 +89,7 @@ class FrameTest {
     @Test
     void topAndBottomBorderHaveSameWidth() {
         String rendered = stripAnsi(
-                sharedFrame.title("Title")
+                frame.title("Title")
                         .nest("hello world")
                         .get()
         );
@@ -144,15 +142,13 @@ class FrameTest {
         );
     }
 
-    // -------------------------
     // Nested component tests
-    // -------------------------
 
     @Test
     void nestedComponentOutputAppearsInFrame() {
         Component comp = component("foo");
         String rendered = stripAnsi(
-                sharedFrame.nest(comp)
+                frame.nest(comp)
                         .get()
         );
         assertTrue(rendered.contains("foo"));
@@ -161,7 +157,7 @@ class FrameTest {
     @Test
     void allContentLinesHaveSameWidth() {
         String rendered = stripAnsi(
-                sharedFrame.nest("short", FrameAlign.LEFT)
+                frame.nest("short", FrameAlign.LEFT)
                         .width(28)
                         .nest("a much longer line")
                         .get()
@@ -178,7 +174,7 @@ class FrameTest {
         String wide = "a much longer string";
         String narrow = "hi";
         String rendered = stripAnsi(
-                sharedFrame.nest(wide)
+                frame.nest(wide)
                         .nest(narrow)
                         .get()
         );
@@ -194,7 +190,7 @@ class FrameTest {
     void nestedComponentWithMultilineOutput() {
         Component comp = component("line one\nline two\nline three");
         String rendered = stripAnsi(
-                sharedFrame.nest(comp)
+                frame.nest(comp)
                         .get()
         );
         assertTrue(rendered.contains("line one"));
@@ -205,7 +201,7 @@ class FrameTest {
     @Test
     void leftAlignedNodeIsPaddedToLeftBorder() {
         String rendered = stripAnsi(
-                sharedFrame.nest("hi", FrameAlign.LEFT)
+                frame.nest("hi", FrameAlign.LEFT)
                         .nest("much wider content here")
                         .get()
         );
