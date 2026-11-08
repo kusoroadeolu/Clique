@@ -183,7 +183,7 @@ For anything scoped to a specific feature, component, or part of your codebase, 
 
 - All `add()` overloads on the builder throw `NullPointerException` if any argument is `null`.
 - `StyleContext.from(StyleContext)` throws `NullPointerException` if the given context is `null`.
-- `StyleContext.from(String)` throws `NullPointerException` if the theme name is `null`, and `NoSuchThemeException` if no theme with that name is registered or discoverable.
+- `StyleContext.fromTheme(String)` throws `NullPointerException` if the theme name is `null`, and `NoSuchThemeException` if no theme with that name is registered or discoverable.
 - `get()` returns `null`, not an exception, when a name isn't found.
 - `StyleContextBuilder` is not thread-safe, synchronize externally if a single builder is shared across threads.
 

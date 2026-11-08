@@ -11,6 +11,8 @@ Clique provides 4 built-in frame styles:
 3. **ROUNDED** - Frame with rounded corners
 4. **DOUBLE_LINE** - Frame with double-line borders
 
+**Note:** Frame shares the same enum with `Box`
+
 ## Basic Usage
 
 ### Creating a Simple Frame
@@ -71,12 +73,12 @@ Clique.frame()
 
 ### Per-Node Alignment
 
-Control how each child sits within the frame width using `FrameAlign`:
+Control how each child sits within the frame width using `TitleAlign`:
 ```java
 Clique.frame()
-    .nest(header, FrameAlign.CENTER)
-    .nest(table, FrameAlign.LEFT)
-    .nest("[dim]footer[/]", FrameAlign.RIGHT)
+    .nest(header, TitleAlign.CENTER)
+    .nest(table, TitleAlign.LEFT)
+    .nest("[dim]footer[/]", TitleAlign.RIGHT)
     .render();
 ```
 
@@ -86,27 +88,24 @@ The frame title can be independently aligned within the top border:
 ```java
 // Title on the left
 Clique.frame()
-    .title("My App", FrameAlign.LEFT)
-    .nest(table)
+    .title("My App", TitleAlign.LEFT)
     .render();
 
 // Title centered (default)
 Clique.frame()
     .title("My App")
-    .nest(table)
     .render();
 
 // Title on the right
 Clique.frame()
-    .title("My App", FrameAlign.RIGHT)
-    .nest(table)
+    .title("My App", TitleAlign.RIGHT)
     .render();
 ```
 
 Available alignments:
-- `FrameAlign.LEFT` - Left-aligned
-- `FrameAlign.CENTER` - Centered
-- `FrameAlign.RIGHT` - Right-aligned
+- `TitleAlign.LEFT` - Left-aligned
+- `TitleAlign.CENTER` - Centered
+- `TitleAlign.RIGHT` - Right-aligned
 
 ## Width
 
@@ -128,7 +127,7 @@ Use `FrameConfiguration` to customize frame appearance and behavior. Access the 
 
 | Option | Default |
 |---|---|
-| `frameAlign` | `FrameAlign.CENTER` |
+| `TitleAlign` | `TitleAlign.CENTER` |
 | `parser` | `MarkupParser.DEFAULT` |
 | `borderColor` | `{}` (no color) |
 | `padding` | `2` |
@@ -136,7 +135,7 @@ Use `FrameConfiguration` to customize frame appearance and behavior. Access the 
 ### Basic Configuration
 ```java
 FrameConfiguration config = FrameConfiguration.builder()
-    .frameAlign(FrameAlign.LEFT)
+    .TitleAlign(TitleAlign.LEFT)
     .padding(1)
     .build();
 
@@ -153,7 +152,7 @@ Clique.frame(config)
 Set the default alignment for all nested children. Individual `.nest()` calls can still override this per node:
 ```java
 FrameConfiguration config = FrameConfiguration.builder()
-    .frameAlign(FrameAlign.CENTER)
+    .TitleAlign(TitleAlign.CENTER)
     .build();
 ```
 
@@ -190,7 +189,7 @@ ParserConfiguration parserConfig = ParserConfiguration
     .delimiter(' ')
     .build();
 
-FrameConfiguration config = FrameConfiguration.builder()
+FrameConfiguration frameConfig = FrameConfiguration.builder()
     .parser(Clique.parser(parserConfig))
     .build();
 ```
@@ -198,16 +197,16 @@ FrameConfiguration config = FrameConfiguration.builder()
 ### Full Configuration Example
 ```java
 FrameConfiguration config = FrameConfiguration.builder()
-    .frameAlign(FrameAlign.CENTER)
+    .TitleAlign(TitleAlign.CENTER)
     .padding(3)
     .borderColor("blue")
     .build();
 
 Clique.frame(BoxType.DOUBLE_LINE, config)
-    .title("[bold, cyan]Dashboard[/]", FrameAlign.CENTER)
-    .nest(headerTable, FrameAlign.CENTER)
-    .nest(progressBar, FrameAlign.LEFT)
-    .nest("[dim]last updated: just now[/]", FrameAlign.RIGHT)
+    .title("[bold, cyan]Dashboard[/]", TitleAlign.CENTER)
+    .nest(headerTable, TitleAlign.CENTER)
+    .nest(progressBar, TitleAlign.LEFT)
+    .nest("[dim]last updated: just now[/]", TitleAlign.RIGHT)
     .render();
 ```
 
@@ -216,12 +215,12 @@ Clique.frame(BoxType.DOUBLE_LINE, config)
 Components nested inside a frame are evaluated lazily — every call to `get()` or `render()` re-invokes each `Component` to produce fresh output. This means dynamic components like clocks, counters, or live status strings just work without any extra wiring.
 ```java
 Component clock = () -> {
-    var now = java.time.LocalTime.now();
+    var now = LocalTime.now();
     return "[cyan]%02d:%02d:%02d[/]".formatted(now.getHour(), now.getMinute(), now.getSecond());
 };
 
 // clock is re-evaluated on every render call
-frame.nest(clock).render();
+Clique.frame().nest(clock).render();
 ```
 
 Raw strings passed to `nest()` are static — only `Component` instances get re-evaluated.
@@ -242,7 +241,7 @@ System.out.println(frameString);
 
 ### Nested Tree
 ```java
-Tree tree = Clique.tree("[*magenta, bold]clique-lib/", config);
+Tree tree = Clique.tree("[*magenta, bold]clique-lib/");
 
 Tree src = tree.add("[*cyan, bold]src/");
 Tree core = src.add("[cyan]core/");
@@ -259,7 +258,7 @@ tree.add("[white]README.md");
 tree.add("[dim].gitignore");
 
 Clique.frame(BoxType.CLASSIC)
-    .title("Project Structure", FrameAlign.LEFT)
+    .title("Project Structure", TitleAlign.LEFT)
     .nest(tree)
     .render();
 ```
@@ -269,7 +268,7 @@ Clique.frame(BoxType.CLASSIC)
 - A nested component's content width **cannot exceed the frame's width**. If it does, an exception is thrown.
 - The **title width cannot exceed the frame width**. Keep titles shorter than the frame's content.
 - Frame width is derived from the **widest child** automatically, so you generally don't need to set it manually.
-- `null` values for `frameAlign`, `parser`, or `borderColor` in the builder will throw a `NullPointerException`.
+- `null` values for `TitleAlign`, `parser`, or `borderColor` in the builder will throw a `NullPointerException`.
 - Padding cannot be negative — an `IllegalArgumentException` will be thrown.
 
 ## See Also

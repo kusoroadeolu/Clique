@@ -135,8 +135,8 @@ Clique.enableCliqueColors(false); // Force disable colors
 ## Terminal Compatibility
 For all colors to display correctly, your terminal must support truecolor (24-bit color). Most modern terminals support this by default, but you may need to enable it:
 
-- Check support: Run echo $COLORTERM - it should output truecolor or 24bit
-- Enable truecolor: Set the environment variable COLORTERM=truecolor in your shell profile
+- Check support: Run `echo $COLORTERM` - it should output truecolor or 24bit
+- Enable truecolor: Set the environment variable `COLORTERM=truecolor` in your shell profile
 - Terminal compatibility: Ensure your terminal emulator supports 24-bit color (most modern terminals like iTerm2, Alacritty, Kitty, Windows Terminal, and recent versions of GNOME Terminal do)
   Without truecolor support, themes may appear with reduced color accuracy or fall back to the nearest 256-color approximation.
 
@@ -144,4 +144,4 @@ For all colors to display correctly, your terminal must support truecolor (24-bi
 ## See Also
 
 - [Parser Documentation](parser.md) - Learn how to use the parser
-- [StyleBuilder Documentation](style-progressBarConfigurationBuilder.md) - Alternative
+- [StyleBuilder Documentation](stylebuilder.md) - Alternative to the markup parser

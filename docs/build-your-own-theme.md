@@ -147,7 +147,7 @@ private AnsiCode hexToAnsi(String hex, boolean bg) {
 }
 ```
 
-Then your palette becomes just a itemList of names and hex values, readable, easy to update:
+Then your palette becomes just a list of names and hex values, readable, easy to update:
 
 ```java
 addHex(colors, "corp_navy",    "#003366");

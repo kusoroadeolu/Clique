@@ -34,17 +34,15 @@ tree.render();
 
 ### Add a Child
 ```java
-Tree child = tree.add("child label");
+Tree parent = Clique.tree("Parent");
+Tree child = parent.add("Child");          // child is the new node
+Tree grandchild = child.add("Grandchild");
+
+Tree existing = Clique.tree("Existing");
+Tree attached = parent.add(existing);      // attached is existing
 ```
 
-`add()` returns the newly created child node, so you can nest further calls off it.
-
-```java
-Tree child = Clique.tree("Child node");
-Tree parent = Clique.tree("Parent Node");
-Tree tree = parent.add(child); //Returns the child node
-```
-`add()`returns the pre-created created child node, so you can nest further calls off it.
+`add()`returns the newly created child node, so you can nest further calls off it.
 
 
 ### Nesting Arbitrarily Deep
@@ -85,7 +83,7 @@ Tree tree = Clique.tree("project/", config);
 
 ### Configuration Options
 
-#### Guide Style
+#### Connector Color
 
 Controls the color and style of the connector characters (`├─`, `└─`, `│`). Accepts any valid markup style string:
 
@@ -155,6 +153,10 @@ main.parent(); // returns Optional.of(src)
 tree.parent();  // returns Optional.empty() — root has no parent
 ```
 
+## Reparenting and Cycles
+If the child already has a parent, it’s removed from that parent first. Adding a node to itself throws UnsupportedOperationException. 
+Adding an ancestor is not checked, which creates a cycle, and get() will overflow the stack
+
 ## Factory Methods
 
 ```java
@@ -171,4 +173,4 @@ Clique.tree("label", config);
 
 - [Markup Reference](markup-reference.md) - Available colors and styles for labels
 - [Parser Documentation](parser.md) - How markup parsing works
-- [Item List Documentation](itemList.md) - Lower level functional hierarchical building
+- [Item List Documentation](item-list.md) - Lower level functional hierarchical building

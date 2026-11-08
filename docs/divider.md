@@ -1,6 +1,6 @@
 # Divider
 
-Dividers are horizontal lines that span a given width. They're perfect for visually separating sections of terminal output. A divider can optionally display a centered title within the line.
+Dividers are horizontal lines that span a given width. They're useful for separating sections of terminal output. A divider can optionally display a title within the line.
 
 ## Basic Usage
 
@@ -15,8 +15,10 @@ divider.render(); // Print the divider to terminal
 Clique.divider(40)
     .title("Section One")
     .render();
-// ────────── Section One ──────────
+// ─────────────  Section One  ──────────────
 ```
+
+The title is centered by default. See [Title Alignment](#title-alignment) to place it elsewhere.
 
 ### Applying a Color
 
@@ -38,9 +40,42 @@ Clique.divider(50)
     .render();
 ```
 
+## Title Alignment
+
+`TitleAlign` controls where the title sits on the line. The default is `TitleAlign.CENTER`.
+
+Title alignment is set per call, not in `DividerConfiguration`. `title(String)` always centers the title. `title(String, TitleAlign)` lets you choose the position:
+
+```java
+import io.github.kusoroadeolu.clique.configuration.TitleAlign;
+
+Clique.divider(30).title("Errors", TitleAlign.LEFT).render();
+Clique.divider(30).title("Errors", TitleAlign.CENTER).render();
+Clique.divider(30).title("Errors", TitleAlign.RIGHT).render();
+```
+
+Output for a 30-wide divider with the title "Errors":
+
+─ Errors ─────────────────────
+
+─────────── Errors ───────────
+
+───────────────────── Errors ─
+
+
+The title always has one space on each side. The remaining width is filled with dash characters:
+
+| `TitleAlign` | Dashes before title | Dashes after title |
+|---|---|---|
+| `LEFT` | 1 | remainder |
+| `CENTER` | half of remainder | the other half |
+| `RIGHT` | remainder | 1 |
+
+When the remainder is odd, `CENTER` puts the extra dash after the title.
+
 ## Divider Configuration
 
-Use `DividerConfiguration` to fully customize the divider's appearance. Access the builder via `DividerConfiguration.builder()`.
+Use `DividerConfiguration` to customize the divider's character, color, and title parser. Access the builder via `DividerConfiguration.builder()`. Title alignment is not part of this configuration. Set it per call as shown above.
 
 ### Default Values
 
@@ -130,9 +165,9 @@ Clique.divider(40, config)
 
 ## Things to Watch Out For
 
-- `width` must be greater than `0`. An `IllegalArgumentException` will be thrown otherwise
-- The title's **visible length** (excluding markup tags) must be strictly less than the divider width. An `IllegalArgumentException` will be thrown if it is equal to or exceeds the width
-- `DividerConfiguration` is immutable and thread-safe; `DividerConfigurationBuilder` **should be** synchronized externally if sharing a builder across threads
+- `width` must be greater than `0`. An `IllegalArgumentException` is thrown otherwise.
+- The title's **visible length** (excluding markup tags) plus 2 must be less than the divider width. The 2 accounts for the spaces around the title. In a 30-wide divider, the longest title you can use is 27 visible characters. An `IllegalArgumentException` is thrown if the limit is exceeded.
+- `DividerConfiguration` is immutable and thread-safe. `DividerConfigurationBuilder` is not thread-safe, so synchronize externally if you share a builder across threads.
 
 ## See Also
 

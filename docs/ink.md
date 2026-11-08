@@ -84,6 +84,15 @@ Clique.ink().of(MyStyles.MAUVE).bold().on("Hello")
 | `brightCyan()`  | Bright Cyan    |
 | `brightWhite()` | Bright White   |
 
+#### `hex(String hexCode)`
+
+Applies a 24-bit foreground color using a hex color string. The string must be in `#RRGGBB` format. Requires truecolor terminal support.
+
+```java
+Clique.ink().hex("#FF5733").bold().on("Orange red")
+```
+
+
 #### `rgb(int red, int green, int blue)`
 
 Applies a 24-bit foreground color using the provided RGB components. Requires truecolor terminal support.
@@ -121,14 +130,6 @@ Applies a 24-bit background color using the provided RGB components. Requires tr
 
 ```java
 Clique.ink().white().bgRgb(30, 30, 30).on("Dark background")
-```
-
-#### `hex(String hexCode)`
-
-Applies a 24-bit foreground color using a hex color string. The string must be in `#RRGGBB` format. Requires truecolor terminal support.
-
-```java
-Clique.ink().hex("#FF5733").bold().on("Orange red")
 ```
 
 #### `bgHex(String hexCode)`
@@ -173,13 +174,13 @@ Clique.ink().cyan().underline().hyperlink("https://github.com").on("GitHub")
 
 #### `gradient(RGBAnsiCode from, RGBAnsiCode to)`
 
-Applies a linear RGB gradient across the rendered text, interpolating R, G, and B channels per visible character. Existing ANSI escape sequences within the text are preserved and skipped during colorization. A reset sequence is appended automatically.
+Applies a linear RGB gradient across the rendered text, interpolating RGB channels per visible character. Existing ANSI escape sequences within the text are preserved and skipped during colorization. A reset sequence is appended automatically.
 
 Requires truecolor terminal support.
 
 ```java
 RGBAnsiCode pink = Clique.rgb(255, 105, 180);
-RGBAnsiCode blue = Clique.rgb(255, 105, 180);
+RGBAnsiCode blue = Clique.rgb(0, 0, 255);
 
 Clique.ink().bold().gradient(pink, blue).on("Gradient text")
 ```

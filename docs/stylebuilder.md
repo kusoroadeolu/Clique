@@ -42,7 +42,8 @@ Clique.styleBuilder()
 ```java
 String output = Clique.styleBuilder()
     .appendAndReset("Title: ", ColorCode.CYAN, StyleCode.BOLD)
-    .appendAndReset("My Document", ColorCode.WHITE);
+    .appendAndReset("My Document", ColorCode.WHITE)
+    .toString();    
 
 System.out.println(output);
 ```
@@ -63,14 +64,12 @@ All standard and bright ANSI colors are available:
 - `UNDERLINE` - Underlined text
 - `DOUBLE_UNDERLINE` - Double underlined text
 - `REVERSE_VIDEO` - Swap foreground/background
-- `INVISIBLE` - Hidden text
-- `STRIKE` - Strikethrough text
+- `INVISIBLE_TEXT` - Hidden text
+- `STRIKETHROUGH` - Strikethrough text
 
 ### Background Colors
 
-Follow the pattern `BG_[COLOR]`:
-- Standard: `BG_RED`, `BG_GREEN`, `BG_YELLOW`, etc.
-- Bright: `BG_BRIGHT_RED`, `BG_BRIGHT_GREEN`, etc.
+Background colors live in the BackgroundCode enum: `BackgroundCode.RED`, `BackgroundCode.BRIGHT_RED`, and so on
 
 ## Examples
 

@@ -50,15 +50,13 @@ bar.tickAnimated(40);  // smooth 500ms animation
 bar.tickAnimated(3);   // below threshold — jumps instantly
 ```
 
-`tickAnimated()` is safe to call on any progress bar. If easing isn't configured, or the tick amount falls below the threshold, it just falls through to a regular `tick()`.
-
 ---
 
 ## Configuring easing
 
 ### function
 
-The curve that controls how the animation accelerates and decelerates. See the [full itemList below](#easing-functions).
+The curve that controls how the animation accelerates and decelerates. See the [full list below](#easing-functions).
 
 ```java
 .function(EasingFunction.EASE_OUT_CUBIC)
@@ -117,7 +115,8 @@ For progress bars, `EASE_OUT_QUAD` and `EASE_OUT_CUBIC` tend to feel the most na
 
 ## Mixing animated and instant ticks
 
-This is where easing actually shines in practice. You don't have to pick one or the other — animate the big jumps, tick instantly through the small ones:
+This is where easing actually shines in practice. You don’t have to pick one or the other: animate the big jumps, and process the small ones in a batch. 
+Note that tick() renders on every call, so for a loop of many small updates, pass false to skip the render and call render() once at the end.
 
 ```java
 ProgressBar bar = Clique.progressBar(1000, config);
@@ -125,12 +124,13 @@ ProgressBar bar = Clique.progressBar(1000, config);
 // Large batch arrives, animate it
 bar.tickAnimated(150);
 
-// Process items individually — instant, no overhead
+// Process items individually. tick(false) skips rendering, so call render() once after the loop
 for (int i = 0; i < 50; i++) {
-processItem();
-    bar.tick();
+    processItem();
+    bar.tick(false);
 }
-        bar.render();
+
+bar.render();
 
 // Another large batch
 bar.tickAnimated(200);
@@ -143,8 +143,6 @@ bar.tickAnimated(200);
 **`tickAnimated()` blocks.** The animation runs on the calling thread and sleeps between frames. For CLI tools where the bar is the main event, this is fine. If that's a problem, you'll need to run it on a separate thread yourself.
 
 **Frames snap to target.** After the animation loop finishes, the bar is set exactly to the target value. The easing math is floating point, so without the snap you'd accumulate small rounding errors over many ticks.
-
-**Auto-renders during animation.** Unlike `tick()`, `tickAnimated()` calls `render()` for every frame automatically. You don't need to call it afterward.
 
 ---
 
