@@ -16,13 +16,16 @@ Clique provides 5 built-in table styles:
 
 ### Creating a Simple Table
 ```java
-PendingTable table = Clique.table(TableType.ASCII);
-table.headers("Name", "Age", "Class")
-    .row("John", "25", "Class A")
-    .row("Doe", "26", "Class B");
+  Table table = Clique.table(TableType.ASCII)
+        .headers("Name", "Age", "Class")
+        .row("John", "25", "Class A")
+        .row("Doe", "26", "Class B");
 
-table.render(); // Print the table to terminal
+  table.render();
 ```
+
+Pending table prepares a table whose headers have not yet been initialized. 
+It is not a component 
 
 ## Table Manipulation
 
@@ -36,7 +39,7 @@ Table table = Clique.table(TableType.ASCII)
         .row("Bob", "30", "Inactive");
 
 // Update a specific cell (row 1, column 2)
-table.updateCell(1, 2, "Active");
+table.updateCell(1, 2, "Inactive");
 ```
 
 ### Remove a Cell
@@ -107,7 +110,7 @@ table.render();
 Maps each header to its column values, top to bottom:
 
 ```java
-SequencedMap<String, List<String>> map = new LinkedHashMap();
+SequencedMap<String, List<String>> map = new LinkedHashMap<>();
 map.put("Name", List.of("John", "Doe"));
 map.put("Age", List.of("25", "26"));
 map.put("Class", List.of("Class A", "Class B"));

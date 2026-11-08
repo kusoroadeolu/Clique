@@ -64,7 +64,7 @@ public class CompositeStyle implements AnsiCode {
     public CompositeStyle(AnsiCode... codes) {
         var sb = new StringBuilder();
         for (AnsiCode c : codes) sb.append(c);
-        this.code = sb.ansiSequence();
+        this.code = sb.toString();
     }
 
     @Override

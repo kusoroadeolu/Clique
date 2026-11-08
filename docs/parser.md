@@ -14,7 +14,7 @@ System.out.println(styled);
 ```
 
 ### Getting the Original String
-After parsing, you can retrieve the original text without markup tags:
+After parsing, you can retrieve a text with the markup stripped:
 ```java
 MarkupParser parser = Clique.parser();
 String original = parser.getOriginalString("[red, bold]Hello[/] World"); // Returns "Hello World"
@@ -149,7 +149,7 @@ Clique.parser().print("\\[red]");
 
 ## Markup Syntax Reference
 
-See [markup-reference.md](markup-reference.md) for a complete itemList of default supported colors, background colors, and text styles.
+See [markup-reference.md](markup-reference.md) for a complete list of default supported colors, background colors, and text styles.
 
 ## Using Parser with Other Features
 

@@ -8,20 +8,20 @@ Components that implement `Component`:
 - [`Frame`](frame.md) - layout containers that stack nested components
 - [`Tree`](tree.md) - hierarchical data with connector lines
 - [`ItemList`](item-list.md) - symbol-driven nested lists
-- [`Table`](tables.md) - structured tabular data
+- [`Table`](tables.md) - structured tabular data. `Clique.table(...)` returns a `PendingTable`, which becomes a `Table` once you set headers. Only the `Table` is a `Component`.
 - [`ProgressBar`](progress-bars.md) - visual progress tracking
 
 ## Methods
 
 ### `get()`
 
-Builds and returns the fully formatted string representation of the component without printing it. Useful when you want to compose output, store it, or pass it elsewhere.
+Builds and returns the formatted string representation of the component without printing it. Useful when you want to compose output, store it, or pass it elsewhere.
 
 ```java
 String rendered = Clique.divider(40).get();
 ```
 
-> Each call performs a full render — no caching is guaranteed by this interface. Individual implementations may document their own caching behavior.
+> Each call performs a render. Caching is up to the implementation. `Box` and `Table`, for example, cache their output until their content changes.
 
 ### `render()`
 
@@ -32,6 +32,8 @@ Clique.box()
     .content("Hello, World!")
     .render();
 ```
+
+Some components override the default behavior. `ProgressBar` redraws in place with a carriage return, and only emits a newline once it's complete. `Frame` output already ends with a newline, so `render()` on a frame adds a blank line after it.
 
 ### `render(PrintStream stream)`
 
@@ -71,12 +73,16 @@ report.forEach(Component::render);
 
 ## Implementing `Component`
 
-You can implement `Component` directly for custom renderable output. Only `get()` is required — `render()` and `render(PrintStream)` are provided as defaults.
+You can implement `Component` directly for custom renderable output. Only `get()` is required. `render()` and `render(PrintStream)` are provided as defaults.
+
+`get()` returns the string as-is. Markup is not parsed for you, so call a parser yourself if you want styling:
 
 ```java
 Component clock = () -> {
     var now = java.time.LocalTime.now();
-    return "[cyan]%02d:%02d:%02d[/]".formatted(now.getHour(), now.getMinute(), now.getSecond());
+    return Clique.parser().parse(
+        "[cyan]%02d:%02d:%02d[/]".formatted(now.getHour(), now.getMinute(), now.getSecond())
+    );
 };
 
 clock.render(); // prints current time to stdout
@@ -93,9 +99,9 @@ Clique.frame()
 ## Things to Watch Out For
 
 - `get()` never returns `null`
-- `render()` always appends a newline after the output
 - `render(null)` throws a `NullPointerException`
-- Each call to `get()` or `render()` is a full re-render — if your component does expensive work, handle caching yourself
+- `get()` is not cached by the interface. Some components cache internally, so don't assume every call is cheap or fresh
+- Custom implementations of `get()` must parse their own markup if they want it styled
 
 ## See Also
 

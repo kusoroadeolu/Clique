@@ -64,8 +64,11 @@ Need more than one? Register them all at once:
 Clique.registerAvailableThemes();
 
 Clique.parser().print("[ctp_mauve]Catppuccin[/] meets [tokyo_cyan]Tokyo Night[/]");
-Clique.parser().print("[nord_frost0]Nord[/] meets [drac_pink]Dracula[/]");
+Clique.parser().print("[nord_frost0]Nord[/] meets [drac_magenta]Dracula[/]");
 ```
+
+### Scoped Alternative
+If you’d rather keep a theme scoped to one parser, use StyleContext.fromTheme("catppuccin-mocha"). See style-context.md.
 
 ---
 
@@ -162,15 +165,16 @@ Clique.parser().print("[nord_red, italic]Something subtle[/]");
 ```java
 Clique.registerTheme("nord");
 
-Clique.registerStyle("error",   new RGBColor(191, 97,  106, false)); // nord_red
-Clique.registerStyle("success", new RGBColor(163, 190, 140, false)); // nord_green
-Clique.registerStyle("info",    new RGBColor(136, 192, 208, false)); // nord_frost2
+Clique.registerStyle("error",   Clique.rgb(191, 97,  106, false)); // nord_red
+Clique.registerStyle("success", Clique.rgb(163, 190, 140, false)); // nord_green
+Clique.registerStyle("info",    Clique.rgb(136, 192, 208, false)); // nord_frost2
 
 Clique.parser().print("[error]Failed to connect[/]");
 Clique.parser().print("[success]Connection established[/]");
 ```
 
 **Pick a side on light vs dark.** Catppuccin Mocha and Latte share the same color names, so swapping between them is one line — but don't register both at once or you'll get whichever loaded last.
+Note that `registerAvailableThemes()` registers every theme on the classpath, including both Catppuccin variants/. If you want one, call registerTheme("catppuccin-mocha") directly
 
 ---
 

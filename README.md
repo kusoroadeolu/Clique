@@ -77,6 +77,15 @@ Clique.parser().print("[ctp_mauve]Styled with Catppuccin![/]");
 - [Themes docs](docs/themes.md)
 - [Create your own theme](docs/build-your-own-theme.md)
 
+```xml
+<dependency>
+    <groupId>io.github.kusoroadeolu</groupId>
+    <artifactId>clique-themes</artifactId>
+    <version>1.0.1</version>
+</dependency>
+```
+
+
 ### Tables
 Build tables with multiple styles:
 ```java
@@ -89,7 +98,7 @@ Clique.table()
 ![Sample Table](images/sample-table.png)
 
 ### Boxes
-Single-cell boxes with text wrapping:
+Single-cell boxes with auto or fixed sizing
 ```java
 Clique.box()
     .dimensions(40, 10) // Width, Height
@@ -137,11 +146,17 @@ Clique.frame()
 ![Sample Frame](images/sample-frame.png)
 
 ### Progress Bars
-Visual feedback for long-running operations - wrap a collection and the Clique handles the rest:
+Visual feedback for long-running operations - wrap a collection and Clique handles the rest:
 ```java
 for (var file : Clique.progressBar(files)) {
     process(file);
 }
+```
+
+### Divider
+Horizontal lines that separate sections of output, with an optional centered title:
+```java
+Clique.divider(40).title("Section One").render();
 ```
 
 ![Sample Progress Bar](images/sample-pg-bar.png)

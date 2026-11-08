@@ -80,8 +80,8 @@ for (var file : Clique.progressBar(files, config)) {
 
 ### BLOCKS (Default)
 ```
-████████████████████████████████░░░░░  80% [00:12/00:03]
-```
+████████████████████████████████░░░░░░░░  80% [00:12/00:03]
+``` 
 - Complete: `█`
 - Incomplete: `░`
 - Length: 40
@@ -212,18 +212,16 @@ ProgressBarConfiguration config = ProgressBarConfiguration.builder()
 
 ### Downloading a File
 ```java
-ProgressBarConfiguration config = ProgressBarConfiguration.builder()
-        .length(50)
-        .complete('▓')
-        .incomplete('░')
-        .format("[cyan]:bar[/] :percent% | :progress/:total MB")
-        .build();
-
 ProgressBar bar = Clique.progressBar(totalMB, config);
+int lastDownloaded = 0;
 
 while (downloading) {
-int downloaded = getDownloadedMB();
-    bar.tick(downloaded);
+    int downloaded = getDownloadedMB();
+    int delta = downloaded - lastDownloaded;
+    if (delta > 0) {
+        bar.tick(delta);
+        lastDownloaded = downloaded;
+    }
     Thread.sleep(100);
 }
 ```

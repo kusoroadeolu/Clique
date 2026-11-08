@@ -123,7 +123,7 @@ Clique.list()
           Clique.list()
             .item("[green]✓[/]", "[dim, strike]Auth service[/]")
             .item("[green]✓[/]", "[dim, strike]User profile page[/]")
-            .item("[yellow]~[/]", "Notification system — [yellow]in review[/]",
+            .item("[yellow]~[/]", "Notification system - [yellow]in review[/]",
                   Clique.list()
                     .item("!", "Waiting on design sign-off")
             )
@@ -140,16 +140,16 @@ Clique.list()
 
 ```java
 Clique.list()
-    .item("[bold]>[/]", "[bold, cyan]Build Report — v2.4.1[/]",
+    .item("[bold]>[/]", "[bold, cyan]Build Report - v2.4.1[/]",
           Clique.list()
             .item("[green]✓[/]", "Compiled 42 files in 1.3s")
             .item("[green]✓[/]", "108 tests passed")
             .item("[yellow]⚠[/]", "2 deprecation warnings",
                   Clique.list()
-                    .item("–", "StringUtils.format() — use formatAndReset()")
-                    .item("–", "Flag enum — superseded by markup symbols")
+                    .item("–", "StringUtils.format() - use formatAndReset()")
+                    .item("–", "Flag enum - superseded by markup symbols")
             )
-                    .item("[red]✗[/]", "Coverage at 74% — threshold is 80%")
+                    .item("[red]✗[/]", "Coverage at 74% - threshold is 80%")
     )
             .render();
 ```
