@@ -136,10 +136,10 @@ public class DividerConfiguration {
 		 * @return this builder
 		 * @throws NullPointerException if {@code codes} is {@code null}
 		 */
-		public DividerConfigurationBuilder dividerColor(AnsiCode... colorCodes) {
-			this.dividerColor = Objects.requireNonNull(colorCodes, "Divider color cannot be null");
-			return this;
-		}
+        public DividerConfigurationBuilder dividerColor(AnsiCode... colorCodes) {
+            this.dividerColor = Objects.requireNonNull(colorCodes, "Divider color cannot be null").clone();
+            return this;
+        }
 
 		/**
 		 * Sets the ANSI color to the Divider by parsing a markup string using the currently configured parser.
@@ -153,10 +153,10 @@ public class DividerConfiguration {
 		 * @return this builder
 		 * @throws NullPointerException if {@code color} is {@code null}
 		 */
-		public DividerConfigurationBuilder dividerColor(String color) {
-			dividerColor(ParserUtils.getAnsiCodes(Objects.requireNonNull(color, "Divider color cannot be null.")));
-			return this;
-		}
+        public DividerConfigurationBuilder dividerColor(String color) {
+            Objects.requireNonNull(color, "Divider color cannot be null");
+            return dividerColor(ParserUtils.getAnsiCodes(color, parser));
+        }
 
 		/**
 		 * Sets the char used to render the Divider

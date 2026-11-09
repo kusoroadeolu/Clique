@@ -2,9 +2,11 @@ package io.github.kusoroadeolu.clique.components;
 
 import io.github.kusoroadeolu.clique.Clique;
 import io.github.kusoroadeolu.clique.configuration.DividerConfiguration;
+import io.github.kusoroadeolu.clique.configuration.ParserConfiguration;
 import io.github.kusoroadeolu.clique.configuration.TitleAlign;
 import io.github.kusoroadeolu.clique.internal.exception.UnidentifiedStyleException;
 import io.github.kusoroadeolu.clique.internal.utils.AnsiDetector;
+import io.github.kusoroadeolu.clique.internal.utils.CharWidth;
 import io.github.kusoroadeolu.clique.parser.MarkupParser;
 import io.github.kusoroadeolu.clique.style.ColorCode;
 import io.github.kusoroadeolu.clique.style.StyleCode;
@@ -170,4 +172,56 @@ class DividerTest {
 			assertThrows(NullPointerException.class, () -> divider.title("Clique rocks", null));
 		}
 	}
+
+    private static String visible(String ansi) {
+        return ansi.replaceAll("\u001B\\[[0-9;]*m", "");
+    }
+
+    @Test
+    void emojiTitleRendersAtExactWidth() {
+        var div = new Divider(20, DividerConfiguration.DEFAULT).title("🚀 go");
+        assertEquals(20, CharWidth.of(visible(div.get())));
+    }
+
+    @Test
+    void cjkTitleRendersAtExactWidth() {
+        var div = new Divider(20, DividerConfiguration.DEFAULT).title("日本語");
+        assertEquals(20, CharWidth.of(visible(div.get())));
+    }
+
+    @Test
+    void whitespaceOnlyTitleRendersAtExactWidth() {
+        var div = new Divider(20, DividerConfiguration.DEFAULT).title("   ");
+        assertEquals(20, CharWidth.of(visible(div.get())));
+    }
+
+    @Test
+    void colorStringUsesConfiguredParser() {
+        var parser = Clique.parser(ParserConfiguration.builder().delimiter(' ').build());
+        var cfg = DividerConfiguration.builder()
+                .parser(parser)
+                .dividerColor("red bold")
+                .build();
+        String out = new Divider(20, cfg).get();
+        assertTrue(out.contains(ColorCode.RED.ansiSequence()));
+        assertTrue(out.contains(StyleCode.BOLD.ansiSequence()));
+    }
+
+    @Test
+    void titleAlignParticipatesInEquality() {
+        var left = new Divider(20, DividerConfiguration.DEFAULT).title("a", TitleAlign.LEFT);
+        var right = new Divider(20, DividerConfiguration.DEFAULT).title("a", TitleAlign.RIGHT);
+        assertNotEquals(left, right);
+    }
+
+    @Test
+    void titleBoundary() {
+        for (var align : TitleAlign.values()) {
+            var div = new Divider(20, DividerConfiguration.DEFAULT).title("x".repeat(17), align);
+            assertEquals(20, CharWidth.of(visible(div.get())));
+        }
+
+        assertThrows(IllegalArgumentException.class,
+                () -> new Divider(20, DividerConfiguration.DEFAULT).title("x".repeat(18)));
+    }
 }
