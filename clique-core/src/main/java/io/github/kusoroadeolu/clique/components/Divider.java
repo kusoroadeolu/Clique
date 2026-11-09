@@ -3,7 +3,9 @@ package io.github.kusoroadeolu.clique.components;
 import io.github.kusoroadeolu.clique.configuration.DividerConfiguration;
 import io.github.kusoroadeolu.clique.configuration.TitleAlign;
 import io.github.kusoroadeolu.clique.internal.documentation.Stable;
+import io.github.kusoroadeolu.clique.internal.utils.CharWidth;
 import io.github.kusoroadeolu.clique.internal.utils.StringUtils;
+import io.github.kusoroadeolu.clique.spi.AnsiCode;
 import io.github.kusoroadeolu.clique.style.StyleBuilder;
 
 import java.util.Objects;
@@ -21,116 +23,107 @@ import static io.github.kusoroadeolu.clique.internal.utils.Constants.BLANK;
 @Stable(since = "4.0.2")
 public class Divider implements Component {
 
-	private final DividerConfiguration configuration;
+    private final DividerConfiguration configuration;
+    private final int width;
+    private String title;
+    private TitleAlign titleAlign = TitleAlign.CENTER;
 
-	private final int width;
+    public Divider(int width, DividerConfiguration configuration) {
+        if (width <= 0) throw new IllegalArgumentException("Width must be greater than 0.");
+        this.width = width;
+        this.configuration = Objects.requireNonNull(configuration, "Divider configuration cannot be null");
+    }
 
-	private String title;
+    @Override
+    public String get() {
+        String dividerChar = String.valueOf(configuration.getDividerChar());
+        AnsiCode[] color = configuration.getDividerColor();
 
-	private TitleAlign titleAlign = TitleAlign.CENTER;
+        if (title == null || title.isEmpty()) {
+            return new StyleBuilder()
+                    .appendAndReset(dividerChar.repeat(width), color)
+                    .toString();
+        }
 
-	/**
-	 * Creates a new Divider with the given width and configuration.
-	 *
-	 * @param width         the width of the divider; must be greater than 0
-	 * @param configuration the divider configuration to use; must not be {@code null}
-	 * @throws IllegalArgumentException if {@code width} is not greater than 0
-	 * @throws NullPointerException     if {@code configuration} is {@code null}
-	 */
-	public Divider(int width, DividerConfiguration configuration) {
-		validateWidth(width);
-		this.width = width;
-		this.configuration = Objects.requireNonNull(configuration, "Divider configuration cannot be null");
-	}
+        String content = BLANK + StringUtils.parse(title, configuration.getParser()) + BLANK;
+        // title() guarantees remaining >= 1
+        int remaining = width - visibleWidth(title) - 2;
 
-	private static void validateWidth(int width) {
-		if (width <= 0) {
-			throw new IllegalArgumentException("Width must be greater than 0.");
-		}
-	}
+        int left = switch (titleAlign) {
+            case LEFT -> 1;
+            case RIGHT -> remaining - 1;
+            case CENTER -> remaining / 2;
+        };
 
-	@Override
-	public String get() {
-		String dividerChar = String.valueOf(configuration.getDividerChar());
+        return new StyleBuilder()
+                .appendAndReset(dividerChar.repeat(left), color)
+                .appendAndReset(content)
+                .appendAndReset(dividerChar.repeat(remaining - left), color)
+                .toString();
+    }
 
-		if (title == null || title.isEmpty()) {
-			return new StyleBuilder()
-					.appendAndReset(dividerChar.repeat(width), configuration.getDividerColor())
-					.toString();
-		}
-
-		int contentLength = configuration.getParser().getOriginalString(title).length() + 2; // add 2 from padding
-		String content = BLANK + StringUtils.parse(title, configuration.getParser()) + BLANK;
-
-
-		int remaining = width - contentLength;
-
-		int left = switch (titleAlign) {
-			case LEFT -> 1;
-			case RIGHT -> remaining - 1;
-			case CENTER -> remaining / 2;
-		};
-
-		int right = remaining - left;
-
-        var dividerColor = configuration.getDividerColor();
-		return new StyleBuilder()
-                .appendAndReset(dividerChar.repeat(left), dividerColor)
-				.appendAndReset(content)
-				.appendAndReset(dividerChar.repeat(right), dividerColor)
-				.toString();
-	}
-
-	/**
-	 * Sets the title to display centered within the divider line.
-	 * <p>
-	 *
-     * @param title the title to display; must not be {@code null}
+    /**
+     * Sets the title, centered within the divider line.
      *
-     * @throws NullPointerException if {@code title} is {@code null}
-     * @throws IllegalArgumentException if the visible title length exceeds or is equal to the divider width
-	 * @return this divider instance
-	 */
-	public Divider title(String title) {
-       return title(title, TitleAlign.CENTER);
-	}
+     * @param title the title to display; markup is resolved with the configured parser
+     * @return this divider
+     * @throws NullPointerException     if {@code title} is {@code null}
+     * @throws IllegalArgumentException if the title's visible width plus 2 (for the
+     *                                  surrounding spaces) is not less than the divider width
+     */
+    public Divider title(String title) {
+        return title(title, TitleAlign.CENTER);
+    }
 
-	public Divider title(String title, TitleAlign titleAlign) {
-		Objects.requireNonNull(title, "Divider title cannot be null");
-		Objects.requireNonNull(titleAlign, "Title align cannot be null");
+    /**
+     * Sets the title and where it sits on the line.
+     *
+     * @param title      the title to display; markup is resolved with the configured parser
+     * @param titleAlign where the title sits on the line
+     * @return this divider
+     * @throws NullPointerException     if {@code title} or {@code titleAlign} is {@code null}
+     * @throws IllegalArgumentException if the title's visible width plus 2 (for the
+     *                                  surrounding spaces) is not less than the divider width
+     */
+    public Divider title(String title, TitleAlign titleAlign) {
+        Objects.requireNonNull(title, "Divider title cannot be null");
+        Objects.requireNonNull(titleAlign, "Title align cannot be null");
 
-		String visible = configuration.getParser().getOriginalString(title);
+        if (visibleWidth(title) + 2 >= width) {
+            throw new IllegalArgumentException("Title's visible width plus padding must be less than divider width.");
+        }
 
-		if (visible.length() + 2 >= width) {
-			throw new IllegalArgumentException(
-					"Title's visible length must be less than divider width."
-			);
-		}
+        this.title = title;
+        this.titleAlign = titleAlign;
+        return this;
+    }
 
-		this.title = title;
-		this.titleAlign = titleAlign;
-		return this;
-	}
+    // getOriginalString returns "" for blank input, so blank text is measured directly
+    private int visibleWidth(String text) {
+        if (text.isBlank()) return CharWidth.of(text);
+        return CharWidth.of(configuration.getParser().getOriginalString(text));
+    }
 
-	@Override
-	public boolean equals(Object object) {
-		if (object == null || getClass() != object.getClass()) return false;
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        Divider that = (Divider) o;
+        return width == that.width
+                && titleAlign == that.titleAlign
+                && Objects.equals(configuration, that.configuration)
+                && Objects.equals(title, that.title);
+    }
 
-		Divider that = (Divider) object;
-		return width == that.width && Objects.equals(configuration, that.configuration) && Objects.equals(title, that.title);
-	}
+    @Override
+    public int hashCode() {
+        return Objects.hash(width, configuration, title, titleAlign);
+    }
 
-	@Override
-	public int hashCode() {
-		return Objects.hash(width, configuration, title);
-	}
-
-	@Override
-	public String toString() {
-		return "Divider[" +
-			   "configuration=" + configuration +
-			   ", title='" + title + '\'' +
-			   ", width=" + width +
-			   ']';
-	}
+    @Override
+    public String toString() {
+        return "Divider[configuration=" + configuration
+                + ", title='" + title + '\''
+                + ", titleAlign=" + titleAlign
+                + ", width=" + width + ']';
+    }
 }
