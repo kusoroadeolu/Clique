@@ -18,24 +18,7 @@ public class TableHeaderBuilder implements PendingTable {
         }
 
         public Table headers(String... headers) {
-            if (isNull(headers) || headers.length == 0)
-                throw new IllegalArgumentException("Headers cannot be null or empty");
-
-            final var rows = new WidthAwareList();
-            var config = table.configuration;
-            table.rows.add(rows);
-
-            for (int i = 0; i < headers.length; i++) {
-                String header = handleNulls(headers[i], config.getNullReplacement());
-                final var cell = parseToCell(header, config.getParser());
-                rows.add(cell);
-                final var columns = new WidthAwareList(); //To keep track of all values in this column
-                columns.add(cell);
-
-                table.columns.add(i, columns);
-            }
-
-            return table;
+            return table.setHeaders(headers);
         }
 
         public Table headers(Collection<String> headers) {

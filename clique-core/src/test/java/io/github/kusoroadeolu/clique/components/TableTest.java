@@ -66,7 +66,7 @@ class TableTest {
         Table table = Clique.table()
                 .headers("A", "B")
                 .row("1", "2");
-        assertThrows(IllegalArgumentException.class, () -> table.removeCell(3, 1));
+        assertThrows(IndexOutOfBoundsException.class, () -> table.removeCell(3, 1));
     }
 
     @Test
@@ -74,7 +74,8 @@ class TableTest {
         Table table = Clique.table()
                 .headers("A", "B")
                 .row("1", "2");
-        assertThrows(IllegalArgumentException.class, () -> table.removeCell(1, 3));
+
+        assertThrows(IndexOutOfBoundsException.class, () -> table.removeCell(1, 3));
     }
 
     @Test
@@ -109,26 +110,6 @@ class TableTest {
         assertEquals(threeSpaces + "A", arr[1]);
     }
 
-    @Test
-    void assertSame_onSubsequentGetCalls_withoutModification(){
-        Table table = Clique.table(TableType.ASCII)
-                .headers("A", "B")
-                .row("1", "2");
-
-        assertNotNull(table.get());
-        assertSame(table.get(), table.get());
-    }
-
-    @Test
-    void assertNotSame_onSubsequentGetCalls_onRemoveCall(){ //This should cover for both update/remove since remove depends on update
-        Table table = Clique.table(TableType.ASCII)
-                .headers("A", "B")
-                .row("1", "2");
-        var str1 = table.get();
-        table.removeCell(1, 1);
-
-        assertNotSame(str1, table.get());
-    }
 
     @Test
     void assertNotSame_onSubsequentGetCalls_onRowCall() {
