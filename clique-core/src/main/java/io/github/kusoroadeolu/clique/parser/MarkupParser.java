@@ -27,8 +27,9 @@ import static java.util.Objects.isNull;
  *       strict parsing is enabled.</li>
  *   <li>{@code [nested[nested]]} — nested tags are not supported; passed through as-is.</li>
  *   <li>{@code \[red]} — escaped bracket; rendered as the literal text {@code [red]}.</li>
- *   <li>If a {@code [} is encountered before the current tag closes, the entire tag is ignored.</li>
- * </ul>
+ *   <li>An unmatched {@code [} stops every later tag in the same string from being parsed,
+ *       because the tokenizer counts unclosed brackets. Escape literal brackets with
+ *       {@code \[} (in Java source: {@code "\\["}).</li> * </ul>
  *
  * Formerly known as {@code AnsiStringParser} prior to version 4.0.0.
  *
@@ -36,7 +37,7 @@ import static java.util.Objects.isNull;
  */
 @Stable(since = "3.2.0")
 @SuppressWarnings("java:S106")
-public record MarkupParser(ParserConfiguration parserConfiguration) {
+public record MarkupParser(ParserConfiguration configuration) {
 
     /**
      * A parser using {@link ParserConfiguration#DEFAULT}.
@@ -56,7 +57,7 @@ public record MarkupParser(ParserConfiguration parserConfiguration) {
     public String parse(String string) {
         if (isNull(string) || string.isBlank()) return string;
         final ParseResult result = this.getParseResult(string);
-        String styled = StyleResolver.resolve(result.tokens(), string, this.parserConfiguration.getEnableAutoReset());
+        String styled = StyleResolver.resolve(result.tokens(), string, configuration.getEnableAutoReset());
         return postProcess(styled);
     }
 
@@ -111,7 +112,7 @@ public record MarkupParser(ParserConfiguration parserConfiguration) {
      */
     public String getOriginalString(String tokenedString) {
         if (isNull(tokenedString) || tokenedString.isBlank()) return EMPTY;
-        ParseResult result = this.getParseResult(tokenedString);
+        ParseResult result = getParseResult(tokenedString);
 
         if (!result.isPresent()) {
             return stripAnsi(postProcess(tokenedString));
@@ -134,9 +135,9 @@ public record MarkupParser(ParserConfiguration parserConfiguration) {
     ParseResult getParseResult(String input) {
         return Tokenizer.tokenize(
                 input,
-                parserConfiguration.getDelimiter(),
-                parserConfiguration.getEnableStrictParsing(),
-                parserConfiguration.getStyleContext()
+                configuration.getDelimiter(),
+                configuration.getEnableStrictParsing(),
+                configuration.getStyleContext()
         );
     }
 }

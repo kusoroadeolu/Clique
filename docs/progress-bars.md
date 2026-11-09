@@ -178,6 +178,8 @@ Template for the progress bar output with placeholders:
 - `:units` - Current number of completed units (derived from tick count ÷ ticksPerUnit)
 - `:total-units` - Total number of units (derived from total ÷ ticksPerUnit)
 
+> **Literal brackets:** The format string is parsed as markup after tokens like `:bar` and `:elapsed` are substituted, so `[:bar]` becomes a tag candidate such as `[####====]`. With strict parsing enabled that throws. Escape literal brackets: `"\\[:bar] :percent%"`. The built-in `BLOCKS` and `CLASSIC` presets do this already.
+
 #### Custom Parser
 Use a custom parser for markup processing:
 ```java

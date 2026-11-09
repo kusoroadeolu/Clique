@@ -68,6 +68,8 @@ tree.add("[dim].gitignore");
 tree.render();
 ```
 
+Each label is parsed independently. A stray `[` in one label won't affect markup in any other label. To show a literal bracket, escape it: `tree.add("arr\\[0]")`.
+
 ## Tree Configuration
 
 Use `TreeConfiguration` to customize the guide connector style.

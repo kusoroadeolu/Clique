@@ -20,8 +20,8 @@ public class ParserUtils {
 
     public static AnsiCode[] getAnsiCodes(String string, MarkupParser parser) {
         if (string.isBlank()) return NONE;
-        return Arrays.stream(string.split(parser.parserConfiguration().getDelimiter()))
-                .map(s -> getOrThrow(s.trim(), parser.parserConfiguration().getStyleContext()))
+        return Arrays.stream(string.split(parser.configuration().getDelimiter()))
+                .map(s -> getOrThrow(s.trim(), parser.configuration().getStyleContext()))
                 .toArray(AnsiCode[]::new);
     }
 }

@@ -107,7 +107,7 @@ public class ItemList implements Component {
     public String get() {
         StringBuilder sb = new StringBuilder();
         buildList(sb, ZERO ,this);
-        return parseString(sb.toString());
+        return sb.toString();
     }
 
     void assertNotSelf(ItemList list){
@@ -115,11 +115,12 @@ public class ItemList implements Component {
     }
 
     void buildList(StringBuilder sb, int depth, ItemList root) {
+        var parser = configuration.getParser();
         for (ListItem item : root.items) {
             sb.repeat(BLANK, depth * configuration.getIndentSize())
-                    .append(item.symbol())
+                    .append(parser.parse(item.symbol()))
                     .repeat(BLANK, configuration.getSymbolSpacing())
-                    .append(item.content())
+                    .append(parser.parse(item.content()))
                     .append(RESET)
                     .append(NEWLINE);
 
@@ -142,9 +143,6 @@ public class ItemList implements Component {
         return this;
     }
 
-    private String parseString(String str) {
-        return StringUtils.parse(str, this.configuration.getParser());
-    }
 
     /**
      * Internal test helper to retrieve the first child sublist.

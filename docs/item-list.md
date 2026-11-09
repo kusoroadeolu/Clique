@@ -111,6 +111,8 @@ Clique.list()
             .render();
 ```
 
+The symbol and the content of each item are parsed separately, and so is every item in the list. A stray `[` in one only affects that string. Escape literal brackets with `\\[`.
+
 ---
 
 ## Examples
