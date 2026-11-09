@@ -29,8 +29,6 @@ public class AsciiTable extends AbstractTable {
     }
 
     public String get() {
-        if (cachedString != null) return cachedString;
-
         //Declarations
         final var tableBuilder = new StringBuilder();
         final var sb = new StringBuilder();
@@ -62,8 +60,7 @@ public class AsciiTable extends AbstractTable {
             tableBuilder.append(headerAndFooter).append(Constants.NEWLINE);
         }
 
-        cachedString = tableBuilder.toString();
-        return cachedString;
+        return tableBuilder.toString();
     }
 
     //Dynamically calculate the header and footer for the table

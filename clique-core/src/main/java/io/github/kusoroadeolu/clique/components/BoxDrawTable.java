@@ -47,7 +47,6 @@ public class BoxDrawTable extends AbstractTable {
     }
 
     public String get() {
-        if (cachedString != null) return cachedString;
         //Declarations
         var tableBuilder = new StringBuilder();
         final StringBuilder helperBuilder = new StringBuilder();
@@ -87,8 +86,7 @@ public class BoxDrawTable extends AbstractTable {
         }
 
         tableBuilder.append(footer);
-        cachedString = tableBuilder.toString();
-        return cachedString;
+        return tableBuilder.toString();
     }
 
     public String appendHeader(StringBuilder sb) {
