@@ -144,6 +144,7 @@ public class ProgressBar implements Component {
      */
     public ProgressBar tickAnimated(int amount) {
         if (isDone) return this;
+        if (amount < 1) throw new IllegalArgumentException("Tick amount cannot be less than 1");
         var config = this.configuration;
         if (config != null && config.getEasing().shouldEase(amount)) {
             this.easeTick(amount, config.getEasing());

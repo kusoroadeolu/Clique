@@ -6,10 +6,7 @@ import io.github.kusoroadeolu.clique.internal.exception.NoSuchThemeException;
 import io.github.kusoroadeolu.clique.internal.loader.ThemeLoader;
 import io.github.kusoroadeolu.clique.spi.AnsiCode;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 /**
  * A scoped registry of custom markup styles, mapping markup names to {@link AnsiCode}
@@ -123,7 +120,7 @@ public final class StyleContext {
     }
 
     StyleContext(StyleContextBuilder builder) {
-        this.localStyles = builder.localStyles;
+        this.localStyles = Map.copyOf(builder.styles);
     }
 
     StyleContext() {
@@ -161,11 +158,11 @@ public final class StyleContext {
      * <p>This builder is <b>not</b> thread-safe.
      */
     public static class StyleContextBuilder {
-        private final Map<String, AnsiCode> localStyles;
+        private final Map<String, AnsiCode> styles;
         private static final String NULL_STYLE_NAME = "Style name cannot be null";
 
         private StyleContextBuilder() {
-            this.localStyles = new HashMap<>();
+            this.styles = new HashMap<>();
         }
 
         /**
@@ -179,7 +176,7 @@ public final class StyleContext {
         public StyleContextBuilder add(String style, AnsiCode code) {
             Objects.requireNonNull(style, NULL_STYLE_NAME);
             Objects.requireNonNull(code, "Ansi code cannot be null");
-            localStyles.put(style, code);
+            styles.put(style, code);
             return this;
         }
 
@@ -195,7 +192,7 @@ public final class StyleContext {
         public StyleContextBuilder add(String style, AnsiCode... code) {
             Objects.requireNonNull(style, NULL_STYLE_NAME);
             Objects.requireNonNull(code, "Ansi codes cannot be null");
-            localStyles.put(style, new CompositeColor(code));
+            styles.put(style, new CompositeColor(code));
             return this;
         }
 
@@ -211,7 +208,7 @@ public final class StyleContext {
         public StyleContextBuilder add(String style, Collection<AnsiCode> code) {
             Objects.requireNonNull(style, NULL_STYLE_NAME);
             Objects.requireNonNull(code, "Ansi codes cannot be null");
-            localStyles.put(style, new CompositeColor(code));
+            styles.put(style, new CompositeColor(code));
             return this;
         }
 
@@ -227,7 +224,7 @@ public final class StyleContext {
          */
         public StyleContextBuilder add(Map<String, AnsiCode> codes) {
             Objects.requireNonNull(codes, "Ansi code map cannot be null");
-            localStyles.putAll(codes);
+            styles.putAll(codes);
             return this;
         }
 
@@ -243,7 +240,7 @@ public final class StyleContext {
          */
         public StyleContextBuilder add(StyleContext context) {
             Objects.requireNonNull(context, "Style context cannot be null");
-            localStyles.putAll(context.localStyles);
+            styles.putAll(context.localStyles);
             return this;
         }
 
