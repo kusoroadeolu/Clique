@@ -17,7 +17,6 @@ abstract non-sealed class AbstractTable implements Table {
     final List<WidthAwareList> columns; //This is used to track the max height in that column
     final List<WidthAwareList> rows;
     final TableConfiguration configuration;
-    String cachedString = null;
 
      AbstractTable(TableConfiguration configuration) {
         this.columns = new ArrayList<>();
@@ -58,7 +57,6 @@ abstract non-sealed class AbstractTable implements Table {
             final WidthAwareList colList = columns.get(i);
             colList.add(c);
         }
-        nullCachedString();
         return this;
     }
 
@@ -70,7 +68,6 @@ abstract non-sealed class AbstractTable implements Table {
         for (WidthAwareList cl : columns) {
             cl.remove(index);
         }
-        nullCachedString();
         return this;
     }
 
@@ -89,13 +86,9 @@ abstract non-sealed class AbstractTable implements Table {
         final Cell c = parseToCell(text, configuration.getParser());
         rl.update(col, c);
         cl.update(row, c);
-        nullCachedString();
         return this;
     }
 
-    void nullCachedString(){
-        cachedString = null;
-    }
 
     abstract void colorTableBorders();
 

@@ -114,4 +114,14 @@ class BoxTest {
 
     }
 
+    @Test void autosizeFollowsContentChanges() {
+        Box box = new Box().content("short");
+        box.get();
+        assertDoesNotThrow(() -> box.content("a much longer line of text\nand a second line").get());
+
+        String big = box.get();
+        String small = box.content("hi").get();
+        assertTrue(small.length() < big.length());
+    }
+
 }
