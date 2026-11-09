@@ -29,12 +29,12 @@ import static io.github.kusoroadeolu.clique.internal.utils.Constants.NEWLINE;
 public class Tree implements Component {
     private final String label;
     private final List<Tree> children; //Accumulates children
-    private final TreeConfiguration treeConfiguration;
+    private TreeConfiguration treeConfiguration;
     static final String CONNECTOR = "├─ ";
     static final String END_CONNECTOR = "└─ ";
     static final String SPACE = "   ";
     static final String CONNECTING_LINE = "│  ";
-    private final AnsiCode[] connectorColor;
+    private AnsiCode[] connectorColor;
     private Tree parent;
 
     public Tree(String label) {
@@ -49,10 +49,10 @@ public class Tree implements Component {
         validateLabel(label);
         Objects.requireNonNull(treeConfiguration, "Tree configuration cannot be null");
         this.label = label;
-        this.children = new ArrayList<>();
+        children = new ArrayList<>();
         this.treeConfiguration = treeConfiguration;
         this.parent = parent;
-        this.connectorColor = treeConfiguration.getConnectorColor();
+        connectorColor = treeConfiguration.getConnectorColor();
     }
 
     /**
@@ -85,13 +85,28 @@ public class Tree implements Component {
      */
     public Tree add(Tree tree) {
         Objects.requireNonNull(tree, "Tree cannot be null");
-        assertNotSelf(tree);
-        if (tree.parent != null) {
-            tree.parent.children.remove(tree);
-        }
+        assertNoCycle(tree);
+
+        if (tree.parent != null) tree.parent.children.removeIf(c -> c == tree);
         tree.parent = this;
+        tree.recursivelySetConfiguration(treeConfiguration);
         children.add(tree);
         return tree;
+    }
+
+    // Walks up from this node. If `tree` is this node or any ancestor, adding it would make a cycle.
+    void assertNoCycle(Tree tree) {
+        for (Tree node = this; node != null; node = node.parent) {
+            if (node == tree) {
+                throw new UnsupportedOperationException("Cannot nest a tree within itself or one of its descendants");
+            }
+        }
+    }
+
+    void recursivelySetConfiguration(TreeConfiguration config) {
+        treeConfiguration = config;
+        connectorColor = config.getConnectorColor();
+        for (Tree child : children) child.recursivelySetConfiguration(config);
     }
 
     /**
@@ -151,26 +166,7 @@ public class Tree implements Component {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (o == null || getClass() != o.getClass()) return false;
-
-        Tree tree = (Tree) o;
-        return Objects.equals(label, tree.label) && Objects.equals(children, tree.children) && Objects.equals(treeConfiguration, tree.treeConfiguration) && Objects.equals(parent, tree.parent);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(label, children, treeConfiguration, parent);
-    }
-
-    @Override
     public String toString() {
-        return "Tree[" +
-                "label='" + label + '\'' +
-                ", children=" + children +
-                ", treeConfiguration=" + treeConfiguration +
-                ", connectorColor=" + Arrays.toString(connectorColor) +
-                ", parent=" + parent +
-                ']';
+        return "Tree[label='" + label + "', children=" + children + ']';
     }
 }
