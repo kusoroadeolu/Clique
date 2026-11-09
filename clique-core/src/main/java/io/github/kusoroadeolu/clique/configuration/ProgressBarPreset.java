@@ -20,7 +20,11 @@ import io.github.kusoroadeolu.clique.internal.documentation.Stable;
  *   <tr><td>DOTS</td><td>50</td><td>{@code ●}</td><td>{@code ○}</td><td>{@code :bar :percent%}</td></tr>
  * </table>
  *
- * <p>Example — customizing a preset:
+ * <p>Literal brackets in the {@code BLOCKS} and {@code CLASSIC} formats are escaped
+ * ({@code \[}) so the presets render correctly under strict parsing. The rendered
+ * output is unchanged.
+ *
+ * <p>Example: customizing a preset:
  * <pre>{@code
  * ProgressBarConfiguration config = ProgressBarConfiguration.fromPreset(ProgressBarPreset.CLASSIC)
  *     .length(60)
@@ -45,7 +49,7 @@ public enum ProgressBarPreset {
                     .length(40)
                     .complete('█')
                     .incomplete('░')
-                    .format(":bar :percent% [:elapsed/:remaining]")
+                    .format(":bar :percent% \\[:elapsed/:remaining]")
                     .build();
         }
     },
@@ -93,7 +97,7 @@ public enum ProgressBarPreset {
                     .length(50)
                     .complete('#')
                     .incomplete('=')
-                    .format("[:bar] :percent% [:elapsed]")
+                    .format("\\[:bar] :percent% \\[:elapsed]")
                     .build();
         }
     },

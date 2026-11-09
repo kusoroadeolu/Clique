@@ -1,7 +1,12 @@
 package io.github.kusoroadeolu.clique.components;
 
+import io.github.kusoroadeolu.clique.configuration.ParserConfiguration;
 import io.github.kusoroadeolu.clique.configuration.ProgressBarConfiguration;
+import io.github.kusoroadeolu.clique.configuration.ProgressBarPreset;
+import io.github.kusoroadeolu.clique.parser.MarkupParser;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.EnumSource;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -228,5 +233,28 @@ class ProgressBarTest {
         var builder = ProgressBarConfiguration.builder()
                 .format("[green]:bar :percent% :total :units/:total-units[/]");
         assertThrows(IllegalArgumentException.class, () -> builder.ticksPerUnit(-1));
+    }
+
+    @ParameterizedTest
+    @EnumSource(ProgressBarPreset.class)
+    void testAllPresetsRenderUnderStrictParsing(ProgressBarPreset preset) {
+        MarkupParser strict = new MarkupParser(
+                ParserConfiguration.builder().enableStrictParsing().build());
+
+        ProgressBarConfiguration config = ProgressBarConfiguration.fromPreset(preset)
+                .parser(strict)
+                .build();
+
+        ProgressBar bar = new ProgressBar(100, config);
+        bar.tick(50, false);
+
+        assertDoesNotThrow(bar::get);
+    }
+
+    @Test
+    void testBlocksPresetRendersLiteralBrackets() {
+        ProgressBar bar = new ProgressBar(100, ProgressBarPreset.BLOCKS.getConfiguration());
+        bar.tick(50, false);
+        assertTrue(bar.get().contains("[00:"));
     }
 }

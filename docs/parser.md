@@ -28,9 +28,21 @@ The parser follows a simple, predictable set of rules:
 - `[notastyle]` — valid syntax, but unrecognized style; passed through as-is
 - `[nested[nested]]` — nested tags are not supported; passed through as-is
 - `[not closed [red, blue] hello` — if a `[` is encountered before the current tag closes, the whole thing is ignored
-- `\\[red]` — escaped bracket; rendered as literal `[red]`
+- `[not closed [red]text[/]` — an unmatched `[` stops every later tag in the same string from being parsed
 
-The parser follows an **all or nothing** rule per tag — if a tag can't be cleanly parsed, it is left entirely untouched.
+### Unmatched brackets
+
+The tokenizer counts open brackets, so one stray `[` disables all later tags in the same string. Escape literal brackets to avoid this:
+
+```java
+Clique.parser().print("arr\\[0] is [green]ok[/]");
+```
+
+Components parse each unit on its own, so a stray bracket only affects the unit it appears in: a `Tree` label, an `ItemList` symbol or content string, a `Box` line, or a `Table` cell.
+
+### Strict parsing and dynamic content
+
+With `enableStrictParsing()`, any bracketed text that isn't a style throws, so `"a[0]"` throws `UnidentifiedStyleException`. Escape brackets in user-supplied or data-driven strings.
 
 ## Parser Configuration
 

@@ -2,7 +2,6 @@ package io.github.kusoroadeolu.clique.components;
 
 import io.github.kusoroadeolu.clique.configuration.TreeConfiguration;
 import io.github.kusoroadeolu.clique.internal.documentation.Stable;
-import io.github.kusoroadeolu.clique.internal.utils.StringUtils;
 import io.github.kusoroadeolu.clique.spi.AnsiCode;
 import io.github.kusoroadeolu.clique.style.StyleBuilder;
 
@@ -29,7 +28,7 @@ import static io.github.kusoroadeolu.clique.internal.utils.Constants.NEWLINE;
 public class Tree implements Component {
     private final String label;
     private final List<Tree> children; //Accumulates children
-    private TreeConfiguration treeConfiguration;
+    private TreeConfiguration configuration;
     static final String CONNECTOR = "├─ ";
     static final String END_CONNECTOR = "└─ ";
     static final String SPACE = "   ";
@@ -41,18 +40,18 @@ public class Tree implements Component {
         this(label, TreeConfiguration.DEFAULT, null);
     }
 
-    public Tree(String label, TreeConfiguration treeConfiguration) {
-        this(label, treeConfiguration, null);
+    public Tree(String label, TreeConfiguration configuration) {
+        this(label, configuration, null);
     }
 
-    private Tree(String label, TreeConfiguration treeConfiguration, Tree parent) {
+    private Tree(String label, TreeConfiguration configuration, Tree parent) {
         validateLabel(label);
-        Objects.requireNonNull(treeConfiguration, "Tree configuration cannot be null");
+        Objects.requireNonNull(configuration, "Tree configuration cannot be null");
         this.label = label;
         children = new ArrayList<>();
-        this.treeConfiguration = treeConfiguration;
+        this.configuration = configuration;
         this.parent = parent;
-        connectorColor = treeConfiguration.getConnectorColor();
+        connectorColor = configuration.getConnectorColor();
     }
 
     /**
@@ -67,7 +66,7 @@ public class Tree implements Component {
      */
     public Tree add(String label) {
         validateLabel(label);
-        var child = new Tree(label, treeConfiguration, this);
+        var child = new Tree(label, configuration, this);
         children.add(child);
         return child;
     }
@@ -89,7 +88,7 @@ public class Tree implements Component {
 
         if (tree.parent != null) tree.parent.children.removeIf(c -> c == tree);
         tree.parent = this;
-        tree.recursivelySetConfiguration(treeConfiguration);
+        tree.recursivelySetConfiguration(configuration);
         children.add(tree);
         return tree;
     }
@@ -104,7 +103,7 @@ public class Tree implements Component {
     }
 
     void recursivelySetConfiguration(TreeConfiguration config) {
-        treeConfiguration = config;
+        configuration = config;
         connectorColor = config.getConnectorColor();
         for (Tree child : children) child.recursivelySetConfiguration(config);
     }
@@ -120,9 +119,10 @@ public class Tree implements Component {
 
     private void buildTree(Tree node, String prefix, boolean isLast, StyleBuilder sb) {
         String connector = isLast ? END_CONNECTOR : CONNECTOR;
+        var parser = configuration.getParser();
         sb.append(prefix, this.connectorColor)
                 .appendAndReset(connector)
-                .appendAndReset(node.label)
+                .appendAndReset(parser.parse(node.label))
                 .appendAndReset(NEWLINE);
 
         var childPrefix = prefix + (isLast ? SPACE : CONNECTING_LINE);
@@ -147,13 +147,13 @@ public class Tree implements Component {
     @Override
     public String get() {
         var sb = new StyleBuilder();
-        sb.appendAndReset(label).appendAndReset(NEWLINE);
+        var parser = configuration.getParser();
+        sb.appendAndReset(parser.parse(label)).appendAndReset(NEWLINE);
         for (int i = 0; i < children.size(); i++) {
             buildTree(children.get(i), EMPTY, i == children.size() - 1, sb);
         }
 
-        var parser = treeConfiguration.getParser();
-        return StringUtils.parse(sb.toString(), parser);
+        return sb.toString();
     }
 
     //For Tests

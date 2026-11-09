@@ -36,6 +36,15 @@ public final class Tokenizer {
          * @return A parse result containing the form tags and the parser tokens
          *
          */
+
+        /*
+         * [red]                 valid, will get parsed
+         * [notastyle]           valid syntax, unknown style: ignored (throws in strict mode)
+         * [nested[nested]]      not parsed, passed through as-is
+         * [not closed [red]x    nothing is parsed: the unclosed [ leaves the bracket depth above 0,
+         *                       so this and every later tag in the same string is skipped
+         * \[red]                escaped, rendered as literal [red]
+         */
     public static ParseResult tokenize(String input, String delimiter, boolean enableStrictParsing, StyleContext context) {
         List<ParseToken> tokens = new ArrayList<>();
         final String delimiterPattern = Pattern.quote(delimiter);

@@ -41,7 +41,7 @@ import java.util.*;
 @Stable(since = "4.0.2")
 public final class StyleContext {
 
-    private final Map<String, AnsiCode> localStyles;
+    private final Map<String, AnsiCode> styles;
 
     /**
      * A sentinel {@code StyleContext} with no registered styles.
@@ -87,7 +87,7 @@ public final class StyleContext {
      */
     public static StyleContext from(StyleContext context) {
         Objects.requireNonNull(context, "Style context cannot be null");
-        return StyleContext.from(context.localStyles);
+        return StyleContext.from(context.styles);
     }
 
     /**
@@ -116,15 +116,15 @@ public final class StyleContext {
      * @return the associated {@link AnsiCode}, or {@code null} if not present
      */
     public AnsiCode get(String s) {
-        return localStyles.get(s);
+        return styles.get(s);
     }
 
     StyleContext(StyleContextBuilder builder) {
-        this.localStyles = Map.copyOf(builder.styles);
+        this.styles = Map.copyOf(builder.styles);
     }
 
     StyleContext() {
-        this.localStyles = new HashMap<>();
+        this.styles = new HashMap<>();
     }
 
     @Override
@@ -132,18 +132,18 @@ public final class StyleContext {
         if (o == null || getClass() != o.getClass()) return false;
 
         StyleContext that = (StyleContext) o;
-        return Objects.equals(localStyles, that.localStyles);
+        return Objects.equals(styles, that.styles);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(localStyles);
+        return Objects.hashCode(styles);
     }
 
     @Override
     public String toString() {
         return "StyleContext[" +
-                "localStyles=" + localStyles +
+                "styles=" + styles +
                 ']';
     }
 
@@ -176,7 +176,7 @@ public final class StyleContext {
         public StyleContextBuilder add(String style, AnsiCode code) {
             Objects.requireNonNull(style, NULL_STYLE_NAME);
             Objects.requireNonNull(code, "Ansi code cannot be null");
-            styles.put(style, code);
+            styles.put(style.toLowerCase(Locale.ROOT), code);
             return this;
         }
 
@@ -192,7 +192,7 @@ public final class StyleContext {
         public StyleContextBuilder add(String style, AnsiCode... code) {
             Objects.requireNonNull(style, NULL_STYLE_NAME);
             Objects.requireNonNull(code, "Ansi codes cannot be null");
-            styles.put(style, new CompositeColor(code));
+            styles.put(style.toLowerCase(Locale.ROOT), new CompositeColor(code));
             return this;
         }
 
@@ -208,7 +208,7 @@ public final class StyleContext {
         public StyleContextBuilder add(String style, Collection<AnsiCode> code) {
             Objects.requireNonNull(style, NULL_STYLE_NAME);
             Objects.requireNonNull(code, "Ansi codes cannot be null");
-            styles.put(style, new CompositeColor(code));
+            styles.put(style.toLowerCase(Locale.ROOT), new CompositeColor(code));
             return this;
         }
 
@@ -224,7 +224,7 @@ public final class StyleContext {
          */
         public StyleContextBuilder add(Map<String, AnsiCode> codes) {
             Objects.requireNonNull(codes, "Ansi code map cannot be null");
-            styles.putAll(codes);
+            for (Map.Entry<String, AnsiCode> entry : codes.entrySet()) add(entry.getKey(), entry.getValue());
             return this;
         }
 
@@ -240,7 +240,7 @@ public final class StyleContext {
          */
         public StyleContextBuilder add(StyleContext context) {
             Objects.requireNonNull(context, "Style context cannot be null");
-            styles.putAll(context.localStyles);
+            styles.putAll(context.styles);
             return this;
         }
 
