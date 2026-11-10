@@ -8,7 +8,7 @@ import java.io.PrintStream;
 import java.util.Objects;
 
 import static io.github.kusoroadeolu.clique.internal.utils.AnsiDetector.ansiEnabled;
-import static io.github.kusoroadeolu.clique.internal.utils.StringUtils.clearStringBuilder;
+import static io.github.kusoroadeolu.clique.internal.utils.MiscUtils.clearStringBuilder;
 import static io.github.kusoroadeolu.clique.style.StyleCode.RESET;
 
 /**
@@ -31,12 +31,10 @@ import static io.github.kusoroadeolu.clique.style.StyleCode.RESET;
 public final class StyleBuilder {
 
     private final StringBuilder textBuilder;
-    private final boolean ansiEnabled;
 
 
     public StyleBuilder() {
         textBuilder = new StringBuilder();
-        ansiEnabled = ansiEnabled();
     }
 
     /**
@@ -78,6 +76,7 @@ public final class StyleBuilder {
         StringBuilder sb = new StringBuilder();
         Objects.requireNonNull(text, "Text cannot be null");
         Objects.requireNonNull(ansiCodes, "Ansi codes cannot be null");
+        boolean ansiEnabled = ansiEnabled();
 
         //Check if ansi is enabled
         if (ansiEnabled) {
@@ -126,12 +125,12 @@ public final class StyleBuilder {
         if (object == null || getClass() != object.getClass()) return false;
 
         var that = (StyleBuilder) object;
-        return textBuilder.toString().contentEquals(that.textBuilder) && ansiEnabled == that.ansiEnabled;
+        return textBuilder.toString().contentEquals(that.textBuilder);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(ansiEnabled, textBuilder.toString());
+        return Objects.hash(textBuilder.toString());
     }
 
 }

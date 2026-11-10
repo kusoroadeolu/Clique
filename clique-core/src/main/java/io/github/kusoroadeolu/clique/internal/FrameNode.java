@@ -3,14 +3,13 @@ package io.github.kusoroadeolu.clique.internal;
 import io.github.kusoroadeolu.clique.components.Component;
 import io.github.kusoroadeolu.clique.configuration.FrameAlign;
 import io.github.kusoroadeolu.clique.internal.documentation.InternalApi;
-import io.github.kusoroadeolu.clique.internal.utils.StringUtils;
+import io.github.kusoroadeolu.clique.internal.utils.MiscUtils;
 import io.github.kusoroadeolu.clique.parser.MarkupParser;
 
 import java.util.List;
 
 import static io.github.kusoroadeolu.clique.internal.utils.Constants.ZERO;
-import static io.github.kusoroadeolu.clique.internal.utils.StringUtils.parseToCell;
-import static io.github.kusoroadeolu.clique.parser.MarkupParser.DEFAULT;
+import static io.github.kusoroadeolu.clique.internal.utils.MiscUtils.parseToCell;
 
 @InternalApi(since = "3.2.0")
 public sealed interface FrameNode permits FrameNode.StringNode, FrameNode.ComponentNode {
@@ -31,7 +30,7 @@ public sealed interface FrameNode permits FrameNode.StringNode, FrameNode.Compon
 
     static List<Cell> splitComponentLines(String str) {
         return str.lines()
-                .map(s -> new Cell(StringUtils.stripAnsi(s), s))
+                .map(s -> new Cell(MiscUtils.stripAnsi(s), s))
                 .toList();//Original to styled string for components, we actually need to parse here with a default parser
     }
 

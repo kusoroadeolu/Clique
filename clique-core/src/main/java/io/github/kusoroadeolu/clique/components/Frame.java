@@ -4,12 +4,11 @@ import io.github.kusoroadeolu.clique.configuration.BoxType;
 import io.github.kusoroadeolu.clique.configuration.FrameAlign;
 import io.github.kusoroadeolu.clique.configuration.FrameConfiguration;
 import io.github.kusoroadeolu.clique.configuration.TitleAlign;
+import io.github.kusoroadeolu.clique.exceptions.InvalidDimensionException;
 import io.github.kusoroadeolu.clique.internal.BorderChars;
 import io.github.kusoroadeolu.clique.internal.Cell;
 import io.github.kusoroadeolu.clique.internal.FrameNode;
 import io.github.kusoroadeolu.clique.internal.documentation.Stable;
-import io.github.kusoroadeolu.clique.exceptions.InvalidDimensionException;
-import io.github.kusoroadeolu.clique.internal.utils.BoxUtils;
 import io.github.kusoroadeolu.clique.style.StyleBuilder;
 
 import java.util.ArrayList;
@@ -17,8 +16,8 @@ import java.util.List;
 import java.util.Objects;
 
 import static io.github.kusoroadeolu.clique.internal.utils.Constants.*;
-import static io.github.kusoroadeolu.clique.internal.utils.StringUtils.parseToCell;
-import static io.github.kusoroadeolu.clique.style.StyleCode.RESET;
+import static io.github.kusoroadeolu.clique.internal.utils.MiscUtils.colorBorderChars;
+import static io.github.kusoroadeolu.clique.internal.utils.MiscUtils.parseToCell;
 
 /**
  * A bordered, optionally titled container that renders its content as a formatted
@@ -158,16 +157,15 @@ public class Frame implements Component {
     /**
      * Appends a string node to this frame with the specified alignment.
      *
-     * @param str   the string to nest; must not be {@code null}
+     * @param string   the string to nest; must not be {@code null}
      * @param align the horizontal alignment of the string within the frame; must not be {@code null}
      * @return this frame, for chaining
-     * @throws NullPointerException if {@code str} or {@code align} is {@code null}
+     * @throws NullPointerException if {@code string} or {@code align} is {@code null}
      */
-    public Frame nest(String str, FrameAlign align) {
-        Objects.requireNonNull(str, "String cannot be null");
+    public Frame nest(String string, FrameAlign align) {
+        Objects.requireNonNull(string, "String cannot be null");
         Objects.requireNonNull(align, NULL_FRAME_ALIGN);
-        if (configuration.getParser() != null) str = str + RESET;
-        nodes.add(new FrameNode.StringNode(str, align, configuration.getParser()));
+        nodes.add(new FrameNode.StringNode(string, align, configuration.getParser()));
         return this;
     }
 
@@ -223,13 +221,10 @@ public class Frame implements Component {
      *         content width exceeds the available content area
      */
     public String get() {
-        var appendedTitle = title;
-
         var parser = configuration.getParser();
-        if (!title.isEmpty()) appendedTitle = title + RESET.ansiSequence(); //Add a reset flag to prevent title colors from bleeding
+        var parsedTitle = parseToCell(title, parser);
 
 
-        var parsedTitle = parseToCell(appendedTitle, parser);
         final List<FrameNode> snapshot = nodes.stream().map(FrameNode::snapshot).toList();
 
         //Note that we align the title width by +1 or -1 based on if the frame align is left or right, so to prevent an issue where the title width is left and the frame size = title size, we add one to the width to make up for the by one offset
@@ -253,9 +248,11 @@ public class Frame implements Component {
             );
         }
 
-        var sb = new StyleBuilder();
-        BorderChars chars = BoxUtils.colorBorderChars(sb, borderChars, configuration.getBorderColor());
 
+        BorderChars chars = colorBorderChars(borderChars, configuration.getBorderColor());
+
+
+        var sb = new StyleBuilder();
         appendTitleToBox(parsedTitle, givenWidth, titleWidth, sb, chars); //Using given width, not available width here, since avail width is meant for content not title
 
         for (FrameNode node : nodes) {
@@ -317,15 +314,18 @@ public class Frame implements Component {
         if (!parsedTitle.isEmpty()) {
             int leftWidth = findTitleBlockOffset(givenWidth, titleWidth, titleAlign);
 
+
             sb.append(borderChars.topLeft())
                     .append(borderChars.hLine().repeat(leftWidth))
-                    .append(BLANK).append(parsedTitle.styledText()).append(BLANK)
-                    //20 - 20 - 1, Gives - 1 For left width
-                    //20 - 20
-
+                    .append(BLANK)
+                    .appendAndReset(parsedTitle.styledText())
+                    .append(BLANK)
                     .append(borderChars.hLine().repeat(givenWidth - titleWidth - leftWidth))
                     .append(borderChars.topRight())
                     .append(NEWLINE);
+
+            //20 - 20 - 1, Gives - 1 For left width
+            //20 - 20
         } else {
             sb.append(borderChars.topLeft())
                     .append(borderChars.hLine().repeat(givenWidth))

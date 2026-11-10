@@ -4,7 +4,7 @@ import io.github.kusoroadeolu.clique.configuration.DividerConfiguration;
 import io.github.kusoroadeolu.clique.configuration.TitleAlign;
 import io.github.kusoroadeolu.clique.internal.documentation.Stable;
 import io.github.kusoroadeolu.clique.internal.utils.CharWidth;
-import io.github.kusoroadeolu.clique.internal.utils.StringUtils;
+import io.github.kusoroadeolu.clique.internal.utils.MiscUtils;
 import io.github.kusoroadeolu.clique.spi.AnsiCode;
 import io.github.kusoroadeolu.clique.style.StyleBuilder;
 
@@ -45,7 +45,7 @@ public class Divider implements Component {
                     .toString();
         }
 
-        String content = BLANK + StringUtils.parse(title, configuration.getParser()) + BLANK;
+        String content = BLANK + MiscUtils.parse(title, configuration.getParser()) + BLANK;
         // title() guarantees remaining >= 1
         int remaining = width - visibleWidth(title) - 2;
 

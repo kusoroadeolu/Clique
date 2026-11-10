@@ -6,7 +6,7 @@ import io.github.kusoroadeolu.clique.internal.CompositeColor;
 import io.github.kusoroadeolu.clique.internal.RGBColor;
 import io.github.kusoroadeolu.clique.internal.loader.ThemeLoader;
 import io.github.kusoroadeolu.clique.internal.markup.GlobalStyleRegistry;
-import io.github.kusoroadeolu.clique.internal.utils.StringUtils;
+import io.github.kusoroadeolu.clique.internal.utils.MiscUtils;
 import io.github.kusoroadeolu.clique.parser.MarkupParser;
 import io.github.kusoroadeolu.clique.spi.AnsiCode;
 import io.github.kusoroadeolu.clique.spi.CliqueTheme;
@@ -59,11 +59,11 @@ final class CliqueStyles {
     }
 
     public static RGBAnsiCode hex(String hexCode) {
-        return StringUtils.hex(Objects.requireNonNull(hexCode));
+        return MiscUtils.hex(Objects.requireNonNull(hexCode));
     }
 
     public static RGBAnsiCode hex(String hexCode, boolean background) {
-        return StringUtils.hexBase(Objects.requireNonNull(hexCode), background);
+        return MiscUtils.hexBase(Objects.requireNonNull(hexCode), background);
     }
 
     public static AnsiCode compose(AnsiCode... ansiCodes) {

@@ -3,20 +3,22 @@ package io.github.kusoroadeolu.clique.components;
 import io.github.kusoroadeolu.clique.configuration.BoxConfiguration;
 import io.github.kusoroadeolu.clique.configuration.BoxType;
 import io.github.kusoroadeolu.clique.configuration.TextAlign;
+import io.github.kusoroadeolu.clique.exceptions.InvalidDimensionException;
 import io.github.kusoroadeolu.clique.internal.BorderChars;
 import io.github.kusoroadeolu.clique.internal.BoxWrapper;
+import io.github.kusoroadeolu.clique.internal.Cell;
 import io.github.kusoroadeolu.clique.internal.WidthAwareList;
 import io.github.kusoroadeolu.clique.internal.documentation.Stable;
-import io.github.kusoroadeolu.clique.exceptions.InvalidDimensionException;
-import io.github.kusoroadeolu.clique.internal.utils.StringUtils;
+import io.github.kusoroadeolu.clique.internal.utils.MiscUtils;
 import io.github.kusoroadeolu.clique.style.StyleBuilder;
+import io.github.kusoroadeolu.clique.style.StyleCode;
 
+import java.util.List;
 import java.util.Objects;
 
-import static io.github.kusoroadeolu.clique.internal.utils.BoxUtils.alignText;
-import static io.github.kusoroadeolu.clique.internal.utils.BoxUtils.colorBorderChars;
 import static io.github.kusoroadeolu.clique.internal.utils.Constants.BLANK;
 import static io.github.kusoroadeolu.clique.internal.utils.Constants.NEWLINE;
+import static io.github.kusoroadeolu.clique.internal.utils.MiscUtils.colorBorderChars;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -84,14 +86,14 @@ public class Box implements Component {
         var ta = this.align == null ? configuration.getTextAlign() : this.align;
 
 
-        final StyleBuilder sb = new StyleBuilder();
-        final var chars = colorBorderChars(sb, borderChars, configuration.getBorderColor());
+
+        final var chars = colorBorderChars(borderChars, configuration.getBorderColor());
         final BoxWrapper wrapper = new BoxWrapper(
                 dims.width(), dims.height(), this.configuration,
                 cells.cells(), chars.hLine(), chars.vLine(),
                 chars.topLeft(), chars.topRight(), chars.bottomRight(), chars.bottomLeft()
         );
-
+        var sb = new StyleBuilder();
         drawBox(sb, wrapper, ta);
         return sb.toString();
     }
@@ -166,7 +168,7 @@ public class Box implements Component {
         if (content == null || content.isEmpty()) return new WidthAwareList();
         var parser = configuration.getParser();
         var cellList = content.lines()
-                .map(s -> StringUtils.parseToCell(s, parser))
+                .map(s -> MiscUtils.parseToCell(s, parser))
                 .toList();
         return new WidthAwareList(cellList);
     }
@@ -228,6 +230,47 @@ public class Box implements Component {
 
         Box box = (Box) o;
         return width == box.width && height == box.height && Objects.equals(content, box.content) && Objects.equals(configuration, box.configuration) && align == box.align && Objects.equals(borderChars, box.borderChars);
+    }
+
+
+    static void alignText(StyleBuilder sb, int idx, TextAlign textAlign, String spaces, List<Cell> wordWrap, String vLine, int padding) {
+        final Cell cell = wordWrap.get(idx);
+        final String ss = cell.styledText();
+        final String fixed = BLANK.repeat(padding);
+
+        final int fillSpace = spaces.length() - cell.width() - (padding * 2);
+        switch (textAlign) {
+            case TOP_LEFT, CENTER_LEFT, BOTTOM_LEFT ->
+                    sb.append(vLine)
+                            .append(fixed)
+                            .appendAndReset(ss)
+                            .append(BLANK.repeat(Math.max(0, fillSpace)))
+                            .append(fixed)
+                            .append(vLine)
+                            .append(NEWLINE);
+
+            case TOP_RIGHT, CENTER_RIGHT, BOTTOM_RIGHT ->
+                    sb.append(vLine)
+                            .append(fixed)
+                            .append(BLANK.repeat(Math.max(0, fillSpace)))
+                            .appendAndReset(ss)
+                            .append(fixed)
+                            .append(vLine)
+                            .append(NEWLINE);
+
+            case TOP_CENTER, CENTER, BOTTOM_CENTER -> {
+                final int leftFill = fillSpace / 2;
+                final int rightFill = fillSpace - leftFill;
+                sb.append(vLine)
+                        .append(fixed)
+                        .append(BLANK.repeat(Math.max(0, leftFill)))
+                        .appendAndReset(ss)
+                        .append(BLANK.repeat(Math.max(0, rightFill)))
+                        .append(fixed)
+                        .append(vLine)
+                        .append(NEWLINE);
+            }
+        }
     }
 
     @Override

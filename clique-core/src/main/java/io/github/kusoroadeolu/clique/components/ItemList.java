@@ -3,6 +3,7 @@ package io.github.kusoroadeolu.clique.components;
 import io.github.kusoroadeolu.clique.configuration.ItemListConfiguration;
 import io.github.kusoroadeolu.clique.internal.ListItem;
 import io.github.kusoroadeolu.clique.internal.documentation.Stable;
+import io.github.kusoroadeolu.clique.style.StyleBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -103,10 +104,10 @@ public class ItemList implements Component {
      */
     @Override
     public String get() {
-        StringBuilder sb = new StringBuilder();
-        buildList(sb, ZERO ,this);
-        if (!sb.isEmpty()) sb.setLength(sb.length() - NEWLINE.length());
-        return sb.toString();
+        var sb = new StyleBuilder();
+        buildList(sb, ZERO, this);
+        String out = sb.toString();
+        return out.endsWith(NEWLINE) ? out.substring(0, out.length() - NEWLINE.length()) : out;
     }
 
     void assertNoCycle(ItemList subList) {
@@ -124,14 +125,13 @@ public class ItemList implements Component {
         return false;
     }
 
-    void buildList(StringBuilder sb, int depth, ItemList root) {
+    void buildList(StyleBuilder sb, int depth, ItemList root) {
         var parser = configuration.getParser();
         for (ListItem item : root.items) {
-            sb.repeat(BLANK, depth * configuration.getIndentSize())
+            sb.append(BLANK.repeat(depth * configuration.getIndentSize()))
                     .append(parser.parse(item.symbol()))
-                    .repeat(BLANK, configuration.getSymbolSpacing())
-                    .append(parser.parse(item.content()))
-                    .append(RESET)
+                    .append(BLANK.repeat(configuration.getSymbolSpacing()))
+                    .appendAndReset(parser.parse(item.content()))
                     .append(NEWLINE);
 
             if (item.sublist() != NONE) {
