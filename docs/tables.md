@@ -7,7 +7,7 @@ Tables help you display structured data in a clean, formatted way. Clique suppor
 Clique provides 5 built-in table styles:
 
 1. **ASCII** - Standard table with ASCII characters
-2. **COMPACT** (or **MINIMAL**) - Minimalist table with fewer borders
+2. **COMPACT** - Minimalist table with fewer borders
 3. **BOX_DRAW** - Table using box drawing characters
 4. **ROUNDED_BOX_DRAW** - Box-draw table with rounded corners
 5. **MARKDOWN** - Markdown-style table format

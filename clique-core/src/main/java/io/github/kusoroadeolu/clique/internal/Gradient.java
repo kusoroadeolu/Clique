@@ -12,32 +12,56 @@ public record Gradient(RGBAnsiCode from, RGBAnsiCode to) {
     }
 
     public String apply(String text) {
+        int visible = countVisible(text);
+        int denom = Math.max(visible - 1, 1);
+
         int colorIdx = 0;
         int i = 0;
         boolean inEscape = false;
         StringBuilder sb = new StringBuilder();
 
         while (i < text.length()) {
-            char ch = text.charAt(i);
-            if (ch == Constants.ESC && StringUtils.nextCharEquals(text, i + 1, Constants.LBRACKET)) {
+            int cp = text.codePointAt(i);
+            int len = Character.charCount(cp);
+
+            if (cp == Constants.ESC && StringUtils.nextCharEquals(text, i + 1, Constants.LBRACKET)) {
                 inEscape = true;
-                sb.append(ch);
+                sb.appendCodePoint(cp);
             } else if (inEscape) {
-                sb.append(ch);
-                if (ch == Constants.ANSI_END) inEscape = false;
+                sb.appendCodePoint(cp);
+                if (cp == Constants.ANSI_END) inEscape = false;
             } else {
-                double t = (double) colorIdx / Math.max(text.length() - 1, 1);
+                double t = (double) colorIdx / denom;
                 int r = (int) (from.red() + t * (to.red() - from.red()));
                 int g = (int) (from.green() + t * (to.green() - from.green()));
                 int b = (int) (from.blue() + t * (to.blue() - from.blue()));
 
-                sb.append(new RGBColor(r, g, b).ansiSequence()).append(ch);
+                sb.append(new RGBColor(r, g, b).ansiSequence()).appendCodePoint(cp);
                 colorIdx++;
             }
 
-            i++;
+            i += len;
         }
 
-        return sb.append(StyleCode.RESET).toString();
+        return sb.append(StyleCode.RESET.ansiSequence()).toString();
+    }
+
+    private int countVisible(String text) {
+        int count = 0;
+        int i = 0;
+        boolean inEscape = false;
+
+        while (i < text.length()) {
+            int cp = text.codePointAt(i);
+            if (cp == Constants.ESC && StringUtils.nextCharEquals(text, i + 1, Constants.LBRACKET)) {
+                inEscape = true;
+            } else if (inEscape) {
+                if (cp == Constants.ANSI_END) inEscape = false;
+            } else {
+                count++;
+            }
+            i += Character.charCount(cp);
+        }
+        return count;
     }
 }

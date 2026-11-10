@@ -98,9 +98,7 @@ Clique.frame()
 
 ## Things to Watch Out For
 
-- `get()` never returns `null`
 - `render(null)` throws a `NullPointerException`
-- `get()` is not cached by the interface. Some components cache internally, so don't assume every call is cheap or fresh
 - Custom implementations of `get()` must parse their own markup if they want it styled
 
 ## See Also

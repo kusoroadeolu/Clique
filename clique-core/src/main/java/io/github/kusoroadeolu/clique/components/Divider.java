@@ -98,9 +98,7 @@ public class Divider implements Component {
         return this;
     }
 
-    // getOriginalString returns "" for blank input, so blank text is measured directly
     private int visibleWidth(String text) {
-        if (text.isBlank()) return CharWidth.of(text);
         return CharWidth.of(configuration.getParser().getOriginalString(text));
     }
 

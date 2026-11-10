@@ -1,12 +1,9 @@
 package io.github.kusoroadeolu.clique.components;
 
-import io.github.kusoroadeolu.clique.internal.WidthAwareList;
 import io.github.kusoroadeolu.clique.internal.documentation.InternalApi;
 
 import java.util.*;
 
-import static io.github.kusoroadeolu.clique.internal.utils.StringUtils.parseToCell;
-import static io.github.kusoroadeolu.clique.internal.utils.TableUtils.handleNulls;
 import static java.util.Objects.isNull;
 
 @InternalApi(since = "3.2.0")

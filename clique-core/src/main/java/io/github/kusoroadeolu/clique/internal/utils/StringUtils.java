@@ -7,12 +7,9 @@ import io.github.kusoroadeolu.clique.internal.documentation.InternalApi;
 import io.github.kusoroadeolu.clique.parser.MarkupParser;
 import io.github.kusoroadeolu.clique.spi.AnsiCode;
 import io.github.kusoroadeolu.clique.spi.RGBAnsiCode;
+import io.github.kusoroadeolu.clique.style.StyleBuilder;
 
-import java.util.Objects;
-
-import static io.github.kusoroadeolu.clique.internal.utils.AnsiDetector.ansiEnabled;
 import static io.github.kusoroadeolu.clique.internal.utils.Constants.*;
-import static io.github.kusoroadeolu.clique.style.StyleCode.RESET;
 
 @InternalApi(since = "3.2.0")
 public final class StringUtils {
@@ -31,19 +28,38 @@ public final class StringUtils {
     }
 
     public static String stripAnsi(String styled) {
+        final int n = styled.length();
+        final var clean = new StringBuilder(n);
         int i = 0;
-        boolean inEscape = false;
-        var clean = new StringBuilder();
-        while (i < styled.length()) {
+
+        while (i < n) {
             char c = styled.charAt(i);
-            if (c == ESC && nextCharEquals(styled, i + 1, LBRACKET)) {
-                inEscape = true;
-            } else if (inEscape && c == ANSI_END) {
-                inEscape = false;
-            }else if (!inEscape){
-                clean.append(c);
+
+            if (c == ESC && i + 1 < n) {
+                char next = styled.charAt(i + 1);
+
+                if (next == LBRACKET) {
+                    i += 2;
+                    while (i < n) {
+                        char f = styled.charAt(i++);
+                        if (f >= 0x40 && f <= 0x7E) break;
+                    }
+                    continue;
+                }
+
+                if (next == RBRACKET) {
+                    i += 2;
+                    while (i < n) {
+                        char o = styled.charAt(i);
+                        if (o == BEL) { i++; break; }
+                        if (o == ESC && nextCharEquals(styled, i + 1, '\\')) { i += 2; break; }
+                        i++;
+                    }
+                    continue;
+                }
             }
 
+            clean.append(c);
             i++;
         }
 
@@ -76,28 +92,9 @@ public final class StringUtils {
         }
     }
 
-
-
-    public static String formatAndReset(StringBuilder sb, String text, AnsiCode... ansiCodes) {
-        style(text, sb, ansiCodes).append(RESET);
-        String result = sb.toString();
-        clearStringBuilder(sb);
-        return result;
-    }
-
-    //A helper method to style text with the given codes
-    public static StringBuilder style(String text, StringBuilder sb, AnsiCode... ansiCodes) {
-        Objects.requireNonNull(text, "Text cannot be null");
-        Objects.requireNonNull(ansiCodes, "Ansi codes cannot be null");
-
-        //Check if ansi is enabled
-        if (ansiEnabled()) {
-            for (AnsiCode code : ansiCodes) {
-                if (code != null) sb.append(code.ansiSequence());
-
-            }
-        }
-
-        return sb.append(text);
+    public static String styleAndReset(StyleBuilder sb, String border, AnsiCode[] borderColor) {
+        var str = sb.appendAndReset(border, borderColor).toString();
+        sb.clear();
+        return str;
     }
 }

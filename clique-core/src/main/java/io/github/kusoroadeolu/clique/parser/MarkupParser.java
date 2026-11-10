@@ -111,7 +111,8 @@ public record MarkupParser(ParserConfiguration configuration) {
      *         or the original value if {@code null} or blank
      */
     public String getOriginalString(String tokenedString) {
-        if (isNull(tokenedString) || tokenedString.isBlank()) return EMPTY;
+        if (isNull(tokenedString)) return EMPTY;
+        if (tokenedString.isBlank()) return tokenedString;
         ParseResult result = getParseResult(tokenedString);
 
         if (!result.isPresent()) {

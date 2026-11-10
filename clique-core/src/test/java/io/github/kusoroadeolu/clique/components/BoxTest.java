@@ -61,15 +61,6 @@ class BoxTest {
         assertDoesNotThrow(() -> new Box());
     }
 
-    @Test
-    void assertSame_onSubsequentGets_withoutModification(){
-        var box = new Box()
-                .dimensions(50, 9)
-                .content("Test");
-        var output = box.get();
-        var output1 = box.get();
-        assertSame(output1, output);
-    }
 
     //TESTS FOR API CHANGES
     @Test

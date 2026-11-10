@@ -10,10 +10,7 @@ import io.github.kusoroadeolu.clique.internal.utils.StringUtils;
 import io.github.kusoroadeolu.clique.spi.AnsiCode;
 import io.github.kusoroadeolu.clique.spi.RGBAnsiCode;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 import static io.github.kusoroadeolu.clique.internal.markup.PredefinedStyleContext.getOrThrow;
 
@@ -90,24 +87,20 @@ public final class Ink {
         Objects.requireNonNull(value, "Value cannot be null");
         if (codes.isEmpty() && gradient == null && hyperlink == null) return value;
 
-        StringBuilder sb = new StringBuilder();
+        StyleBuilder sb = new StyleBuilder();
         String styled;
         for (AnsiCode code : codes) {
             sb.append(code.ansiSequence());
         }
 
-        styled = sb.append(value)
-                .append(StyleCode.RESET)
+        styled = sb.appendAndReset(value)
                 .toString();
 
 
-        if (gradient != null){
-            styled = gradient.apply(styled);
-        }
+        if (gradient != null) styled = gradient.apply(styled);
 
-        if (hyperlink != null){
-            styled = hyperlink.apply(styled);
-        }
+
+        if (hyperlink != null) styled = hyperlink.apply(styled);
 
         return styled;
     }
@@ -138,7 +131,7 @@ public final class Ink {
      */
     public Ink of(String style) {
         Objects.requireNonNull(style, "Style cannot be null");
-        AnsiCode code = getOrThrow(style, context);
+        AnsiCode code = getOrThrow(style.toLowerCase(Locale.ROOT).trim(), context);
         return with(code);
     }
 

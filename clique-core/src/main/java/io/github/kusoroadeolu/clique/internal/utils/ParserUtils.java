@@ -5,6 +5,8 @@ import io.github.kusoroadeolu.clique.parser.MarkupParser;
 import io.github.kusoroadeolu.clique.spi.AnsiCode;
 
 import java.util.Arrays;
+import java.util.Locale;
+import java.util.regex.Pattern;
 
 import static io.github.kusoroadeolu.clique.internal.markup.PredefinedStyleContext.getOrThrow;
 
@@ -20,8 +22,9 @@ public class ParserUtils {
 
     public static AnsiCode[] getAnsiCodes(String string, MarkupParser parser) {
         if (string.isBlank()) return NONE;
-        return Arrays.stream(string.split(parser.configuration().getDelimiter()))
-                .map(s -> getOrThrow(s.trim(), parser.configuration().getStyleContext()))
+        var pattern = Pattern.quote(parser.configuration().getDelimiter());
+        return Arrays.stream(string.split(pattern))
+                .map(s -> getOrThrow(s.trim().toLowerCase(Locale.ROOT), parser.configuration().getStyleContext()))
                 .toArray(AnsiCode[]::new);
     }
 }

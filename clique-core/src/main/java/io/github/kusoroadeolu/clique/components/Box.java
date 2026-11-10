@@ -6,14 +6,17 @@ import io.github.kusoroadeolu.clique.configuration.TextAlign;
 import io.github.kusoroadeolu.clique.internal.BorderChars;
 import io.github.kusoroadeolu.clique.internal.BoxWrapper;
 import io.github.kusoroadeolu.clique.internal.WidthAwareList;
-import io.github.kusoroadeolu.clique.internal.documentation.InternalApi;
+import io.github.kusoroadeolu.clique.internal.documentation.Stable;
 import io.github.kusoroadeolu.clique.internal.exception.InvalidDimensionException;
 import io.github.kusoroadeolu.clique.internal.utils.StringUtils;
+import io.github.kusoroadeolu.clique.style.StyleBuilder;
 
 import java.util.Objects;
 
-import static io.github.kusoroadeolu.clique.internal.utils.BoxUtils.applyAnsiToBorders;
-import static io.github.kusoroadeolu.clique.internal.utils.BoxUtils.drawBox;
+import static io.github.kusoroadeolu.clique.internal.utils.BoxUtils.alignText;
+import static io.github.kusoroadeolu.clique.internal.utils.BoxUtils.colorBorderChars;
+import static io.github.kusoroadeolu.clique.internal.utils.Constants.BLANK;
+import static io.github.kusoroadeolu.clique.internal.utils.Constants.NEWLINE;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -31,7 +34,7 @@ import static java.util.Objects.requireNonNull;
  *
  * @since 1.1.0
  */
-@InternalApi(since = "3.2.0")
+@Stable(since = "3.2.0")
 public class Box implements Component {
     private int width;
     private int height; //If width and height == 0
@@ -46,7 +49,6 @@ public class Box implements Component {
         validateTypeAndConfig(type, configuration);
         this.borderChars = BorderChars.from(type);
         this.configuration = configuration;
-        this.styleBorders();
     }
 
     void validateTypeAndConfig(BoxType type, BoxConfiguration config) {
@@ -81,13 +83,15 @@ public class Box implements Component {
         Dimensions dims = resolveDimensions(cells);
         var ta = this.align == null ? configuration.getTextAlign() : this.align;
 
-        final var chars = this.borderChars;
-        final StringBuilder sb = new StringBuilder();
+
+        final StyleBuilder sb = new StyleBuilder();
+        final var chars = colorBorderChars(sb, borderChars, configuration.getBorderColor());
         final BoxWrapper wrapper = new BoxWrapper(
                 dims.width(), dims.height(), this.configuration,
                 cells.cells(), chars.hLine(), chars.vLine(),
                 chars.topLeft(), chars.topRight(), chars.bottomRight(), chars.bottomLeft()
         );
+
         drawBox(sb, wrapper, ta);
         return sb.toString();
     }
@@ -166,12 +170,6 @@ public class Box implements Component {
         return new WidthAwareList(cellList);
     }
 
-    void styleBorders() {
-        if (configuration.getBorderColor() != null) {
-            applyAnsiToBorders(borderChars, configuration.getBorderColor());
-        }
-    }
-
     private record Dimensions(int width, int height) {}
 
 
@@ -191,6 +189,36 @@ public class Box implements Component {
         if (contentHeight > height) throw new InvalidDimensionException("Content overflows: %s lines of content cannot fit in a box of height %s".formatted(contentHeight, height));
 
         return new Dimensions(width, height);
+    }
+
+     static void drawBox(StyleBuilder sb, BoxWrapper boxWrapper, TextAlign textAlign) {
+        final int width = boxWrapper.width();
+        final int padding = boxWrapper.configuration().getPadding();
+        final String spaces = BLANK.repeat(width);
+        final String hLines = boxWrapper.hLine().repeat(width);
+
+        sb.append(boxWrapper.tLeft()).append(hLines).append(boxWrapper.tRight()).append(NEWLINE);
+
+        int startLine = 0;
+        final int textHeight = boxWrapper.wordWrap().size();
+        final int availableLines = boxWrapper.height();
+
+        if (textAlign == TextAlign.CENTER || textAlign == TextAlign.CENTER_LEFT || textAlign == TextAlign.CENTER_RIGHT) {
+            startLine = (availableLines - textHeight) / 2; //Adding one to this like the others makes the vertical alignment(the top half, hog 1 more space than needed, starving the bottom half)
+        } else if (textAlign == TextAlign.BOTTOM_LEFT || textAlign == TextAlign.BOTTOM_CENTER || textAlign == TextAlign.BOTTOM_RIGHT) {
+            startLine = (availableLines - textHeight);
+        }
+
+        for (int i = 0; i < boxWrapper.height(); i++) {
+            if (i >= startLine && i < (startLine + textHeight)) {
+                int textIndex = i - startLine;
+                alignText(sb, textIndex, textAlign, spaces, boxWrapper.wordWrap(), boxWrapper.vLine(), padding);
+            } else {
+                sb.append(boxWrapper.vLine()).append(spaces).append(boxWrapper.vLine()).append(NEWLINE);
+            }
+        }
+
+        sb.append(boxWrapper.bLeft()).append(hLines).append(boxWrapper.bRight());
     }
 
     @Override
@@ -217,4 +245,7 @@ public class Box implements Component {
                 ", borderChars=" + borderChars +
                 ']';
     }
+
+
+
 }

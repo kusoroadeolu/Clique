@@ -53,7 +53,7 @@ public final class TableConfiguration {
         this.alignment = builder.alignment;
         this.parser = builder.parser;
         this.nullReplacement = builder.nullReplacement;
-        this.columnAlignment = builder.columnAlignment;
+        this.columnAlignment = Map.copyOf(builder.columnAlignment);
         this.borderColor = builder.borderColor;
     }
 

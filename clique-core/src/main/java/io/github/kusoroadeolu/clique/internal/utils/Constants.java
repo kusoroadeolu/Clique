@@ -12,6 +12,8 @@ public class Constants {
     public static final char ESC = '\u001b';
     public static final char LBRACKET = '[';
     public static final String HASH = "#";
+    public static final char RBRACKET = ']';
+    public static final char BEL = '\u0007';
 
     //FOR ANSI DETECTOR
     public static final String TERM = "TERM";

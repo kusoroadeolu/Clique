@@ -252,4 +252,49 @@ class FrameTest {
         frame.nest("Hello").title(" ".repeat(5), TitleAlign.LEFT).width(9);
         assertDoesNotThrow(frame::get);
     }
+
+    // Edge case: explicit width where titleWidth == givenWidth
+
+    @Test
+    void throwsInvalidDimension_whenExplicitWidthEqualsTitleWidth_andAlignedLeft() {
+        Frame frame = new Frame();
+        frame.nest("Hi").title("1234567", TitleAlign.LEFT).width(9); // titleWidth = 9 == width
+        assertThrows(InvalidDimensionException.class, frame::get);
+    }
+
+    @Test
+    void throwsInvalidDimension_whenExplicitWidthEqualsTitleWidth_andAlignedRight() {
+        Frame frame = new Frame();
+        frame.nest("Hi").title("1234567", TitleAlign.RIGHT).width(9);
+        assertThrows(InvalidDimensionException.class, frame::get);
+    }
+
+
+    @Test
+    void rendersWhenExplicitWidthIsTitleWidthPlusOne_andAlignedLeft() {
+        Frame frame = new Frame();
+        frame.nest("Hi").title("1234567", TitleAlign.LEFT).width(10);
+        assertDoesNotThrow(frame::get);
+    }
+
+    @Test
+    void rendersWhenExplicitWidthIsTitleWidthPlusOne_andAlignedRight() {
+        Frame frame = new Frame();
+        frame.nest("Hi").title("1234567", TitleAlign.RIGHT).width(10);
+        assertDoesNotThrow(frame::get);
+    }
+
+    @Test
+    void tightFitTitleStillProducesAlignedBorders() {
+        String rendered = stripAnsi(
+                new Frame()
+                        .nest("Hi")
+                        .title("1234567", TitleAlign.LEFT)
+                        .width(10)
+                        .get()
+        );
+        String[] ls = lines(rendered);
+        int expected = ls[0].length();
+        for (String line : ls) assertEquals(expected, line.length());
+    }
 }
