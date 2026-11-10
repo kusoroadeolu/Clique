@@ -9,6 +9,8 @@ import io.github.kusoroadeolu.clique.spi.AnsiCode;
 import io.github.kusoroadeolu.clique.spi.RGBAnsiCode;
 import io.github.kusoroadeolu.clique.style.StyleBuilder;
 
+import java.util.Locale;
+
 import static io.github.kusoroadeolu.clique.internal.utils.Constants.*;
 
 @InternalApi(since = "3.2.0")
@@ -64,6 +66,10 @@ public final class StringUtils {
         }
 
         return clean.toString();
+    }
+
+    public static String normalizeStyle(String s) {
+        return s.toLowerCase(Locale.ROOT).trim();
     }
 
     public static boolean nextCharEquals(String s, int pos, char ch){

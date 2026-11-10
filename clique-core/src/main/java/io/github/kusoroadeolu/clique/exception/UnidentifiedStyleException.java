@@ -1,4 +1,4 @@
-package io.github.kusoroadeolu.clique.internal.exception;
+package io.github.kusoroadeolu.clique.exception;
 
 public class UnidentifiedStyleException extends RuntimeException {
     public UnidentifiedStyleException(String s) {

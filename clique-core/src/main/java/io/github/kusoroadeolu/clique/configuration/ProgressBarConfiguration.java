@@ -83,7 +83,7 @@ public final class ProgressBarConfiguration {
         this.incomplete = builder.incomplete;
         this.format = builder.format;
         this.parser = builder.parser;
-        this.styles = Collections.unmodifiableList(builder.styles);
+        this.styles = List.copyOf(builder.styles);
         this.easingConfiguration = builder.easing;
         this.ticksPerUnit = builder.tickPerUnit;
     }

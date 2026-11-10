@@ -2,7 +2,7 @@ package io.github.kusoroadeolu.clique.components;
 
 import io.github.kusoroadeolu.clique.configuration.ItemListConfiguration;
 import io.github.kusoroadeolu.clique.configuration.ParserConfiguration;
-import io.github.kusoroadeolu.clique.internal.exception.UnidentifiedStyleException;
+import io.github.kusoroadeolu.clique.exception.UnidentifiedStyleException;
 import io.github.kusoroadeolu.clique.parser.MarkupParser;
 import io.github.kusoroadeolu.clique.style.ColorCode;
 import org.junit.jupiter.api.Test;

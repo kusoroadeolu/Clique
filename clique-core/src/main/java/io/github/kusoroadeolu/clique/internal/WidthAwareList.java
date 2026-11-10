@@ -24,24 +24,10 @@ public class WidthAwareList {
         updateLongest(c);
         cells.add(c);
     }
-
-    public void update(int i, Cell c) {
-        updateLongest(c);
-        cells.set(i, c);
-    }
-
-
+    
     public void updateLongest(Cell c) {
         final int len = c.width();
         if (len > longest) longest = len;
-    }
-
-    public void remove(int index) {
-        Cell c = cells.get(index);
-        cells.remove(index);
-
-        if (cells.isEmpty()) longest = 0;
-        else if (c.width() == longest) longest = calculateLongest();
     }
 
 

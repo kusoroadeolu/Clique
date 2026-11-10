@@ -225,7 +225,7 @@ public class ProgressBar implements Component {
     }
 
     private int percent() {
-        if (total > ZERO) return (int) ((currentTick / (double) total) * 100);
+        if (total > ZERO) return (int) (currentTick * 100L / total);
         else return ZERO;
     }
 
@@ -247,8 +247,9 @@ public class ProgressBar implements Component {
         var complete = configuration.getComplete();
         var incomplete = configuration.getIncomplete();
 
-        var completedRatio = total > ZERO ? (this.currentTick / (double) this.total) : ZERO;
-        var completedLength = (int) (completedRatio * length);
+        int completedLength = total > ZERO
+                ? (int) ((long) currentTick * length / total)
+                : ZERO;
 
         return String.valueOf(complete).repeat(completedLength)
                 + String.valueOf(incomplete).repeat(Math.max(length - completedLength, ZERO));

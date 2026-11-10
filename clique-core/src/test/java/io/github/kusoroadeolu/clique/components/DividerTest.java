@@ -4,7 +4,7 @@ import io.github.kusoroadeolu.clique.Clique;
 import io.github.kusoroadeolu.clique.configuration.DividerConfiguration;
 import io.github.kusoroadeolu.clique.configuration.ParserConfiguration;
 import io.github.kusoroadeolu.clique.configuration.TitleAlign;
-import io.github.kusoroadeolu.clique.internal.exception.UnidentifiedStyleException;
+import io.github.kusoroadeolu.clique.exception.UnidentifiedStyleException;
 import io.github.kusoroadeolu.clique.internal.utils.AnsiDetector;
 import io.github.kusoroadeolu.clique.internal.utils.CharWidth;
 import io.github.kusoroadeolu.clique.parser.MarkupParser;

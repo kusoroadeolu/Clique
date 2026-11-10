@@ -2,7 +2,7 @@ package io.github.kusoroadeolu.clique.internal.markup;
 
 import io.github.kusoroadeolu.clique.configuration.StyleContext;
 import io.github.kusoroadeolu.clique.internal.documentation.InternalApi;
-import io.github.kusoroadeolu.clique.internal.exception.UnidentifiedStyleException;
+import io.github.kusoroadeolu.clique.exception.UnidentifiedStyleException;
 import io.github.kusoroadeolu.clique.spi.AnsiCode;
 import io.github.kusoroadeolu.clique.style.BackgroundCode;
 import io.github.kusoroadeolu.clique.style.ColorCode;

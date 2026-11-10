@@ -1,4 +1,4 @@
-package io.github.kusoroadeolu.clique.internal.exception;
+package io.github.kusoroadeolu.clique.exception;
 
 public class NoSuchThemeException extends RuntimeException {
     public NoSuchThemeException(String message) {

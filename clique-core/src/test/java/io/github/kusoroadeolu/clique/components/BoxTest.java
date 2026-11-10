@@ -115,4 +115,31 @@ class BoxTest {
         assertTrue(small.length() < big.length());
     }
 
+    @Test
+    void content_withoutAlign_clearsPreviousOverride() {
+        var box = new Box().content("a", TextAlign.TOP_LEFT);
+        box.content("b");
+        assertNull(box.textAlign());
+    }
+
+    @Test
+    void content_withoutAlign_fallsBackToConfigAlignment() {
+        var box = new Box(BoxConfiguration.builder().textAlign(TextAlign.TOP_RIGHT).build())
+                .dimensions(50, 9);
+
+        box.content("Test", TextAlign.TOP_LEFT);
+        box.content("Test");
+
+        var lines = MarkupParser.DEFAULT.getOriginalString(box.get()).lines().toList();
+        String second = lines.get(1);
+        // TOP_RIGHT from config: T sits 7 chars from the end, same offset as alignTopRight test
+        assertEquals("T", second.substring(second.length() - 7, second.length() - 6));
+    }
+
+    @Test
+    void content_withAlign_subsequentCall_reassigns() {
+        var box = new Box().content("Test", TextAlign.TOP_LEFT);
+        box.content("Test", TextAlign.TOP_RIGHT);
+        assertEquals(TextAlign.TOP_RIGHT, box.textAlign());
+    }
 }
