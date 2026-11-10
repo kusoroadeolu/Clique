@@ -17,6 +17,9 @@ public sealed interface FrameNode permits FrameNode.StringNode, FrameNode.Compon
     List<Cell> lines();
     int maxWidth();
     FrameAlign align();
+    default FrameNode snapshot() {
+        return this;
+    }
 
     static int findMaxWidth(List<Cell> lines) {
         return lines
@@ -54,6 +57,11 @@ public sealed interface FrameNode permits FrameNode.StringNode, FrameNode.Compon
         public FrameAlign align() {
             return align;
         }
+
+         @Override
+         public FrameNode snapshot() {
+             return new StringNode(lines(), 0, align);
+         }
     }
 
 

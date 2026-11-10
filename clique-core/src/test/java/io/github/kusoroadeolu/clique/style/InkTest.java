@@ -2,7 +2,7 @@ package io.github.kusoroadeolu.clique.style;
 
 import io.github.kusoroadeolu.clique.Clique;
 import io.github.kusoroadeolu.clique.configuration.StyleContext;
-import io.github.kusoroadeolu.clique.internal.exception.UnidentifiedStyleException;
+import io.github.kusoroadeolu.clique.exceptions.UnidentifiedStyleException;
 import io.github.kusoroadeolu.clique.internal.utils.AnsiDetector;
 import org.junit.jupiter.api.*;
 

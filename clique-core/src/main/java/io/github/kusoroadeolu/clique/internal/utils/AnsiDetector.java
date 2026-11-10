@@ -4,6 +4,7 @@ import io.github.kusoroadeolu.clique.internal.documentation.InternalApi;
 
 import java.io.Console;
 import java.lang.reflect.Method;
+import java.util.Locale;
 
 import static io.github.kusoroadeolu.clique.internal.utils.Constants.*;
 
@@ -67,7 +68,7 @@ public class AnsiDetector {
 
         String colorTerm = System.getenv(COLOR_TERM);
         if (colorTerm != null) return true;
-        String os = System.getProperty(OS_NAME, EMPTY).toLowerCase();
+        String os = System.getProperty(OS_NAME, EMPTY).toLowerCase(Locale.ROOT);
         if (!consoleIsTerminal() && !os.contains(WIN)) return false;
 
         final String term = System.getenv(TERM);

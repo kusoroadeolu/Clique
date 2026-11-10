@@ -241,7 +241,8 @@ public final class TableConfiguration {
          * @throws NullPointerException if {@code columnAlignment} is {@code null}
          */
         public TableConfigurationBuilder columnAlignment(Map<Integer, CellAlign> columnAlignment) {
-            this.columnAlignment = Objects.requireNonNull(columnAlignment, "Column alignment cannot be null");
+            Objects.requireNonNull(columnAlignment, "Column alignment cannot be null");
+            this.columnAlignment.putAll(columnAlignment);
             return this;
         }
 

@@ -7,7 +7,7 @@ import io.github.kusoroadeolu.clique.internal.BorderChars;
 import io.github.kusoroadeolu.clique.internal.BoxWrapper;
 import io.github.kusoroadeolu.clique.internal.WidthAwareList;
 import io.github.kusoroadeolu.clique.internal.documentation.Stable;
-import io.github.kusoroadeolu.clique.internal.exception.InvalidDimensionException;
+import io.github.kusoroadeolu.clique.exceptions.InvalidDimensionException;
 import io.github.kusoroadeolu.clique.internal.utils.StringUtils;
 import io.github.kusoroadeolu.clique.style.StyleBuilder;
 
@@ -110,6 +110,7 @@ public class Box implements Component {
     public Box content(String content) {
         Objects.requireNonNull(content, BOX_CONTENT_NOT_NULL);
         this.content = content;
+        align = null;
         return this;
     }
 

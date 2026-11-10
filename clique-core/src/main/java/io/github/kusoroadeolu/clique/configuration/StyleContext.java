@@ -2,8 +2,9 @@ package io.github.kusoroadeolu.clique.configuration;
 
 import io.github.kusoroadeolu.clique.internal.CompositeColor;
 import io.github.kusoroadeolu.clique.internal.documentation.Stable;
-import io.github.kusoroadeolu.clique.internal.exception.NoSuchThemeException;
+import io.github.kusoroadeolu.clique.exceptions.NoSuchThemeException;
 import io.github.kusoroadeolu.clique.internal.loader.ThemeLoader;
+import io.github.kusoroadeolu.clique.internal.utils.StringUtils;
 import io.github.kusoroadeolu.clique.spi.AnsiCode;
 
 import java.util.*;
@@ -102,10 +103,7 @@ public final class StyleContext {
      * @throws NoSuchThemeException if no theme was found
      */
     public static StyleContext fromTheme(String theme) {
-        var opt = ThemeLoader.find(theme);
-        if (opt.isEmpty()) throw new NoSuchThemeException("No such theme: %s".formatted(theme));
-        var ct = opt.get();
-        return StyleContext.from(ct.styles());
+        return StyleContext.from(ThemeLoader.findOrThrow(theme).styles());
     }
 
     /**
@@ -208,7 +206,7 @@ public final class StyleContext {
         public StyleContextBuilder add(String style, Collection<AnsiCode> code) {
             Objects.requireNonNull(style, NULL_STYLE_NAME);
             Objects.requireNonNull(code, "Ansi codes cannot be null");
-            styles.put(style.toLowerCase(Locale.ROOT), new CompositeColor(code));
+            styles.put(StringUtils.normalizeStyle(style), new CompositeColor(code));
             return this;
         }
 

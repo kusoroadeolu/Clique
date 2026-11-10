@@ -2,7 +2,7 @@ package io.github.kusoroadeolu.clique.internal.markup;
 
 import io.github.kusoroadeolu.clique.configuration.StyleContext;
 import io.github.kusoroadeolu.clique.internal.documentation.InternalApi;
-import io.github.kusoroadeolu.clique.internal.exception.UnidentifiedStyleException;
+import io.github.kusoroadeolu.clique.exceptions.UnidentifiedStyleException;
 import io.github.kusoroadeolu.clique.spi.AnsiCode;
 
 import java.util.ArrayList;

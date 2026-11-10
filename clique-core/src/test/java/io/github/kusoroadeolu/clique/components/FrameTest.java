@@ -2,7 +2,7 @@ package io.github.kusoroadeolu.clique.components;
 
 import io.github.kusoroadeolu.clique.configuration.FrameAlign;
 import io.github.kusoroadeolu.clique.configuration.TitleAlign;
-import io.github.kusoroadeolu.clique.internal.exception.InvalidDimensionException;
+import io.github.kusoroadeolu.clique.exceptions.InvalidDimensionException;
 import io.github.kusoroadeolu.clique.internal.utils.StringUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

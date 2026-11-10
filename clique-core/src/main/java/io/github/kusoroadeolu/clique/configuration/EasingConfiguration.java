@@ -236,7 +236,7 @@ public final class EasingConfiguration {
          * @throws IllegalArgumentException if {@code frames} is {@code <= 0}
          */
         public EasingConfigurationBuilder frames(int frames) {
-            if (frames <= 0) throw new IllegalArgumentException("Frames must be greater than or equal to zero");
+            if (frames <= 0) throw new IllegalArgumentException("Frames must be greater than to zero");
             this.frames = frames;
             return this;
         }
@@ -252,7 +252,7 @@ public final class EasingConfiguration {
          * @throws IllegalArgumentException if {@code threshold} is negative
          */
         public EasingConfigurationBuilder threshold(int threshold) {
-            if (threshold < 0) throw new IllegalArgumentException("Threshold must be positive");
+            if (threshold < 0) throw new IllegalArgumentException("Threshold must be greater than or equal to zero");
             this.threshold = threshold;
             return this;
         }

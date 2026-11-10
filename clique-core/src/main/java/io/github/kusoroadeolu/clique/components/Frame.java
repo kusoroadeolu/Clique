@@ -8,7 +8,7 @@ import io.github.kusoroadeolu.clique.internal.BorderChars;
 import io.github.kusoroadeolu.clique.internal.Cell;
 import io.github.kusoroadeolu.clique.internal.FrameNode;
 import io.github.kusoroadeolu.clique.internal.documentation.Stable;
-import io.github.kusoroadeolu.clique.internal.exception.InvalidDimensionException;
+import io.github.kusoroadeolu.clique.exceptions.InvalidDimensionException;
 import io.github.kusoroadeolu.clique.internal.utils.BoxUtils;
 import io.github.kusoroadeolu.clique.style.StyleBuilder;
 
@@ -34,7 +34,7 @@ import static io.github.kusoroadeolu.clique.style.StyleCode.RESET;
  * </ol>
  *
  * <p>Content width must not exceed {@code frameWidth - (padding * 2)}; if it does,
- * {@link io.github.kusoroadeolu.clique.internal.exception.InvalidDimensionException} is thrown
+ * {@link InvalidDimensionException} is thrown
  * at render time.
  *
  * <p>This class is <b>not thread-safe</b>.
@@ -230,10 +230,11 @@ public class Frame implements Component {
 
 
         var parsedTitle = parseToCell(appendedTitle, parser);
+        final List<FrameNode> snapshot = nodes.stream().map(FrameNode::snapshot).toList();
 
         //Note that we align the title width by +1 or -1 based on if the frame align is left or right, so to prevent an issue where the title width is left and the frame size = title size, we add one to the width to make up for the by one offset
         int titleWidth = parsedTitle.width() + 2;
-        int nodesMaxWidth = findNodesMaxWidth(); //Max content width
+        int nodesMaxWidth = findNodesMaxWidth(snapshot); //Max content width
 
         int givenWidth = (noWidthSet() ? nodesMaxWidth + (configuration.getPadding() * 2) : this.width);
 
@@ -333,7 +334,7 @@ public class Frame implements Component {
         }
     }
 
-    int findNodesMaxWidth() {
+    int findNodesMaxWidth(List<FrameNode> nodes) {
         return nodes.stream()
                 .mapToInt(FrameNode::maxWidth)
                 .max()

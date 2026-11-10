@@ -1,6 +1,6 @@
 package io.github.kusoroadeolu.clique.internal.markup;
 
-import io.github.kusoroadeolu.clique.internal.exception.UnidentifiedStyleException;
+import io.github.kusoroadeolu.clique.exceptions.UnidentifiedStyleException;
 import io.github.kusoroadeolu.clique.style.StyleCode;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
