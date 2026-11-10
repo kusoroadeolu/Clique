@@ -11,7 +11,7 @@ import java.util.concurrent.TimeUnit;
 
 import static io.github.kusoroadeolu.clique.internal.utils.Constants.BLANK;
 import static io.github.kusoroadeolu.clique.internal.utils.Constants.ZERO;
-import static io.github.kusoroadeolu.clique.internal.utils.StringUtils.parse;
+import static io.github.kusoroadeolu.clique.internal.utils.MiscUtils.parse;
 
 /**
  * A terminal progress bar component that tracks incremental progress toward a total.

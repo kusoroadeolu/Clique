@@ -4,7 +4,7 @@ import io.github.kusoroadeolu.clique.internal.CompositeColor;
 import io.github.kusoroadeolu.clique.internal.documentation.Stable;
 import io.github.kusoroadeolu.clique.exceptions.NoSuchThemeException;
 import io.github.kusoroadeolu.clique.internal.loader.ThemeLoader;
-import io.github.kusoroadeolu.clique.internal.utils.StringUtils;
+import io.github.kusoroadeolu.clique.internal.utils.MiscUtils;
 import io.github.kusoroadeolu.clique.spi.AnsiCode;
 
 import java.util.*;
@@ -206,7 +206,7 @@ public final class StyleContext {
         public StyleContextBuilder add(String style, Collection<AnsiCode> code) {
             Objects.requireNonNull(style, NULL_STYLE_NAME);
             Objects.requireNonNull(code, "Ansi codes cannot be null");
-            styles.put(StringUtils.normalizeStyle(style), new CompositeColor(code));
+            styles.put(MiscUtils.normalizeStyle(style), new CompositeColor(code));
             return this;
         }
 

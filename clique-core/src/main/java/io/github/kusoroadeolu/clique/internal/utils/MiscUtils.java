@@ -1,6 +1,7 @@
 package io.github.kusoroadeolu.clique.internal.utils;
 
 
+import io.github.kusoroadeolu.clique.internal.BorderChars;
 import io.github.kusoroadeolu.clique.internal.Cell;
 import io.github.kusoroadeolu.clique.internal.RGBColor;
 import io.github.kusoroadeolu.clique.internal.documentation.InternalApi;
@@ -14,8 +15,8 @@ import java.util.Locale;
 import static io.github.kusoroadeolu.clique.internal.utils.Constants.*;
 
 @InternalApi(since = "3.2.0")
-public final class StringUtils {
-    private StringUtils(){}
+public final class MiscUtils {
+    private MiscUtils(){}
 
     public static void clearStringBuilder(StringBuilder sb) {
         sb.setLength(ZERO);
@@ -96,6 +97,10 @@ public final class StringUtils {
         } catch (NumberFormatException e) {
             throw new IllegalArgumentException("Invalid hex color: '" + hex + "' contains non-hex characters (expected '#RRGGBB')", e);
         }
+    }
+
+    public static BorderChars colorBorderChars(BorderChars borderChar, AnsiCode[] borderColor) {
+        return borderChar.map(s -> styleAndReset(new StyleBuilder(), s, borderColor));
     }
 
     public static String styleAndReset(StyleBuilder sb, String border, AnsiCode[] borderColor) {

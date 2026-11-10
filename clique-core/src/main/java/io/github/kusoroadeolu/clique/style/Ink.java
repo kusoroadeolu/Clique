@@ -6,7 +6,7 @@ import io.github.kusoroadeolu.clique.internal.Hyperlink;
 import io.github.kusoroadeolu.clique.internal.RGBColor;
 import io.github.kusoroadeolu.clique.internal.documentation.Stable;
 import io.github.kusoroadeolu.clique.internal.markup.PredefinedStyleContext;
-import io.github.kusoroadeolu.clique.internal.utils.StringUtils;
+import io.github.kusoroadeolu.clique.internal.utils.MiscUtils;
 import io.github.kusoroadeolu.clique.spi.AnsiCode;
 import io.github.kusoroadeolu.clique.spi.RGBAnsiCode;
 
@@ -218,7 +218,7 @@ public final class Ink {
      */
     public Ink hex(String hexCode){
         Objects.requireNonNull(hexCode,"Hex code cannot be null");
-        return with(StringUtils.hex(hexCode));
+        return with(MiscUtils.hex(hexCode));
     }
 
     /**
@@ -234,7 +234,7 @@ public final class Ink {
      */
     public Ink bgHex(String hexCode){
         Objects.requireNonNull(hexCode);
-        return with(StringUtils.bgHex(hexCode));
+        return with(MiscUtils.bgHex(hexCode));
     }
 
 

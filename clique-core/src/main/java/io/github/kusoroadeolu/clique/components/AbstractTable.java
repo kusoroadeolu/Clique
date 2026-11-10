@@ -12,14 +12,13 @@ import java.util.*;
 
 import static io.github.kusoroadeolu.clique.internal.utils.Constants.BLANK;
 import static io.github.kusoroadeolu.clique.internal.utils.Constants.NEWLINE;
-import static io.github.kusoroadeolu.clique.internal.utils.StringUtils.parseToCell;
+import static io.github.kusoroadeolu.clique.internal.utils.MiscUtils.parseToCell;
 import static io.github.kusoroadeolu.clique.internal.utils.TableUtils.*;
 
 @InternalApi(since = "3.2.0")
 abstract non-sealed class AbstractTable implements Table {
     final List<List<Cell>> rows = new ArrayList<>();
     final TableConfiguration configuration;
-    StyleBuilder sb; //updated each call to get
 
     AbstractTable(TableConfiguration configuration) {
         this.configuration = Objects.requireNonNull(configuration, "Table configuration cannot be null");
@@ -104,7 +103,6 @@ abstract non-sealed class AbstractTable implements Table {
     @Override
     public String get() {
         int[] widths = columnWidths();
-        sb = new StyleBuilder();
         var colAligns = configuration.getColumnAlignment();
         var lines = new ArrayList<String>();
 
@@ -156,9 +154,7 @@ abstract non-sealed class AbstractTable implements Table {
 
     final String border(String s) {
         AnsiCode[] color = configuration.getBorderColor();
-        var res = color.length == 0 ? s : sb.appendAndReset(s, color).toString();
-        sb.clear();
-        return res;
+        return color.length == 0 ? s : new StyleBuilder().appendAndReset(s, color).toString();
     }
 
     @Override

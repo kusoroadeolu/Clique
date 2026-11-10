@@ -13,7 +13,7 @@ import java.util.Objects;
 
 import static io.github.kusoroadeolu.clique.internal.markup.MarkupPostProcessor.postProcess;
 import static io.github.kusoroadeolu.clique.internal.utils.Constants.EMPTY;
-import static io.github.kusoroadeolu.clique.internal.utils.StringUtils.stripAnsi;
+import static io.github.kusoroadeolu.clique.internal.utils.MiscUtils.stripAnsi;
 import static java.util.Objects.isNull;
 
 

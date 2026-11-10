@@ -1,14 +1,14 @@
 package io.github.kusoroadeolu.clique.internal;
 
 import io.github.kusoroadeolu.clique.internal.utils.Constants;
-import io.github.kusoroadeolu.clique.internal.utils.StringUtils;
+import io.github.kusoroadeolu.clique.internal.utils.MiscUtils;
 import io.github.kusoroadeolu.clique.spi.RGBAnsiCode;
 import io.github.kusoroadeolu.clique.style.StyleCode;
 
 public record Gradient(RGBAnsiCode from, RGBAnsiCode to) {
 
     public Gradient(String fromHex, String toHex) {
-        this(StringUtils.hex(fromHex), StringUtils.hex(toHex));
+        this(MiscUtils.hex(fromHex), MiscUtils.hex(toHex));
     }
 
     public String apply(String text) {
@@ -24,7 +24,7 @@ public record Gradient(RGBAnsiCode from, RGBAnsiCode to) {
             int cp = text.codePointAt(i);
             int len = Character.charCount(cp);
 
-            if (cp == Constants.ESC && StringUtils.nextCharEquals(text, i + 1, Constants.LBRACKET)) {
+            if (cp == Constants.ESC && MiscUtils.nextCharEquals(text, i + 1, Constants.LBRACKET)) {
                 inEscape = true;
                 sb.appendCodePoint(cp);
             } else if (inEscape) {
@@ -53,7 +53,7 @@ public record Gradient(RGBAnsiCode from, RGBAnsiCode to) {
 
         while (i < text.length()) {
             int cp = text.codePointAt(i);
-            if (cp == Constants.ESC && StringUtils.nextCharEquals(text, i + 1, Constants.LBRACKET)) {
+            if (cp == Constants.ESC && MiscUtils.nextCharEquals(text, i + 1, Constants.LBRACKET)) {
                 inEscape = true;
             } else if (inEscape) {
                 if (cp == Constants.ANSI_END) inEscape = false;
