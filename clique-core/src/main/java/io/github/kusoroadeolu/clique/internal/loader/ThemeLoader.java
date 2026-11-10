@@ -1,14 +1,12 @@
 package io.github.kusoroadeolu.clique.internal.loader;
 
-import io.github.kusoroadeolu.clique.Clique;
-import io.github.kusoroadeolu.clique.exception.NoSuchThemeException;
+import io.github.kusoroadeolu.clique.exceptions.NoSuchThemeException;
 import io.github.kusoroadeolu.clique.internal.documentation.InternalApi;
 import io.github.kusoroadeolu.clique.internal.markup.GlobalStyleRegistry;
 import io.github.kusoroadeolu.clique.spi.CliqueTheme;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.stream.Collectors;
 
 import static java.util.Objects.requireNonNull;
 

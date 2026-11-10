@@ -7,7 +7,7 @@ import io.github.kusoroadeolu.clique.internal.BorderChars;
 import io.github.kusoroadeolu.clique.internal.BoxWrapper;
 import io.github.kusoroadeolu.clique.internal.WidthAwareList;
 import io.github.kusoroadeolu.clique.internal.documentation.Stable;
-import io.github.kusoroadeolu.clique.exception.InvalidDimensionException;
+import io.github.kusoroadeolu.clique.exceptions.InvalidDimensionException;
 import io.github.kusoroadeolu.clique.internal.utils.StringUtils;
 import io.github.kusoroadeolu.clique.style.StyleBuilder;
 
