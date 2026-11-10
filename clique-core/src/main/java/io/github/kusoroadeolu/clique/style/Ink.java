@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Objects;
 
 import static io.github.kusoroadeolu.clique.internal.markup.PredefinedStyleContext.getOrThrow;
+import static io.github.kusoroadeolu.clique.internal.utils.AnsiDetector.ansiEnabled;
 
 /**
  * A lightweight, functional, chainable ANSI string builder.
@@ -88,27 +89,16 @@ public final class Ink {
      */
     public String on(String value) {
         Objects.requireNonNull(value, "Value cannot be null");
+        if (!ansiEnabled()) return value;
         if (codes.isEmpty() && gradient == null && hyperlink == null) return value;
 
         StringBuilder sb = new StringBuilder();
-        String styled;
-        for (AnsiCode code : codes) {
-            sb.append(code.ansiSequence());
-        }
+        for (AnsiCode code : codes) sb.append(code.ansiSequence());
+        sb.append(value).append(StyleCode.RESET);
 
-        styled = sb.append(value)
-                .append(StyleCode.RESET)
-                .toString();
-
-
-        if (gradient != null){
-            styled = gradient.apply(styled);
-        }
-
-        if (hyperlink != null){
-            styled = hyperlink.apply(styled);
-        }
-
+        String styled = sb.toString();
+        if (gradient != null) styled = gradient.apply(styled);
+        if (hyperlink != null) styled = hyperlink.apply(styled);
         return styled;
     }
 

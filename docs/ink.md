@@ -243,4 +243,4 @@ Styles are resolved in this order: local `StyleContext` -> `GlobalStyleRegistry`
 
 - [Markup Reference](markup-reference.md) — markup tag syntax for use with the parser
 - [StyleBuilder Documentation](stylebuilder.md) — explicit and imperative ANSI-output builder for full strings
-- [StyleContext](parser.md) — registering custom and theme styles
+- [StyleContext](style-context.md) — registering custom and theme styles

@@ -29,7 +29,7 @@ public sealed interface Table extends Component permits AbstractTable{
      *
      * @param row the cell contents for the new row
      * @return this table instance for method chaining
-     * @throws NullPointerException if the varargs array or any element is {@code null}
+     * @throws NullPointerException if the varargs array is {@code null}
      */
     Table row(String... row);
 
@@ -40,7 +40,7 @@ public sealed interface Table extends Component permits AbstractTable{
      *
      * @param row the cell contents for the new row
      * @return this table instance for method chaining
-     * @throws NullPointerException if {@code row} or any element is {@code null}
+     * @throws NullPointerException if {@code row} is {@code null}
      * @deprecated in favor of the {@link SequencedCollection} overload
      * */
     @Deprecated(since = "4.0.3")
@@ -53,7 +53,7 @@ public sealed interface Table extends Component permits AbstractTable{
      * @param row a collection of strings representing the cells of the row;
      * must not be {@code null}
      * @return this table instance for method chaining
-     * @throws NullPointerException if {@code rows} or any element is {@code null}
+     * @throws NullPointerException if {@code rows} is {@code null}
      */
     Table row(SequencedCollection<String> row);
 

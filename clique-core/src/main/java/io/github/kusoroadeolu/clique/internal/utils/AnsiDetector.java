@@ -2,6 +2,9 @@ package io.github.kusoroadeolu.clique.internal.utils;
 
 import io.github.kusoroadeolu.clique.internal.documentation.InternalApi;
 
+import java.io.Console;
+import java.lang.reflect.Method;
+
 import static io.github.kusoroadeolu.clique.internal.utils.Constants.*;
 
 @InternalApi(since = "3.2.0")
@@ -9,24 +12,43 @@ public class AnsiDetector {
 
     private AnsiDetector() {}
 
-    private static volatile boolean ansiEnabled = autoDetect();
+    private static final Method IS_TERMINAL = lookupIsTerminal();
+
+    private static Method lookupIsTerminal() {
+        if (Runtime.version().feature() < 22) return null;
+
+        try {
+            return Console.class.getMethod("isTerminal");
+        } catch (ReflectiveOperationException e) {
+            return null;
+        }
+    }
+
+    private static boolean consoleIsTerminal() {
+        Console c = System.console();
+        if (c == null) return false;
+        if (IS_TERMINAL == null) return true;
+        try {
+            return (Boolean) IS_TERMINAL.invoke(c);
+        } catch (ReflectiveOperationException e) {
+            return true;
+        }
+    }
 
     public static void refresh() {
-        ansiEnabled = autoDetect();
+        autoDetect();
     }
 
     public static boolean ansiEnabled() {
-        return ansiEnabled;
+        return autoDetect();
     }
 
     public static void enableCliqueColors() {
         System.setProperty(CLIQUE_COLOR, ALWAYS);
-        ansiEnabled = true;
     }
 
     public static void disableCliqueColors() {
         System.setProperty(CLIQUE_COLOR, NEVER);
-        ansiEnabled = false;
     }
 
     private static boolean autoDetect() {
@@ -46,7 +68,7 @@ public class AnsiDetector {
         String colorTerm = System.getenv(COLOR_TERM);
         if (colorTerm != null) return true;
         String os = System.getProperty(OS_NAME, EMPTY).toLowerCase();
-        if (System.console() == null && !os.contains(WIN)) return false;
+        if (!consoleIsTerminal() && !os.contains(WIN)) return false;
 
         final String term = System.getenv(TERM);
         if (term == null) {

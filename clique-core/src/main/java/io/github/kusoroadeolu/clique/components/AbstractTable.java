@@ -4,31 +4,26 @@ package io.github.kusoroadeolu.clique.components;
 import io.github.kusoroadeolu.clique.configuration.CellAlign;
 import io.github.kusoroadeolu.clique.configuration.TableConfiguration;
 import io.github.kusoroadeolu.clique.internal.Cell;
-import io.github.kusoroadeolu.clique.internal.WidthAwareList;
 import io.github.kusoroadeolu.clique.internal.documentation.InternalApi;
 import io.github.kusoroadeolu.clique.spi.AnsiCode;
 import io.github.kusoroadeolu.clique.style.StyleBuilder;
 
 import java.util.*;
 
+import static io.github.kusoroadeolu.clique.internal.utils.Constants.BLANK;
 import static io.github.kusoroadeolu.clique.internal.utils.Constants.NEWLINE;
 import static io.github.kusoroadeolu.clique.internal.utils.StringUtils.parseToCell;
 import static io.github.kusoroadeolu.clique.internal.utils.TableUtils.*;
-import static java.util.Objects.isNull;
 
 @InternalApi(since = "3.2.0")
 abstract non-sealed class AbstractTable implements Table {
     final List<List<Cell>> rows = new ArrayList<>();
     final TableConfiguration configuration;
+    StyleBuilder sb; //updated each call to get
 
     AbstractTable(TableConfiguration configuration) {
         this.configuration = Objects.requireNonNull(configuration, "Table configuration cannot be null");
     }
-
-    AbstractTable() {
-        this(TableConfiguration.DEFAULT);
-    }
-
 
     abstract String rowEdge();
     abstract String cellSeparator();
@@ -60,7 +55,11 @@ abstract non-sealed class AbstractTable implements Table {
     public Table row(String... row) {
         Objects.requireNonNull(row, "Given row cannot be null");
         if (rows.isEmpty()) throw new IllegalStateException("Headers must be set before adding rows");
-        rows.add(toCells(row, rows.getFirst().size()));
+        int columns = rows.getFirst().size();
+        if (row.length > columns)
+            throw new IllegalArgumentException(
+                    "Row has %d cells but the table only has %d columns".formatted(row.length, columns));
+        rows.add(toCells(row, columns));
         return this;
     }
 
@@ -105,6 +104,7 @@ abstract non-sealed class AbstractTable implements Table {
     @Override
     public String get() {
         int[] widths = columnWidths();
+        sb = new StyleBuilder();
         var colAligns = configuration.getColumnAlignment();
         var lines = new ArrayList<String>();
 
@@ -118,12 +118,17 @@ abstract non-sealed class AbstractTable implements Table {
     }
 
     private String renderRow(List<Cell> row, int[] widths, Map<Integer, CellAlign> colAligns) {
+        String space = BLANK.repeat(cellPadding());
         var sb = new StringBuilder(rowEdge());
+
         for (int i = 0; i < widths.length; i++) {
             if (i > 0) sb.append(cellSeparator());
             CellAlign align = colAligns.getOrDefault(i, configuration.getAlignment());
-            sb.append(pad(align, row.get(i), widths[i] + cellPadding()));
+            sb.append(space)
+                    .append(pad(align, row.get(i), widths[i]))
+                    .append(space);
         }
+
         return sb.append(rowEdge()).toString();
     }
 
@@ -144,14 +149,16 @@ abstract non-sealed class AbstractTable implements Table {
         var sb = new StringBuilder(border(left));
         for (int i = 0; i < widths.length; i++) {
             if (i > 0) sb.append(border(join));
-            sb.append(border(fill.repeat(widths[i] + cellPadding())));
+            sb.append(border(fill.repeat(widths[i] + 2 * cellPadding())));
         }
         return sb.append(border(right)).toString();
     }
 
     final String border(String s) {
         AnsiCode[] color = configuration.getBorderColor();
-        return color.length == 0 ? s : new StyleBuilder().appendAndReset(s, color).toString();
+        var res = color.length == 0 ? s : sb.appendAndReset(s, color).toString();
+        sb.clear();
+        return res;
     }
 
     @Override
@@ -168,6 +175,6 @@ abstract non-sealed class AbstractTable implements Table {
 
     @Override
     public String toString() {
-        return getClass().getSimpleName() + "[rows=" + rows + ", configuration=" + configuration + "]";
+        return "Table[rows=" + rows + ", configuration=" + configuration + "]";
     }
 }

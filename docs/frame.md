@@ -73,12 +73,12 @@ Clique.frame()
 
 ### Per-Node Alignment
 
-Control how each child sits within the frame width using `TitleAlign`:
+Control how each child sits within the frame width using `FrameAlign`:
 ```java
 Clique.frame()
-    .nest(header, TitleAlign.CENTER)
-    .nest(table, TitleAlign.LEFT)
-    .nest("[dim]footer[/]", TitleAlign.RIGHT)
+    .nest(header, FrameAlign.CENTER)
+    .nest(table, FrameAlign.LEFT)
+    .nest("[dim]footer[/]", FrameAlign.RIGHT)
     .render();
 ```
 
@@ -125,17 +125,17 @@ Use `FrameConfiguration` to customize frame appearance and behavior. Access the 
 
 ### Default Values
 
-| Option | Default |
-|---|---|
-| `TitleAlign` | `TitleAlign.CENTER` |
-| `parser` | `MarkupParser.DEFAULT` |
+| Option        | Default |
+|---------------|---|
+| `FrameAlign`  | `FrameAlign.CENTER` |
+| `parser`      | `MarkupParser.DEFAULT` |
 | `borderColor` | `{}` (no color) |
-| `padding` | `2` |
+| `padding`     | `2` |
 
 ### Basic Configuration
 ```java
 FrameConfiguration config = FrameConfiguration.builder()
-    .TitleAlign(TitleAlign.LEFT)
+    .frameAlign(FrameAlign.LEFT)
     .padding(1)
     .build();
 
@@ -152,7 +152,7 @@ Clique.frame(config)
 Set the default alignment for all nested children. Individual `.nest()` calls can still override this per node:
 ```java
 FrameConfiguration config = FrameConfiguration.builder()
-    .TitleAlign(TitleAlign.CENTER)
+    .frameAlign(FrameAlign.CENTER)
     .build();
 ```
 
@@ -197,16 +197,16 @@ FrameConfiguration frameConfig = FrameConfiguration.builder()
 ### Full Configuration Example
 ```java
 FrameConfiguration config = FrameConfiguration.builder()
-    .TitleAlign(TitleAlign.CENTER)
+    .frameAlign(FrameAlign.CENTER)
     .padding(3)
     .borderColor("blue")
     .build();
 
 Clique.frame(BoxType.DOUBLE_LINE, config)
     .title("[bold, cyan]Dashboard[/]", TitleAlign.CENTER)
-    .nest(headerTable, TitleAlign.CENTER)
-    .nest(progressBar, TitleAlign.LEFT)
-    .nest("[dim]last updated: just now[/]", TitleAlign.RIGHT)
+    .nest(headerTable, FrameAlign.CENTER)
+    .nest(progressBar, FrameAlign.LEFT)
+    .nest("[dim]last updated: just now[/]", FrameAlign.RIGHT)
     .render();
 ```
 

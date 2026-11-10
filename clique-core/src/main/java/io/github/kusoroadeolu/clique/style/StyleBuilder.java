@@ -7,7 +7,9 @@ import io.github.kusoroadeolu.clique.spi.AnsiCode;
 import java.io.PrintStream;
 import java.util.Objects;
 
-import static io.github.kusoroadeolu.clique.internal.utils.StringUtils.style;
+import static io.github.kusoroadeolu.clique.internal.utils.AnsiDetector.ansiEnabled;
+import static io.github.kusoroadeolu.clique.internal.utils.StringUtils.clearStringBuilder;
+import static io.github.kusoroadeolu.clique.style.StyleCode.RESET;
 
 /**
  * A fluent builder for constructing ANSI-styled strings from multiple segments.
@@ -28,11 +30,13 @@ import static io.github.kusoroadeolu.clique.internal.utils.StringUtils.style;
 @SuppressWarnings("java:S106")
 public final class StyleBuilder {
 
-    private static final AnsiCode RESET = StyleCode.RESET;
     private final StringBuilder textBuilder;
+    private final boolean ansiEnabled;
+
 
     public StyleBuilder() {
-        this.textBuilder = new StringBuilder();
+        textBuilder = new StringBuilder();
+        ansiEnabled = ansiEnabled();
     }
 
     /**
@@ -44,7 +48,7 @@ public final class StyleBuilder {
      * @return this builder
      */
     public StyleBuilder append(String text, AnsiCode... ansiCodes) {
-        style(text, textBuilder ,ansiCodes);
+        textBuilder.append(style(text, false ,ansiCodes));
         return this;
     }
 
@@ -58,9 +62,35 @@ public final class StyleBuilder {
      *
      */
     public StyleBuilder appendAndReset(String text, AnsiCode... ansiCodes) {
-        this.append(text, ansiCodes);
-        this.textBuilder.append(RESET.ansiSequence());
+        textBuilder.append(style(text, true ,ansiCodes));
         return this;
+    }
+
+    /**
+     * Clears the content of the style builder
+     */
+    public void clear() {
+        clearStringBuilder(textBuilder);
+    }
+
+    //A helper method to style text with the given codes
+    private StringBuilder style(String text, boolean reset, AnsiCode... ansiCodes) {
+        StringBuilder sb = new StringBuilder();
+        Objects.requireNonNull(text, "Text cannot be null");
+        Objects.requireNonNull(ansiCodes, "Ansi codes cannot be null");
+
+        //Check if ansi is enabled
+        if (ansiEnabled) {
+            for (AnsiCode code : ansiCodes) {
+                if (code != null) sb.append(code.ansiSequence());
+
+            }
+        }
+
+        sb.append(text);
+
+        if (reset && ansiEnabled) sb.append(RESET);
+        return sb;
     }
 
     /**
@@ -69,7 +99,7 @@ public final class StyleBuilder {
      * @return the styled string
      */
     public String toString() {
-        return this.textBuilder.toString();
+        return textBuilder.toString();
     }
 
     /**
@@ -96,12 +126,12 @@ public final class StyleBuilder {
         if (object == null || getClass() != object.getClass()) return false;
 
         var that = (StyleBuilder) object;
-        return textBuilder.compareTo(that.textBuilder) == 0;
+        return textBuilder.toString().contentEquals(that.textBuilder) && ansiEnabled == that.ansiEnabled;
     }
 
     @Override
     public int hashCode() {
-        return textBuilder.hashCode();
+        return Objects.hash(ansiEnabled, textBuilder.toString());
     }
 
 }

@@ -238,7 +238,6 @@ public final class ParserConfiguration {
             this.styleContextBuilder.add(styleContext);
             return this;
         }
-
         /**
          * Constructs a new {@link ParserConfiguration} from the current builder state.
          *

@@ -3,7 +3,6 @@ package io.github.kusoroadeolu.clique.components;
 import io.github.kusoroadeolu.clique.configuration.ItemListConfiguration;
 import io.github.kusoroadeolu.clique.internal.ListItem;
 import io.github.kusoroadeolu.clique.internal.documentation.Stable;
-import io.github.kusoroadeolu.clique.internal.utils.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -65,12 +64,11 @@ public class ItemList implements Component {
      */
     public ItemList item(String symbol, String content, ItemList subList){
         Objects.requireNonNull(subList, "Sublist cannot be null");
-        lastSymbol = symbol;
-        assertNotSelf(subList);
+        assertNoCycle(subList);
         items.add(new ListItem(symbol, content, subList.recursivelySetConfiguration(configuration)));
+        lastSymbol = symbol;
         return this;
     }
-
     /**
      * Adds a leaf item to the list with no sublist.
      *
@@ -107,11 +105,23 @@ public class ItemList implements Component {
     public String get() {
         StringBuilder sb = new StringBuilder();
         buildList(sb, ZERO ,this);
+        if (!sb.isEmpty()) sb.setLength(sb.length() - NEWLINE.length());
         return sb.toString();
     }
 
-    void assertNotSelf(ItemList list){
-        if (list == this) throw new IllegalArgumentException("Cannot nest list within itself");
+    void assertNoCycle(ItemList subList) {
+        if (subList == this || subList.contains(this)) {
+            throw new IllegalArgumentException("Cannot nest a list within itself or one of its descendants");
+        }
+    }
+
+    private boolean contains(ItemList target) {
+        for (ListItem item : items) {
+            ItemList sub = item.sublist();
+            if (sub == NONE) continue;
+            if (sub == target || sub.contains(target)) return true;
+        }
+        return false;
     }
 
     void buildList(StringBuilder sb, int depth, ItemList root) {

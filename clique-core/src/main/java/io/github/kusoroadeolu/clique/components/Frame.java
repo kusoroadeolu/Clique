@@ -9,12 +9,13 @@ import io.github.kusoroadeolu.clique.internal.Cell;
 import io.github.kusoroadeolu.clique.internal.FrameNode;
 import io.github.kusoroadeolu.clique.internal.documentation.Stable;
 import io.github.kusoroadeolu.clique.internal.exception.InvalidDimensionException;
+import io.github.kusoroadeolu.clique.internal.utils.BoxUtils;
+import io.github.kusoroadeolu.clique.style.StyleBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import static io.github.kusoroadeolu.clique.internal.utils.BoxUtils.applyAnsiToBorders;
 import static io.github.kusoroadeolu.clique.internal.utils.Constants.*;
 import static io.github.kusoroadeolu.clique.internal.utils.StringUtils.parseToCell;
 import static io.github.kusoroadeolu.clique.style.StyleCode.RESET;
@@ -58,7 +59,6 @@ public class Frame implements Component {
         this.titleAlign = TitleAlign.CENTER;
         this.width = NO_WIDTH_SET;
         borderChars = BorderChars.from(type);
-        this.colorBorders(borderChars);
     }
 
     public Frame() {
@@ -226,7 +226,7 @@ public class Frame implements Component {
         var appendedTitle = title;
 
         var parser = configuration.getParser();
-        if (!title.isEmpty()) appendedTitle = title + RESET; //Add a reset flag to prevent title colors from bleeding
+        if (!title.isEmpty()) appendedTitle = title + RESET.ansiSequence(); //Add a reset flag to prevent title colors from bleeding
 
 
         var parsedTitle = parseToCell(appendedTitle, parser);
@@ -252,24 +252,24 @@ public class Frame implements Component {
             );
         }
 
-        var sb = new StringBuilder();
-        appendTitleToBox(parsedTitle, givenWidth, titleWidth, sb); //Using given width, not available width here, since avail width is meant for content not title
+        var sb = new StyleBuilder();
+        BorderChars chars = BoxUtils.colorBorderChars(sb, borderChars, configuration.getBorderColor());
+
+        appendTitleToBox(parsedTitle, givenWidth, titleWidth, sb, chars); //Using given width, not available width here, since avail width is meant for content not title
 
         for (FrameNode node : nodes) {
-            align(node, availableWidth, sb);
+            align(node, availableWidth, sb, chars);
         }
 
-        sb.append(borderChars.bottomLeft())
-                .append(borderChars.hLine().repeat(givenWidth))
-                .append(borderChars.bottomRight())
-                .append(NEWLINE);
+        sb.append(chars.bottomLeft())
+                .append(chars.hLine().repeat(givenWidth))
+                .append(chars.bottomRight());
 
         return sb.toString();
     }
 
     //Given width = well the given width, avail width = width - (padding * 2), in the case of no width set, the avail width = max node width, given width = (width) + (padding * 2)
-    void align(FrameNode node ,int availableWidth, StringBuilder sb) {
-        var borderChar = this.borderChars;
+    void align(FrameNode node ,int availableWidth, StyleBuilder sb, BorderChars borderChars) {
         var padding = configuration.getPadding();
         int rem = Math.max(ZERO, availableWidth - node.maxWidth());
 
@@ -278,43 +278,44 @@ public class Frame implements Component {
             int lineWidth = line.width();
             String content = line.styledText();
             switch (node.align()){
-                case RIGHT -> sb.append(borderChar.vLine())
+                case RIGHT -> sb.append(borderChars.vLine())
                         .append(fixed)
-                        .repeat(BLANK,  rem) //We append the remaining width to align right
+                        .append(BLANK.repeat(rem)) //We append the remaining width to align right
                         .append(content)
                         .append(fixed)
-                        .repeat(BLANK, Math.max(ZERO, availableWidth - lineWidth - rem))
-                        .append(borderChar.vLine())
+                        .append(BLANK.repeat(Math.max(ZERO, availableWidth - lineWidth - rem)))
+                        .append(borderChars.vLine())
                         .append(NEWLINE);
 
-                case LEFT -> sb.append(borderChar.vLine())
+                case LEFT -> sb.append(borderChars.vLine())
                     .append(fixed)
                     .append(content)
-                    .repeat(BLANK, Math.max(ZERO, availableWidth - lineWidth)) //Just append the remaining space here, we don't need rem here
+                    .append(BLANK.repeat(Math.max(ZERO, availableWidth - lineWidth))) //Just append the remaining space here, we don't need rem here
                     .append(fixed)
-                    .append(borderChar.vLine())
+                    .append(borderChars.vLine())
                     .append(NEWLINE);
 
                 case CENTER -> {
                     int leftPad = rem / 2;
                     int rightPad = (availableWidth - lineWidth) - leftPad;
 
-                    sb.append(borderChar.vLine())
+                    sb.append(borderChars.vLine())
                             .append(fixed)
-                            .repeat(BLANK, leftPad) //We need to align everything at a common place
+                            .append(BLANK.repeat(leftPad)) //We need to align everything at a common place
                             .append(content)
-                            .repeat(BLANK, rightPad)
+                            .append(BLANK.repeat(rightPad))
                             .append(fixed)
-                            .append(borderChar.vLine())
+                            .append(borderChars.vLine())
                             .append(NEWLINE);
                 }
             }
         }
     }
 
-    void appendTitleToBox(Cell parsedTitle, int givenWidth, int titleWidth, StringBuilder sb){
+    void appendTitleToBox( Cell parsedTitle, int givenWidth, int titleWidth, StyleBuilder sb, BorderChars borderChars){
         if (!parsedTitle.isEmpty()) {
             int leftWidth = findTitleBlockOffset(givenWidth, titleWidth, titleAlign);
+
             sb.append(borderChars.topLeft())
                     .append(borderChars.hLine().repeat(leftWidth))
                     .append(BLANK).append(parsedTitle.styledText()).append(BLANK)
@@ -352,17 +353,12 @@ public class Frame implements Component {
     }
 
     void validateTitleWidth(int titleWidth, int resolvedWidth) {
-        if (titleWidth > resolvedWidth)
+        int required = titleWidth + 1;
+        if (required > resolvedWidth)
             throw new InvalidDimensionException(
                     "Title width (%d) exceeds frame width (%d). Increase frame width to at least %d or shorten the title."
-                            .formatted(titleWidth, resolvedWidth, titleWidth)
+                            .formatted(titleWidth, resolvedWidth, required)
             );
-    }
-
-    void colorBorders(BorderChars borderChar) {
-        if (configuration.getBorderColor() != null) {
-            applyAnsiToBorders(borderChar, configuration.getBorderColor());
-        }
     }
 
     @Override

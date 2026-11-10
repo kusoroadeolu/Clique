@@ -24,6 +24,14 @@ class ItemListTest {
     }
 
     @Test
+    void nestingAncestorThrows() {
+        ItemList a = new ItemList();
+        ItemList b = new ItemList();
+        a.item("-", "child", b);
+        assertThrows(IllegalArgumentException.class, () -> b.item("-", "loop", a));
+    }
+
+    @Test
     void test_indentSpacing(){
         var list = new ItemList();
         String s = list.item("->", "Content", new ItemList().item("<-", "Content 2")).get();

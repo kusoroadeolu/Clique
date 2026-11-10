@@ -88,8 +88,8 @@ class TableTest {
         var firstCol = lines.get(1);
         String[] arr = firstCol.split("\\|");
         String threeSpaces = " ".repeat(3);
-        assertEquals("A" + threeSpaces, arr[1]);
-        assertEquals("B" + threeSpaces, arr[2]);
+        assertEquals(threeSpaces + "A" + threeSpaces, arr[1]);
+        assertEquals(threeSpaces + "B" + threeSpaces, arr[2]);
     }
 
     @Test
@@ -107,7 +107,7 @@ class TableTest {
         String[] arr = firstCol.split("\\|");
         String threeSpaces = " ".repeat(3);
 
-        assertEquals(threeSpaces + "A", arr[1]);
+        assertEquals(threeSpaces + "A" + threeSpaces, arr[1]);
     }
 
 
@@ -120,5 +120,53 @@ class TableTest {
         table.row("1");
 
         assertNotSame(str1, table.get());
+    }
+
+    @Test
+    void row_withMoreCellsThanHeaders_throws() {
+        Table table = Clique.table(TableType.ASCII).headers("Name", "Age", "Class");
+
+        var ex = assertThrows(IllegalArgumentException.class,
+                () -> table.row("John", "25", "Class A", "extra"));
+
+        assertEquals("Row has 4 cells but the table only has 3 columns", ex.getMessage());
+    }
+
+    @Test
+    void row_withMoreCellsThanHeaders_doesNotAddRow() {
+        Table table = Clique.table(TableType.ASCII).headers("Name", "Age");
+        String before = table.get();
+
+        assertThrows(IllegalArgumentException.class, () -> table.row("John", "25", "extra"));
+
+        assertEquals(before, table.get()); // failed call left the table untouched
+    }
+
+    @Test
+    void row_withExactCellCount_succeeds() {
+        Table table = Clique.table(TableType.ASCII).headers("Name", "Age");
+
+        assertDoesNotThrow(() -> table.row("John", "25"));
+    }
+
+    @Test
+    void row_withFewerCells_padsWithNullReplacement() {
+        var config = TableConfiguration.builder().nullReplacement("N/A").build();
+        Table table = Clique.table(TableType.ASCII, config).headers("Name", "Age", "Class");
+
+        table.row("John");
+
+        assertTrue(table.get().contains("N/A"));
+    }
+
+    @Test
+    void fromRows_withRowLongerThanHeaders_throws() {
+        var rows = List.of(
+                List.of("Name", "Age"),
+                List.of("John", "25", "extra")
+        );
+
+        assertThrows(IllegalArgumentException.class,
+                () -> Clique.table(TableType.ASCII).fromRows(rows));
     }
 }

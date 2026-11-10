@@ -3,6 +3,7 @@ package io.github.kusoroadeolu.clique.internal;
 import io.github.kusoroadeolu.clique.components.Component;
 import io.github.kusoroadeolu.clique.configuration.FrameAlign;
 import io.github.kusoroadeolu.clique.internal.documentation.InternalApi;
+import io.github.kusoroadeolu.clique.internal.utils.StringUtils;
 import io.github.kusoroadeolu.clique.parser.MarkupParser;
 
 import java.util.List;
@@ -25,8 +26,10 @@ public sealed interface FrameNode permits FrameNode.StringNode, FrameNode.Compon
                 .orElse(ZERO);
     }
 
-    static List<Cell> splitComponentLines(String str){
-        return str.lines().map(s -> parseToCell(s, DEFAULT)).toList(); //Original to styled string for components, we actually need to parse here with a default parser
+    static List<Cell> splitComponentLines(String str) {
+        return str.lines()
+                .map(s -> new Cell(StringUtils.stripAnsi(s), s))
+                .toList();//Original to styled string for components, we actually need to parse here with a default parser
     }
 
     //For raw strings, we need to handle the case in which the string has markup, however for components, when we call the get method, they apply their markup so it's good
@@ -35,14 +38,7 @@ public sealed interface FrameNode permits FrameNode.StringNode, FrameNode.Compon
     }
 
 
-    non-sealed class ComponentNode implements FrameNode {
-        private final Component component;
-        private final FrameAlign align;
-
-        public ComponentNode(Component component, FrameAlign align) {
-            this.component = component;
-            this.align = align;
-        }
+     record ComponentNode(Component component, FrameAlign align) implements FrameNode {
 
         @Override
         public List<Cell> lines() {
@@ -60,30 +56,16 @@ public sealed interface FrameNode permits FrameNode.StringNode, FrameNode.Compon
         }
     }
 
-    non-sealed class StringNode implements FrameNode {
-        private final List<Cell> lines;
-        private final int maxWidth;
-        private final FrameAlign align;
+
+
+    record StringNode(List<Cell> lines, int maxWidth, FrameAlign align) implements FrameNode {
 
         public StringNode(String str, FrameAlign align, MarkupParser parser) {
-            this.lines = FrameNode.splitLines(str, parser);
-            this.maxWidth = findMaxWidth(lines);
-            this.align = align;
+            this(FrameNode.splitLines(str, parser), 0, align);
         }
 
-        @Override
-        public List<Cell> lines() {
-            return this.lines;
-        }
-
-        @Override
-        public int maxWidth() {
-            return maxWidth;
-        }
-
-        @Override
-        public FrameAlign align() {
-            return align;
+        public StringNode {
+            maxWidth = findMaxWidth(lines);
         }
     }
 }

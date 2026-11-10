@@ -5,7 +5,10 @@ import io.github.kusoroadeolu.clique.internal.documentation.Stable;
 import io.github.kusoroadeolu.clique.spi.AnsiCode;
 import io.github.kusoroadeolu.clique.style.StyleBuilder;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 
 import static io.github.kusoroadeolu.clique.internal.utils.Constants.EMPTY;
 import static io.github.kusoroadeolu.clique.internal.utils.Constants.NEWLINE;
@@ -120,10 +123,10 @@ public class Tree implements Component {
     private void buildTree(Tree node, String prefix, boolean isLast, StyleBuilder sb) {
         String connector = isLast ? END_CONNECTOR : CONNECTOR;
         var parser = configuration.getParser();
-        sb.append(prefix, this.connectorColor)
+        sb.append(NEWLINE)
+                .append(prefix, this.connectorColor)
                 .appendAndReset(connector)
-                .appendAndReset(parser.parse(node.label))
-                .appendAndReset(NEWLINE);
+                .appendAndReset(parser.parse(node.label));
 
         var childPrefix = prefix + (isLast ? SPACE : CONNECTING_LINE);
         for (int i = 0; i < node.children.size(); i++) {
@@ -148,11 +151,10 @@ public class Tree implements Component {
     public String get() {
         var sb = new StyleBuilder();
         var parser = configuration.getParser();
-        sb.appendAndReset(parser.parse(label)).appendAndReset(NEWLINE);
+        sb.appendAndReset(parser.parse(label));
         for (int i = 0; i < children.size(); i++) {
             buildTree(children.get(i), EMPTY, i == children.size() - 1, sb);
         }
-
         return sb.toString();
     }
 
