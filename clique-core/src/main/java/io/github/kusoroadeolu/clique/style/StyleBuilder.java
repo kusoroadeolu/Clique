@@ -126,12 +126,12 @@ public final class StyleBuilder {
         if (object == null || getClass() != object.getClass()) return false;
 
         var that = (StyleBuilder) object;
-        return textBuilder.compareTo(that.textBuilder) == 0;
+        return textBuilder.toString().contentEquals(that.textBuilder) && ansiEnabled == that.ansiEnabled;
     }
 
     @Override
     public int hashCode() {
-        return textBuilder.hashCode();
+        return Objects.hash(ansiEnabled, textBuilder.toString());
     }
 
 }
