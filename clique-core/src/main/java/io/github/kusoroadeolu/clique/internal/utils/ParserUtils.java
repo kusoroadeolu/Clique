@@ -24,7 +24,7 @@ public class ParserUtils {
         if (string.isBlank()) return NONE;
         var pattern = Pattern.quote(parser.configuration().getDelimiter());
         return Arrays.stream(string.split(pattern))
-                .map(s -> getOrThrow(s.trim().toLowerCase(Locale.ROOT), parser.configuration().getStyleContext()))
+                .map(s -> getOrThrow(s, parser.configuration().getStyleContext()))
                 .toArray(AnsiCode[]::new);
     }
 }

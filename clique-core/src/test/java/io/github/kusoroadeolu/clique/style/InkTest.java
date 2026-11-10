@@ -1,10 +1,10 @@
 package io.github.kusoroadeolu.clique.style;
 
+import io.github.kusoroadeolu.clique.Clique;
 import io.github.kusoroadeolu.clique.configuration.StyleContext;
 import io.github.kusoroadeolu.clique.internal.exception.UnidentifiedStyleException;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Nested;
-import org.junit.jupiter.api.Test;
+import io.github.kusoroadeolu.clique.internal.utils.AnsiDetector;
+import org.junit.jupiter.api.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -12,8 +12,14 @@ class InkTest {
 
     private Ink ink;
 
+    @AfterEach
+    void tearDown() {
+        AnsiDetector.disableCliqueColors();
+    }
+
     @BeforeEach
     void setUp() {
+        Clique.enableCliqueColors();
         ink = new Ink(StyleContext.NONE);
     }
 

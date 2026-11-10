@@ -8,6 +8,7 @@ import io.github.kusoroadeolu.clique.style.BackgroundCode;
 import io.github.kusoroadeolu.clique.style.ColorCode;
 import io.github.kusoroadeolu.clique.style.StyleCode;
 
+import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -118,7 +119,7 @@ public final class PredefinedStyleContext {
 
 
     public static AnsiCode getOrThrow(String s, StyleContext ctx){
-        AnsiCode code = get(s, ctx);
+        AnsiCode code = get(s.toLowerCase(Locale.ROOT).trim(), ctx);
         if (code == null) throw new UnidentifiedStyleException(s);
         return code;
     }
