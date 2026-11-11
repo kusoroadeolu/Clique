@@ -173,7 +173,8 @@ Clique.divider(40).title("Section One").render();
 
 ## Documentation
 
-- **[Full Documentation](docs)**: Complete guides for all features
+- **[Documentation](docs)**: Complete guides for all features
+- **[Java Docs](https://javadoc.io/doc/io.github.kusoroadeolu/clique-core/latest/clique.core/module-summary.html)**: Java docs for clique
 - **[Markup Reference](docs/markup-reference.md)**: Colors, styles, and syntax
 - **[Examples & Demos](https://github.com/kusoroadeolu/clique-demos)**: Interactive examples
 
