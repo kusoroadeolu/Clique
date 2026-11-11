@@ -149,6 +149,9 @@ public final class FrameConfiguration {
         private MarkupParser parser = MarkupParser.DEFAULT;
         private AnsiCode[] borderColor = {};
 
+        private FrameConfigurationBuilder(){}
+
+
         /**
          * Sets the padding applied between the frame border and its content.
          *

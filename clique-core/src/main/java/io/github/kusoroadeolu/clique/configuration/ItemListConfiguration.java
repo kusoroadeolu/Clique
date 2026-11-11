@@ -118,6 +118,8 @@ public class ItemListConfiguration {
         private MarkupParser parser = MarkupParser.DEFAULT;
         private int symbolSpacing = 1;
 
+        private ItemListConfigurationBuilder(){}
+
         /**
          * Sets the number of spaces for each nesting level.
          *

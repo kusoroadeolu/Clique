@@ -64,7 +64,7 @@ The curve that controls how the animation accelerates and decelerates. See the [
 
 ### duration
 
-Total animation time in milliseconds. Must be positive.
+Total animation time in milliseconds. Must be non-negative.
 
 ```java
 .duration(500)  // half a second

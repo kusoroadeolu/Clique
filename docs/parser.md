@@ -29,6 +29,8 @@ The parser follows a simple, predictable set of rules:
 - `[nested[nested]]` — nested tags are not supported; passed through as-is
 - `[not closed [red, blue] hello` — if a `[` is encountered before the current tag closes, the whole thing is ignored
 - `[not closed [red]text[/]` — an unmatched `[` stops every later tag in the same string from being parsed
+- Tags are case-insensitive: `[RED]`, `[Red]` and `[red]` are equivalent. 
+Registered custom style names are lowercased too, so `registerStyle("Brand", ...)` is used as `[brand]`.
 
 ### Unmatched brackets
 

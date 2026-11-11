@@ -120,7 +120,7 @@ public final class Ink {
 
     /**
      * Adds a named style, looked up from the instance's {@link StyleContext}
-     * and {@link PredefinedStyleContext}. Throws {@code UndefinedStyleException} if not found.
+     * and {@link PredefinedStyleContext}. Throws {@code UnidentifiedStyleException} if not found.
      *
      * @param style the registered style name (e.g. {@code "ctp_mauve"})
      * @throws NullPointerException if style is null
@@ -135,7 +135,7 @@ public final class Ink {
 
     /**
      * Adds a named style, looked up from the instance's {@link StyleContext}
-     * and {@link PredefinedStyleContext}. Throws {@code UndefinedStyleException} if not found.
+     * and {@link PredefinedStyleContext}. Throws {@code UnidentifiedStyleException} if not found.
      *
      * @param code the AnsiCode to be applied
      * @throws NullPointerException if style is null

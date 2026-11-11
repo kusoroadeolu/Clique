@@ -47,7 +47,7 @@ Clique.ink().green().on(42)             // toString() called on numeric values
 
 Adds a named style looked up from the instance's `StyleContext` and `PredefinedStyleContext`. Useful for registered theme or custom styles that aren't statically knowable.
 
-Throws `UndefinedStyleException` if the name isn't found in either context.
+Throws `UnidentifiedStyleException` if the name isn't found in either context.
 
 ```java
 Clique.ink().of("ctp_mauve").bold().on("Hello")

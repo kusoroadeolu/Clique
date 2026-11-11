@@ -4,7 +4,10 @@ import io.github.kusoroadeolu.clique.internal.documentation.InternalApi;
 import io.github.kusoroadeolu.clique.internal.documentation.Stable;
 import io.github.kusoroadeolu.clique.parser.MarkupParser;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Objects;
 import java.util.function.Predicate;
 
 import static java.util.Objects.requireNonNull;
@@ -252,6 +255,9 @@ public final class ProgressBarConfiguration {
         private EasingConfiguration easing = EasingConfiguration.DEFAULT;
         private static final String FORMAT_ERR_MESSAGE = "Format cannot be null";
 
+        private ProgressBarConfigurationBuilder(){}
+
+
         /**
          * Sets the character length of the bar segment rendered for {@code :bar}.
          *
@@ -345,7 +351,7 @@ public final class ProgressBarConfiguration {
         public ProgressBarConfigurationBuilder styleWhen(Predicate<Integer> condition, String format) {
             requireNonNull(format, FORMAT_ERR_MESSAGE);
             requireNonNull(condition, "Condition cannot be null");
-            this.styles.add(new ProgressBarPredicate(condition, format));
+            styles.add(new ProgressBarPredicate(condition, format));
             return this;
         }
 
@@ -381,7 +387,7 @@ public final class ProgressBarConfiguration {
          */
         public ProgressBarConfigurationBuilder styles(Collection<ProgressBarPredicate> formats) {
             requireNonNull(formats, "Format styles cannot be null");
-            this.styles.addAll(formats);
+            styles.addAll(formats);
             return this;
         }
 

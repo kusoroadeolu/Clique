@@ -46,15 +46,14 @@ Clique.box()
 
 ### Multi-line Content
 
-Boxes handle newlines properly and will wrap text accordingly:
+Boxes handle newlines properly and will autosize to the text if no dimensions are set accordingly:
 ```java
-Clique.box(BoxType.CLASSIC)
-    .dimensions(40, 10)
+Clique.box()
     .content(
         """
-            [green, bold]Success![/]
-            Your operation completed successfully.
-            You can now proceed to the next step.
+        [green, bold]Success![/]
+        Your operation completed successfully.
+        You can now proceed to the next step.
         """
     )
     .render();
@@ -64,12 +63,12 @@ Clique.box(BoxType.CLASSIC)
 
 Boxes support a range of text alignments, with the default being centered:
 ```java
-Clique.box(BoxType.CLASSIC)
+Clique.box()
     .content(
         """
-            [green, bold]Success![/]
-            Your operation completed successfully.
-            You can now proceed to the next step.
+        [green, bold]Success![/]
+        Your operation completed successfully.
+        You can now proceed to the next step.
         """, TextAlign.CENTER
     )
     .render();

@@ -155,8 +155,11 @@ public final class TableConfiguration {
         private CellAlign alignment = CellAlign.LEFT;
         private MarkupParser parser = MarkupParser.DEFAULT;
         private String nullReplacement = "";
-        private Map<Integer, CellAlign> columnAlignment = new HashMap<>();
+        private final Map<Integer, CellAlign> columnAlignment = new HashMap<>();
         private AnsiCode[] borderColor = {};
+
+        private TableConfigurationBuilder(){}
+
 
         /**
          * Sets the padding for table cells.
@@ -185,8 +188,6 @@ public final class TableConfiguration {
 
         /**
          * Sets the parser for markup resolution.
-         *
-         * content will be treated as literal text and will not be parsed into ANSI sequences.
          *
          * @param parser the parser to use; must not be {@code null}
          * @return this builder

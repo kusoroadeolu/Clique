@@ -126,9 +126,6 @@ public final class TreeConfiguration {
         /**
          * Sets the {@link MarkupParser} used to resolve markup tags in node labels.
          *
-         * then be rendered as-is. Also affects subsequent calls to
-         * {@link #connectorColor(String)}, which resolves color markup using this parser.
-         *
          * @param parser the parser to use; must not be {@code null}
          * @return this builder
          * @throws NullPointerException if {@code parser} is {@code null}

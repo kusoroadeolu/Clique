@@ -11,7 +11,6 @@ import io.github.kusoroadeolu.clique.internal.WidthAwareList;
 import io.github.kusoroadeolu.clique.internal.documentation.Stable;
 import io.github.kusoroadeolu.clique.internal.utils.MiscUtils;
 import io.github.kusoroadeolu.clique.style.StyleBuilder;
-import io.github.kusoroadeolu.clique.style.StyleCode;
 
 import java.util.List;
 import java.util.Objects;
@@ -25,12 +24,9 @@ import static java.util.Objects.requireNonNull;
  * A single-cell bordered container that renders text content within a styled box.
  *
  * <p>Boxes can be sized explicitly via {@link #dimensions(int, int)} or left to
- * autosize based on content. When no dimensions are set, width and height are
- * derived from the longest line and line count of the content respectively.</p>
- *
- * <p>The rendered string is cached after the first call to {@link #get()} and
- * invalidated whenever {@link #content(String)} or {@link #content(String, TextAlign)}
- * is called.</p>
+ * autosize based on content. When no dimensions are set,
+ * width is the longest line plus horizontal padding, and
+ * height is the line count and line count of the content respectively.</p>
  *
  * <p><b>Note:</b> This class is not thread-safe.</p>
  *
@@ -73,8 +69,7 @@ public class Box implements Component {
     /**
      * Renders and returns the box as a string.
      *
-     * <p>The result is cached after the first invocation and reused on subsequent
-     * calls until the content is updated. Text alignment is resolved from the
+     * <p>Text alignment is resolved from the
      * per-call override set via {@link #content(String, TextAlign)} if present,
      * falling back to the value in {@link BoxConfiguration}.</p>
      *
@@ -100,10 +95,11 @@ public class Box implements Component {
 
 
     /**
-     * Sets the content of this box and invalidates the render cache.
+     * Sets the content of this box.
      *
-     * <p>Text alignment is inherited from the {@link BoxConfiguration} provided
-     * at construction time.</p>
+     * <p>Any text alignment override set by a previous call to
+     * {@link #content(String, TextAlign)} is cleared, so alignment falls back to
+     * the {@link BoxConfiguration} provided at construction time.</p>
      *
      * @param content the text content to display; must not be {@code null}
      * @return this box instance
@@ -117,7 +113,7 @@ public class Box implements Component {
     }
 
     /**
-     * Sets the content and text alignment of this box, invalidating the render cache.
+     * Sets the content and text alignment of this box.
      *
      * <p>The provided {@code align} takes precedence over the alignment specified
      * in the {@link BoxConfiguration}.</p>
@@ -135,20 +131,23 @@ public class Box implements Component {
         return this;
     }
 
-    TextAlign textAlign(){
-        return this.align;
-    }
-
     /**
      * Sets explicit dimensions for this box.
      *
-     * <p>When dimensions are set, content that exceeds the usable inner width
-     * (width minus padding) or the specified height will throw an
-     * {@link InvalidDimensionException} at render time. If this method is never
-     * called, the box auto sizes to fit its content.</p>
+     * <p>{@code width} and {@code height} describe the <b>inner</b> area of the box,
+     * i.e. the space between the borders. The rendered box is therefore
+     * {@code width + 2} characters wide and {@code height + 2} lines tall, since
+     * the border occupies one column on each side and one row at the top and bottom.
+     * Horizontal padding is applied inside {@code width}, so the usable content
+     * width is {@code width - (2 * padding)}.</p>
      *
-     * @param width  the total outer width of the box; must be greater than 0
-     * @param height the total outer height of the box; must be greater than 0
+     * <p>When dimensions are set, content wider than the usable inner width or
+     * taller than {@code height} will throw an {@link InvalidDimensionException}
+     * at render time. If this method is never called, the box autosizes to fit
+     * its content.</p>
+     *
+     * @param width  the inner width of the box, including horizontal padding; must be greater than 0
+     * @param height the inner height of the box in lines; must be greater than 0
      * @return this box instance
      * @throws IllegalArgumentException if {@code width} or {@code height} is not greater than 0
      */
@@ -175,6 +174,9 @@ public class Box implements Component {
 
     private record Dimensions(int width, int height) {}
 
+    TextAlign textAlign(){
+        return align;
+    }
 
     private Dimensions resolveDimensions(WidthAwareList cells) {
         int padding = configuration.getPadding();
@@ -194,7 +196,7 @@ public class Box implements Component {
         return new Dimensions(width, height);
     }
 
-     static void drawBox(StyleBuilder sb, BoxWrapper boxWrapper, TextAlign textAlign) {
+     private static void drawBox(StyleBuilder sb, BoxWrapper boxWrapper, TextAlign textAlign) {
         final int width = boxWrapper.width();
         final int padding = boxWrapper.configuration().getPadding();
         final String spaces = BLANK.repeat(width);
@@ -233,7 +235,7 @@ public class Box implements Component {
     }
 
 
-    static void alignText(StyleBuilder sb, int idx, TextAlign textAlign, String spaces, List<Cell> wordWrap, String vLine, int padding) {
+    private static void alignText(StyleBuilder sb, int idx, TextAlign textAlign, String spaces, List<Cell> wordWrap, String vLine, int padding) {
         final Cell cell = wordWrap.get(idx);
         final String ss = cell.styledText();
         final String fixed = BLANK.repeat(padding);

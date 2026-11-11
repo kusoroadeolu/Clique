@@ -155,10 +155,6 @@ main.parent(); // returns Optional.of(src)
 tree.parent();  // returns Optional.empty() — root has no parent
 ```
 
-## Reparenting and Cycles
-If the child already has a parent, it’s removed from that parent first. Adding a node to itself throws UnsupportedOperationException. 
-Adding an ancestor is not checked, which creates a cycle, and get() will overflow the stack
-
 ## Factory Methods
 
 ```java

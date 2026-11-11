@@ -77,13 +77,20 @@ public class Tree implements Component {
     /**
      * Appends an existing {@code Tree} as a child of this node.
      *
-     * <p>The provided tree is re-parented to this node. The returned node is the
-     * provided child, not this node.</p>
+     * <p>If the tree already has a parent, it is first removed from that parent's
+     * children. It is then re-parented to this node and appended after any existing
+     * children.</p>
      *
-     * @param tree the tree to append as a child; must not be {@code null} or this node
+     * <p>The {@link TreeConfiguration} of this node is applied to the provided tree
+     * and all of its descendants, replacing whatever configuration they had before.</p>
+     *
+     * <p>The returned node is the provided child, not this node.</p>
+     *
+     * @param tree the tree to append as a child; must not be {@code null}
      * @return the provided child node
      * @throws NullPointerException          if {@code tree} is {@code null}
-     * @throws UnsupportedOperationException if {@code tree} is this node
+     * @throws UnsupportedOperationException if {@code tree} is this node or one of
+     *                                       its ancestors, since that would create a cycle
      */
     public Tree add(Tree tree) {
         Objects.requireNonNull(tree, "Tree cannot be null");
@@ -125,7 +132,7 @@ public class Tree implements Component {
         var parser = configuration.getParser();
         sb.append(NEWLINE)
                 .append(prefix, this.connectorColor)
-                .appendAndReset(connector)
+                .appendAndReset(connector, this.connectorColor)
                 .appendAndReset(parser.parse(node.label));
 
         var childPrefix = prefix + (isLast ? SPACE : CONNECTING_LINE);
@@ -142,8 +149,9 @@ public class Tree implements Component {
     /**
      * Renders this node and all its descendants as a formatted tree string.
      *
-     * <p>If a parser is configured via {@link TreeConfiguration}, markup in node
-     * labels is resolved before the string is returned.</p>
+     * <p>Labels are passed through the parser supplied by this node's
+     * {@link TreeConfiguration}, so any markup is resolved before the string is returned.
+     * Calling this on a non-root node renders only the subtree rooted at that node.</p>
      *
      * @return the rendered tree as a string
      */
@@ -161,10 +169,6 @@ public class Tree implements Component {
     //For Tests
     List<Tree> children(){
         return children;
-    }
-
-    void assertNotSelf(Tree tree){
-        if (tree == this) throw new UnsupportedOperationException("Cannot nest a tree within itself");
     }
 
     @Override

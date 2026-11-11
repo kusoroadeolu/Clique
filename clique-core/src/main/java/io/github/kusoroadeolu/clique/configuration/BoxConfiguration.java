@@ -147,6 +147,8 @@ public final class BoxConfiguration {
         private AnsiCode[] borderColor = {};
         private int padding = 2;
 
+        private BoxConfigurationBuilder(){}
+
         /**
          * Sets the padding applied between the box border and its content.
          *
@@ -168,7 +170,6 @@ public final class BoxConfiguration {
          *
          * <p>The markup string is resolved against the parser set via
          * {@link #parser(MarkupParser)} at the time this method is called.
-         * no color codes will be applied.
          *
          * @param borderColor a markup string representing the desired border color;
          *                    must not be {@code null}

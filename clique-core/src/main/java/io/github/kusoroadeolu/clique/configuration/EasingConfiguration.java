@@ -6,10 +6,7 @@ import io.github.kusoroadeolu.clique.internal.documentation.Stable;
 import java.util.Objects;
 
 /**
- * Immutable configuration controlling the easing animation applied during animated
- * progress bar ticks.
- *
- * <p>Easing interpolates a tick across multiple rendered frames over a fixed duration,
+  * <p>Easing interpolates a tick across multiple rendered frames over a fixed duration,
  * producing a smooth animation rather than an instant jump. Whether easing is applied
  * to a given tick is determined by {@link #shouldEase(int)}, which compares the tick
  * amount against the configured {@link #getThreshold() threshold}. The default values are:
@@ -67,13 +64,12 @@ public final class EasingConfiguration {
     private static final int DISABLED_THRESHOLD = 0;
 
     private static EasingConfiguration disabledConfig() {
-        return EasingConfiguration
-                .builder()
-                .function(EasingFunction.LINEAR)
-                .duration(0)
-                .threshold(DISABLED_THRESHOLD)
-                .frames(1)
-                .build();
+        EasingConfigurationBuilder b = new EasingConfigurationBuilder();
+        b.function = EasingFunction.LINEAR;
+        b.durationMs = 0;
+        b.frames = 1;
+        b.threshold = DISABLED_THRESHOLD;
+        return new EasingConfiguration(b);
     }
 
     private EasingConfiguration(EasingConfigurationBuilder easingConfigurationBuilder) {
@@ -140,6 +136,9 @@ public final class EasingConfiguration {
     /**
      * Returns the delay between each animation frame, derived as {@code durationMs / frames}.
      *
+     * <p>Uses integer division, so the result is truncated. The total animation
+     * time may be slightly shorter than {@link #getDurationMs()}.
+     *
      * @return the per-frame delay in milliseconds
      */
     public long getFrameDelayMs() {
@@ -149,12 +148,10 @@ public final class EasingConfiguration {
     /**
      * Returns whether easing should be applied for the given tick amount.
      *
-     * <p>Returns {@code true} if {@code tickBy >= threshold} and {@code threshold >= 0}.
-     * If {@code threshold < 0}, this method always returns {@code false}, effectively
-     * disabling easing regardless of tick size.
-     *
-     * @param tickBy the number of ticks being advanced
-     * @return {@code true} if easing should be applied; {@code false} otherwise
+     * <p>Returns {@code true} if {@code tickBy >= threshold}. A negative threshold
+     * (used internally by {@link #DISABLED}) always yields {@code false}. Thresholds
+     * set through the builder are always {@code >= 0}, so a builder-created
+     * configuration never disables easing this way.
      */
     @InternalApi(since = "4.0.2")
     public boolean shouldEase(int tickBy) {
@@ -196,6 +193,9 @@ public final class EasingConfiguration {
         private int frames = 20;
         private int threshold = 5;
 
+        private EasingConfigurationBuilder(){}
+
+
         /**
          * Sets the easing function used to interpolate progress across frames.
          *
@@ -220,7 +220,7 @@ public final class EasingConfiguration {
          * @throws IllegalArgumentException if {@code durationMs} is negative
          */
         public EasingConfigurationBuilder duration(int durationMs) {
-            if (durationMs < 0) throw new IllegalArgumentException("Duration must be positive");
+            if (durationMs < 0) throw new IllegalArgumentException("Duration must be non-negative");
             this.durationMs = durationMs;
             return this;
         }
@@ -236,7 +236,7 @@ public final class EasingConfiguration {
          * @throws IllegalArgumentException if {@code frames} is {@code <= 0}
          */
         public EasingConfigurationBuilder frames(int frames) {
-            if (frames <= 0) throw new IllegalArgumentException("Frames must be greater than to zero");
+            if (frames <= 0) throw new IllegalArgumentException("Frames must be greater than zero");
             this.frames = frames;
             return this;
         }
@@ -252,7 +252,7 @@ public final class EasingConfiguration {
          * @throws IllegalArgumentException if {@code threshold} is negative
          */
         public EasingConfigurationBuilder threshold(int threshold) {
-            if (threshold < 0) throw new IllegalArgumentException("Threshold must be greater than or equal to zero");
+            if (threshold < 0) throw new IllegalArgumentException("Threshold must be non-negative");
             this.threshold = threshold;
             return this;
         }
