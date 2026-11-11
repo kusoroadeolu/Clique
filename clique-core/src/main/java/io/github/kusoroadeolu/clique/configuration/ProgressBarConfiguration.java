@@ -293,7 +293,7 @@ public final class ProgressBarConfiguration {
          * @throws IllegalArgumentException if {@code tickPerUnit} is less than {@code 1}
          */
         public ProgressBarConfigurationBuilder ticksPerUnit(int ticksPerUnit) {
-            if (ticksPerUnit <= 0) throw new IllegalArgumentException("Ticks per unit cannot be less than 1");
+            if (ticksPerUnit <= 0) throw new IllegalArgumentException("Ticks per unit must be positive");
             this.tickPerUnit = ticksPerUnit;
             return this;
         }

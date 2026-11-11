@@ -3,6 +3,8 @@ package io.github.kusoroadeolu.clique.internal;
 import io.github.kusoroadeolu.clique.internal.documentation.InternalApi;
 import io.github.kusoroadeolu.clique.spi.RGBAnsiCode;
 
+import java.util.Objects;
+
 @InternalApi(since = "3.2.0")
 
 //"
@@ -47,5 +49,23 @@ public class RGBColor implements RGBAnsiCode {
 
     public boolean isBackground() {
         return isBackground;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+
+        RGBColor rgbColor = (RGBColor) o;
+        return red == rgbColor.red && green == rgbColor.green && blue == rgbColor.blue && isBackground == rgbColor.isBackground && Objects.equals(ansiSequence, rgbColor.ansiSequence);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = red;
+        result = 31 * result + green;
+        result = 31 * result + blue;
+        result = 31 * result + Boolean.hashCode(isBackground);
+        result = 31 * result + Objects.hashCode(ansiSequence);
+        return result;
     }
 }

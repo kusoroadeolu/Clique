@@ -61,7 +61,7 @@ public final class EasingConfiguration {
         this(new EasingConfigurationBuilder());
     }
 
-    private static final int DISABLED_THRESHOLD = 0;
+    private static final int DISABLED_THRESHOLD = -1;
 
     private static EasingConfiguration disabledConfig() {
         EasingConfigurationBuilder b = new EasingConfigurationBuilder();

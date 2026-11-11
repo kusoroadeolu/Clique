@@ -19,10 +19,6 @@ public class ParseToken {
         this.end = end;
     }
 
-    public ParseToken(int start, List<AnsiCode> styles) {
-        this.start = start;
-        this.styles = styles;
-    }
 
     public int start() {
         return start;
@@ -30,10 +26,6 @@ public class ParseToken {
 
     public int end() {
         return end;
-    }
-
-    public void setEnd(int end) {
-        this.end = end;
     }
 
     public List<AnsiCode> styles() {

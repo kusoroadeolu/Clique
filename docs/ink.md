@@ -137,7 +137,7 @@ Clique.ink().white().bgRgb(30, 30, 30).on("Dark background")
 Applies a 24-bit background color using a hex color string. The string must be in `#RRGGBB` format. Requires truecolor terminal support.
 
 ```java
-Clique.ink().hex("#FF5733").bold().on("Orange red")
+Clique.ink().bgHex("#FF5733").bold().on("Orange red")
 ```
 ---
 
