@@ -52,12 +52,16 @@ public final class StyleBuilder {
 
 
     /**
-     * Appends an ANSI code to this text and then resets the terminal
+     * Appends styled text to this builder, then resets the terminal so the style
+     * does not carry over into subsequent segments.
      *
-     * @param text      The text we're applying the ansiCode to
-     * @param ansiCodes The ANSI code we're applying to the text
-     * @return An instance of this
+     * <p>If ANSI is not enabled, the text is appended as-is with no escape sequences.
+     * Null entries in {@code ansiCodes} are ignored.</p>
      *
+     * @param text      the text to style; must not be {@code null}
+     * @param ansiCodes the ANSI codes to apply; the array itself must not be {@code null}
+     * @return this builder
+     * @throws NullPointerException if {@code text} or {@code ansiCodes} is {@code null}
      */
     public StyleBuilder appendAndReset(String text, AnsiCode... ansiCodes) {
         textBuilder.append(style(text, true ,ansiCodes));

@@ -87,43 +87,6 @@ Use `DividerConfiguration` to customize the divider's character, color, and titl
 
 ### Configuration Options
 
-#### Divider Character
-
-Change the character used to draw the line:
-```java
-DividerConfiguration config = DividerConfiguration.builder()
-    .dividerChar('=')
-    .build();
-```
-
-#### Divider Color
-
-Set the line color using a color name string or `AnsiCode` values:
-```java
-// Using a color name string
-DividerConfiguration config = DividerConfiguration.builder()
-    .dividerColor("green")
-    .build();
-
-// Using AnsiCode values directly
-DividerConfiguration config = DividerConfiguration.builder()
-    .dividerColor(ColorCode.GREEN)
-    .build();
-```
-
-#### Custom Parser
-
-Provide a custom parser for markup resolution in the title:
-```java
-ParserConfiguration parserConfig = ParserConfiguration.builder()
-    .delimiter(' ')
-    .build();
-
-DividerConfiguration config = DividerConfiguration.builder()
-    .parser(Clique.parser(parserConfig))
-    .build();
-```
-
 ### Full Configuration Example
 ```java
 DividerConfiguration config = DividerConfiguration.builder()

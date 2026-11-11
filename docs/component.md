@@ -21,8 +21,6 @@ Builds and returns the formatted string representation of the component without 
 String rendered = Clique.divider(40).get();
 ```
 
-> Each call performs a render. Caching is up to the implementation. `Box` and `Table`, for example, cache their output until their content changes.
-
 ### `render()`
 
 Prints the component to `System.out`, followed by a newline. This is the most common way to display a component.

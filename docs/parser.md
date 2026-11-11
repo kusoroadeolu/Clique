@@ -29,6 +29,8 @@ The parser follows a simple, predictable set of rules:
 - `[nested[nested]]` — nested tags are not supported; passed through as-is
 - `[not closed [red, blue] hello` — if a `[` is encountered before the current tag closes, the whole thing is ignored
 - `[not closed [red]text[/]` — an unmatched `[` stops every later tag in the same string from being parsed
+- Tags are case-insensitive: `[RED]`, `[Red]` and `[red]` are equivalent. 
+Registered custom style names are lowercased too, so `registerStyle("Brand", ...)` is used as `[brand]`.
 
 ### Unmatched brackets
 
@@ -43,30 +45,6 @@ Components parse each unit on its own, so a stray bracket only affects the unit 
 ### Strict parsing and dynamic content
 
 With `enableStrictParsing()`, any bracketed text that isn't a style throws, so `"a[0]"` throws `UnidentifiedStyleException`. Escape brackets in user-supplied or data-driven strings.
-
-## Parser Configuration
-
-Customize how the parser behaves using `ParserConfiguration`:
-```java
-ParserConfiguration configuration = ParserConfiguration
-        .builder()
-        .enableAutoReset()  // Automatically reset styles between tags to prevent leaking
-        .delimiter(' ')          // Use space instead of comma as delimiter
-        .build();
-
-MarkupParser configuredParser = Clique.parser(configuration);
-
-// Now you can use space-separated styles
-configuredParser.print("[red bold]Hello[blue] World");
-```
-
-### Configuration Options
-
-- **`delimiter(char)`** - Set the delimiter between style attributes (default: `,`)
-- **`enableAutoReset()`** - Automatically resets styles when a new tag is encountered, preventing styles from leaking into subsequent tags
-- **`enableStrictParsing()`** - Throw exceptions for unrecognized styles on otherwise valid tags
-- **`addStyle(String, AnsiCode)`** - Register a single custom style for this parser instance
-- **`styleContext(StyleContext)`** - Attach a full `StyleContext` of custom styles to this parser instance
 
 ## Local Styles with StyleContext
 

@@ -13,7 +13,7 @@ public record Gradient(RGBAnsiCode from, RGBAnsiCode to) {
 
     public String apply(String text) {
         int visible = countVisible(text);
-        int denom = Math.max(visible - 1, 1);
+        int d = Math.max(visible - 1, 1);
 
         int colorIdx = 0;
         int i = 0;
@@ -31,7 +31,7 @@ public record Gradient(RGBAnsiCode from, RGBAnsiCode to) {
                 sb.appendCodePoint(cp);
                 if (cp == Constants.ANSI_END) inEscape = false;
             } else {
-                double t = (double) colorIdx / denom;
+                double t = (double) colorIdx / d;
                 int r = (int) (from.red() + t * (to.red() - from.red()));
                 int g = (int) (from.green() + t * (to.green() - from.green()));
                 int b = (int) (from.blue() + t * (to.blue() - from.blue()));
@@ -43,7 +43,7 @@ public record Gradient(RGBAnsiCode from, RGBAnsiCode to) {
             i += len;
         }
 
-        return sb.append(StyleCode.RESET.ansiSequence()).toString();
+        return sb.append(StyleCode.RESET).toString();
     }
 
     private int countVisible(String text) {

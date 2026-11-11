@@ -75,8 +75,10 @@ public class Frame implements Component {
     /**
      * Sets the frame title and its horizontal alignment within the top border.
      *
-     * <p>The title is rendered inline with the top border line. If a color parser is configured,
-     * a reset sequence is automatically appended to prevent color bleed into the border.
+     * <p>The title is rendered inline with the top border line.
+     * A reset sequence is appended after the title when ANSI is enabled, to prevent
+     * color bleed into the border.
+     * </p>
      *
      * @param title     the title text; must not be {@code null}
      * @param titleAlign the horizontal placement of the title; must not be {@code null}
@@ -110,6 +112,9 @@ public class Frame implements Component {
      * Sets the frame title with center alignment.
      *
      * <p>Equivalent to {@code title(title, TitleAlign.CENTER)}.
+     *
+     * <p>A reset sequence is appended after the title when ANSI is enabled, to prevent
+     * color bleed into the border.
      *
      * @param title the title text; must not be {@code null}
      * @return this frame, for chaining
@@ -213,9 +218,9 @@ public class Frame implements Component {
      * Builds the frame and all its nested nodes to a string.
      *
      * <p>Width resolution, title placement, content alignment, and border drawing all
-     * occur during this call. No state is cached; each invocation performs a full render.
+     * occur during this call.
      *
-     * @return the fully rendered frame as a multi-line string, terminated with a newline
+     * @return the fully rendered frame as a multi-line string, with no trailing newline
      * @throws InvalidDimensionException
      *         if the title width exceeds the resolved frame width, or if any nested node's
      *         content width exceeds the available content area

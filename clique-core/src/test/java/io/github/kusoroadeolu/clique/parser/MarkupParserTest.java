@@ -3,8 +3,8 @@ package io.github.kusoroadeolu.clique.parser;
 
 import io.github.kusoroadeolu.clique.Clique;
 import io.github.kusoroadeolu.clique.configuration.ParserConfiguration;
-import io.github.kusoroadeolu.clique.internal.CompositeColor;
 import io.github.kusoroadeolu.clique.exceptions.UnidentifiedStyleException;
+import io.github.kusoroadeolu.clique.internal.CompositeColor;
 import io.github.kusoroadeolu.clique.internal.markup.GlobalStyleRegistry;
 import io.github.kusoroadeolu.clique.internal.utils.AnsiDetector;
 import io.github.kusoroadeolu.clique.internal.utils.ParserUtils;

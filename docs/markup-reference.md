@@ -130,7 +130,7 @@ Clique automatically detects ANSI support and can be manually controlled:
 
 ```java
 Clique.enableCliqueColors();  // Force enable colors
-Clique.enableCliqueColors(false); // Force disable colors
+Clique.disableCliqueColors(); // Force disable colors
 ```
 ## Terminal Compatibility
 For all colors to display correctly, your terminal must support truecolor (24-bit color). Most modern terminals support this by default, but you may need to enable it:

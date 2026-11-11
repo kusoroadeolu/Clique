@@ -137,32 +137,7 @@ ProgressBarConfiguration config = ProgressBarConfiguration.builder()
 ProgressBar bar = Clique.progressBar(100, config);
 ```
 
-### Configuration Options
-
-#### Length
-Width of the progress bar in characters:
-```java
-.length(50)
-```
-
-#### Complete/Incomplete Characters
-Characters used for filled and unfilled portions:
-```java
-.complete('█')
-.incomplete('░')
-```
-
-#### Ticks Per Unit
-Map multiple ticks to a single logical unit for `:units` and `:total-units` tokens.
-Useful when each item you're processing has multiple internal steps:
-```java
-.ticksPerUnit(5)
-```
-
-For example, with `ticksPerUnit(5)` and a total of `50` ticks, `:total-units` renders
-as `10` and `:units` increments automatically as ticks accumulate.
-
-#### Format String
+### Format String
 Template for the progress bar output with placeholders:
 ```java
 .format(":bar :percent% [:elapsed/:remaining]")

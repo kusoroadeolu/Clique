@@ -145,55 +145,6 @@ Clique.frame(config)
     .render();
 ```
 
-### Configuration Options
-
-#### Default Alignment
-
-Set the default alignment for all nested children. Individual `.nest()` calls can still override this per node:
-```java
-FrameConfiguration config = FrameConfiguration.builder()
-    .frameAlign(FrameAlign.CENTER)
-    .build();
-```
-
-#### Padding
-
-Set the horizontal padding inside the frame. Default is `2`. Padding cannot be negative.
-```java
-FrameConfiguration config = FrameConfiguration.builder()
-    .padding(4)
-    .build();
-```
-
-#### Border Coloring
-
-Set a uniform border color using a color name string or `AnsiCode` values directly:
-```java
-// Using a color name string
-FrameConfiguration config = FrameConfiguration.builder()
-    .borderColor("red")
-    .build();
-
-// Using AnsiCode values directly
-FrameConfiguration config = FrameConfiguration.builder()
-    .borderColor(ColorCode.RED)
-    .build();
-```
-
-#### Custom Parser
-
-Provide a custom configured parser for markup processing in string nodes and titles:
-```java
-ParserConfiguration parserConfig = ParserConfiguration
-    .builder()
-    .delimiter(' ')
-    .build();
-
-FrameConfiguration frameConfig = FrameConfiguration.builder()
-    .parser(Clique.parser(parserConfig))
-    .build();
-```
-
 ### Full Configuration Example
 ```java
 FrameConfiguration config = FrameConfiguration.builder()

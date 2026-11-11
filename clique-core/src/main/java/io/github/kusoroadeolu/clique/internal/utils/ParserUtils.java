@@ -5,7 +5,6 @@ import io.github.kusoroadeolu.clique.parser.MarkupParser;
 import io.github.kusoroadeolu.clique.spi.AnsiCode;
 
 import java.util.Arrays;
-import java.util.Locale;
 import java.util.regex.Pattern;
 
 import static io.github.kusoroadeolu.clique.internal.markup.PredefinedStyleContext.getOrThrow;

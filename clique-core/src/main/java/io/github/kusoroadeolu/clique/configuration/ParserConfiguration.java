@@ -165,6 +165,9 @@ public final class ParserConfiguration {
         private final StyleContext.StyleContextBuilder styleContextBuilder = StyleContext.builder();
         private StyleContext context = StyleContext.NONE;
 
+        private ParserConfigurationBuilder(){}
+
+
         /**
          * Enables auto-reset, causing an ANSI reset sequence to be injected automatically
          * when a new tag is encountered, preventing style bleed between tags.

@@ -484,21 +484,20 @@ public final class Clique {
     // -------------------------------------------------------------------------
 
     /**
-     * Creates a {@link Tree} with the given root label and {@link TreeConfiguration#DEFAULT} configuration.
+     * Creates a root node with the given label and {@link TreeConfiguration#DEFAULT}.
      *
-     * @param label the label for the root node
-     * @throws NullPointerException if the label is null
-     * @return a new {@code Tree} instance
+     * @param label the label for this node; must not be {@code null}
+     * @throws NullPointerException if {@code label} is {@code null}
      */
     public static Tree tree(String label) { return CliqueComponents.tree(label); }
 
     /**
-     * Creates a {@link Tree} with the given root label and configuration.
+     * Creates a root node with the given label and configuration.
      *
-     * @param label         the label for the root node
-     * @param configuration the tree configuration to use
-     * @throws NullPointerException if the label or configuration is null
-     * @return a new {@code Tree} instance
+     * @param label         the label for this node; must not be {@code null}
+     * @param configuration the configuration used by this node and inherited by
+     *                      any children added later; must not be {@code null}
+     * @throws NullPointerException if {@code label} or {@code configuration} is {@code null}
      */
     public static Tree tree(String label, TreeConfiguration configuration) { return CliqueComponents.tree(label, configuration); }
 

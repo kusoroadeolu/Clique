@@ -47,26 +47,6 @@ A few things worth knowing:
 
 ---
 
-## `item()` Overloads
-
-```java
-.item("•", "content")                    // symbol + content
-.item("•", "content", Clique.list()...)  // symbol + content + sublist
-```
-
-Symbols are full markup strings — `"[red]✗[/]"` works fine.
-
----
-
-## Getting the Output
-
-```java
-list.render();         // prints to stdout
-String s = list.get(); // returns the rendered string
-```
-
----
-
 ## Configuration
 
 ```java

@@ -1,13 +1,15 @@
 package io.github.kusoroadeolu.clique.configuration;
 
+import io.github.kusoroadeolu.clique.exceptions.NoSuchThemeException;
 import io.github.kusoroadeolu.clique.internal.CompositeColor;
 import io.github.kusoroadeolu.clique.internal.documentation.Stable;
-import io.github.kusoroadeolu.clique.exceptions.NoSuchThemeException;
 import io.github.kusoroadeolu.clique.internal.loader.ThemeLoader;
 import io.github.kusoroadeolu.clique.internal.utils.MiscUtils;
 import io.github.kusoroadeolu.clique.spi.AnsiCode;
 
 import java.util.*;
+
+import static io.github.kusoroadeolu.clique.internal.utils.MiscUtils.normalizeStyle;
 
 /**
  * A scoped registry of custom markup styles, mapping markup names to {@link AnsiCode}
@@ -110,11 +112,11 @@ public final class StyleContext {
      * Returns the {@link AnsiCode} registered under the given markup name, or
      * {@code null} if no style is registered for that name.
      *
-     * @param s the markup name to look up
+     * @param style the markup name to look up
      * @return the associated {@link AnsiCode}, or {@code null} if not present
      */
-    public AnsiCode get(String s) {
-        return styles.get(s);
+    public AnsiCode get(String style) {
+        return styles.get(normalizeStyle(style));
     }
 
     StyleContext(StyleContextBuilder builder) {
@@ -206,7 +208,7 @@ public final class StyleContext {
         public StyleContextBuilder add(String style, Collection<AnsiCode> code) {
             Objects.requireNonNull(style, NULL_STYLE_NAME);
             Objects.requireNonNull(code, "Ansi codes cannot be null");
-            styles.put(MiscUtils.normalizeStyle(style), new CompositeColor(code));
+            styles.put(normalizeStyle(style), new CompositeColor(code));
             return this;
         }
 

@@ -108,9 +108,12 @@ public class DividerConfiguration {
 
     public static class DividerConfigurationBuilder {
 
-		private char dividerChar = '─';
+        private DividerConfigurationBuilder(){}
 
-		private AnsiCode[] dividerColor = new AnsiCode[ZERO];
+
+        private char dividerChar = '─';
+
+		private AnsiCode[] dividerColor = {};
 
 		private MarkupParser parser = MarkupParser.DEFAULT;
 
@@ -163,7 +166,6 @@ public class DividerConfiguration {
 		 *
 		 * @param c the char used to render the Divider
 		 * @return this builder
-		 * @throws NullPointerException if {@code c} is {@code null}
 		 */
 		public DividerConfigurationBuilder dividerChar(char c) {
 

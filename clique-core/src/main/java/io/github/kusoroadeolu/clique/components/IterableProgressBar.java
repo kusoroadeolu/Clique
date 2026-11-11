@@ -26,7 +26,7 @@ import java.util.Objects;
  * @since 3.2.1
  */
 @Stable(since = "3.2.1")
-public class IterableProgressBar<T> implements Iterable<T> {
+public class IterableProgressBar<T> implements Iterable<T>{
 
     private final Iterator<T> iterator;
     private boolean consumed = false;
@@ -80,7 +80,7 @@ public class IterableProgressBar<T> implements Iterable<T> {
     }
 
     /**
-     * Prints the progress bar component to the given {@link PrintStream}, followed by a newline.
+     * Sets the print stream for this progress bar.
      *
      * @param stream the stream to print to; must not be {@code null}
      * @throws NullPointerException if {@code stream} is {@code null}

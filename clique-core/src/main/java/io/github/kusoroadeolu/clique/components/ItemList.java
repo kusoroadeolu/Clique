@@ -10,7 +10,6 @@ import java.util.List;
 import java.util.Objects;
 
 import static io.github.kusoroadeolu.clique.internal.utils.Constants.*;
-import static io.github.kusoroadeolu.clique.style.StyleCode.RESET;
 
 /**
  * A component representing a hierarchical list of items with customizable symbols and indentation.
@@ -27,8 +26,9 @@ import static io.github.kusoroadeolu.clique.style.StyleCode.RESET;
  * </ol>
  *
  * <p><b>Scoping:</b> Sublists added via {@link #item(String, String, ItemList)} are
- * automatically reconfigured to inherit the configuration of the parent list.
- * Self-nesting is strictly prohibited.
+ * reconfigured <i>in place</i> to use the parent's configuration, replacing whatever
+ * configuration they had. If the same sublist instance is added to multiple parents,
+ * the last parent's configuration wins for all of them.
  *
  * <p><b>Thread Safety:</b> This class is <b>not thread-safe</b>. The internal item storage
  * is mutable, and the configuration may be updated internally during nesting operations.
@@ -39,7 +39,7 @@ import static io.github.kusoroadeolu.clique.style.StyleCode.RESET;
 public class ItemList implements Component {
     private final List<ListItem> items;
     private ItemListConfiguration configuration;
-    private String lastSymbol;
+    private String previousSymbol;
     private static final ItemList NONE = new ItemList();
 
     public ItemList(ItemListConfiguration configuration) {
@@ -67,7 +67,7 @@ public class ItemList implements Component {
         Objects.requireNonNull(subList, "Sublist cannot be null");
         assertNoCycle(subList);
         items.add(new ListItem(symbol, content, subList.recursivelySetConfiguration(configuration)));
-        lastSymbol = symbol;
+        previousSymbol = symbol;
         return this;
     }
     /**
@@ -78,7 +78,7 @@ public class ItemList implements Component {
      * @return this list instance for method chaining
      */
     public ItemList item(String symbol, String content) {
-        lastSymbol = symbol;
+        previousSymbol = symbol;
         items.add(new ListItem(symbol, content, NONE));
         return this;
     }
@@ -89,10 +89,12 @@ public class ItemList implements Component {
      *
      * @param content the text content of the item
      * @return this list instance for method chaining
+     *
+     * @throws IllegalStateException if no symbol has been set by a previous call
      */
     public ItemList item(String content) {
-        if (lastSymbol == null) throw new IllegalStateException("No symbol has been set yet");
-        return item(lastSymbol, content);
+        if (previousSymbol == null) throw new IllegalStateException("No symbol has been set yet");
+        return item(previousSymbol, content);
     }
 
 
