@@ -24,42 +24,7 @@ Clique provides 5 built-in table styles:
   table.render();
 ```
 
-Pending table prepares a table whose headers have not yet been initialized. 
-It is not a component 
-
-## Table Manipulation
-
-Tables support dynamic updates after creation:
-
-### Update a Cell
-```java
-Table table = Clique.table(TableType.ASCII)
-        .headers("Name", "Age", "Status")
-        .row("Alice", "25", "Active")
-        .row("Bob", "30", "Inactive");
-
-// Update a specific cell (row 1, column 2)
-table.updateCell(1, 2, "Inactive");
-```
-
-### Remove a Cell
-```java
-// Remove a specific cell (replaces with null replacement)
-table.removeCell(1, 1);
-```
-
-### Remove a Row
-```java
-// Remove an entire row (cannot remove headers at row 0)
-table.removeRow(1);
-```
-
-### Get Table as String
-```java
-// Get table as string instead of printing
-String tableString = table.get();
-System.out.println(tableString);
-```
+Pending table prepares a table whose headers have not yet been initialized. It is not a component 
 
 ### Using Markup in Tables
 Tables automatically parse markup tags when you add content:
@@ -153,98 +118,6 @@ Clique.table(TableType.ASCII, config)
     .headers("Name", "Age", "Class")
     .row("John", "25", "Class A")
     .render();
-```
-
-### Configuration Options
-
-#### Alignment
-
-Control how content is aligned within cells:
-```java
-TableConfiguration config = TableConfiguration
-    .builder()
-    .alignment(CellAlign.CENTER)           // Center everything
-    .columnAlignment(0, CellAlign.LEFT)    // Column 0 left-aligned
-    .columnAlignment(2, CellAlign.RIGHT)   // Column 2 right-aligned
-    .build();
-```
-
-**Note:** Column alignment always takes precedence over table alignment.
-
-Available alignments:
-- `CellAlign.LEFT` - Left-aligned (default)
-- `CellAlign.CENTER` - Centered
-- `CellAlign.RIGHT` - Right-aligned
-
-You can also set multiple column alignments at once by passing a `Map<Integer, CellAlign>`:
-```java
-Map<Integer, CellAlign> colAligns = new HashMap<>();
-colAligns.put(0, CellAlign.LEFT);
-colAligns.put(2, CellAlign.RIGHT);
-
-TableConfiguration config = TableConfiguration
-    .builder()
-    .columnAlignment(colAligns)
-    .build();
-```
-
-#### Padding
-
-Add whitespace around cell content to prevent cramping. Default is `1`. Padding cannot be negative.
-```java
-TableConfiguration config = TableConfiguration
-    .builder()
-    .padding(3)  // 3 spaces on the left/right side, halved on each side if cell is centered
-    .build();
-```
-
-#### Null Handling
-
-When cells are null or removed, Clique replaces them with a configurable value:
-```java
-TableConfiguration config = TableConfiguration.builder()
-    .nullReplacement("N/A")  // Default is empty string
-    .build();
-
-Clique.table(TableType.ASCII, config)
-    .headers("Name", "Age", "City")
-    .row("Alice", null, "NYC")  // null becomes "N/A"
-    .render();
-```
-
-#### Border Coloring
-
-Set a uniform border color using a color name string or `AnsiCode` values directly:
-
-> **Note:** Uniform styling is recommended for tables. Due to their more complex layout, passing multiple `AnsiCode` values may not fully align visually.
-
-```java
-// Using a color name string
-TableConfiguration config = TableConfiguration
-    .builder()
-    .borderColor("blue")
-    .build();
-
-// Using AnsiCode values directly
-TableConfiguration config = TableConfiguration
-    .builder()
-    .borderColor(ColorCode.BLUE)
-    .build();
-```
-
-#### Custom Parser
-
-Provide a custom configured parser for markup processing:
-```java
-ParserConfiguration parserConfig = ParserConfiguration
-    .builder()
-    .delimiter(' ')
-    .build();
-
-TableConfiguration config = TableConfiguration
-    .builder()
-    .parser(Clique.parser(parserConfig))
-    .build();
 ```
 
 ### Full Configuration Example

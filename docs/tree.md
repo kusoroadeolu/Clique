@@ -71,9 +71,6 @@ tree.render();
 Each label is parsed independently. A stray `[` in one label won't affect markup in any other label. To show a literal bracket, escape it: `tree.add("arr\\[0]")`.
 
 ## Tree Configuration
-
-Use `TreeConfiguration` to customize the guide connector style.
-
 ### Basic Configuration
 ```java
 TreeConfiguration config = TreeConfiguration.builder()
@@ -81,33 +78,6 @@ TreeConfiguration config = TreeConfiguration.builder()
     .build();
 
 Tree tree = Clique.tree("project/", config);
-```
-
-### Configuration Options
-
-#### Connector Color
-
-Controls the color and style of the connector characters (`├─`, `└─`, `│`). Accepts any valid markup style string:
-
-```java
-TreeConfiguration config = TreeConfiguration.builder()
-    .connectorColor("*blue, bold")
-    .build();
-```
-
-#### Custom Parser
-
-Provide a custom configured parser for markup processing in labels:
-
-```java
-ParserConfiguration parserConfig = ParserConfiguration
-        .builder()
-        .delimiter(' ')
-        .build();
-
-TreeConfiguration config = TreeConfiguration.builder()
-        .parser(Clique.parser(parserConfig))
-        .build();
 ```
 
 ### Full Configuration Example

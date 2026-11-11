@@ -50,47 +50,7 @@ bar.tickAnimated(40);  // smooth 500ms animation
 bar.tickAnimated(3);   // below threshold — jumps instantly
 ```
 
----
-
-## Configuring easing
-
-### function
-
-The curve that controls how the animation accelerates and decelerates. See the [full list below](#easing-functions).
-
-```java
-.function(EasingFunction.EASE_OUT_CUBIC)
-```
-
-### duration
-
-Total animation time in milliseconds. Must be non-negative.
-
-```java
-.duration(500)  // half a second
-```
-
-### frames
-
-How many steps the animation is broken into. Frame delay is calculated automatically as `duration / frames` — integer division, so round numbers play nicer together.
-
-```java
-.frames(30)  // ~16ms per frame at 500ms duration
-```
-
-More frames means smoother motion but more CPU cycles. For CLI use, 20–30 frames is usually plenty.
-
-### threshold
-
-The minimum tick amount needed to trigger animation. Ticks below this jump instantly. This is what makes it practical to mix `tickAnimated()` with tight loops — small increments skip the animation overhead entirely.
-
-```java
-.threshold(10)  // animate ticks >= 10, instant otherwise
-```
-
 If you need to explicitly disable easing, use `EasingConfiguration.DISABLED` instead of building a configuration manually.
-
----
 
 ## Easing functions
 

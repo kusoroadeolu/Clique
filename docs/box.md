@@ -94,64 +94,6 @@ Use `BoxConfiguration` to customize box appearance and behavior. You can access 
 | `borderColor` | `{}` (no color) |
 | `padding` | `2` |
 
-### Basic Configuration
-```java
-Clique.box(BoxType.DOUBLE_LINE)
-    .content("This box auto-sizes to fit content")
-    .render();
-```
-
-### Configuration Options
-
-#### Text Alignment
-
-Control how content is aligned within the box:
-```java
-BoxConfiguration config = BoxConfiguration.builder()
-    .textAlign(TextAlign.CENTER)
-    .build();
-```
-
-#### Padding
-
-Adds padding to each side of the box. This padding is taken from the given width of the box and is not added to it. Default padding is `2`.
-```java
-BoxConfiguration config = BoxConfiguration.builder()
-    .padding(3)
-    .build();
-```
-
-> Padding cannot be negative — an `IllegalArgumentException` will be thrown.
-
-#### Border Coloring
-
-Set a uniform border color using a color name string or `AnsiCode` values directly:
-```java
-// Using a color name string
-BoxConfiguration config = BoxConfiguration.builder()
-    .borderColor("blue")
-    .build();
-
-// Using AnsiCode values directly
-BoxConfiguration config = BoxConfiguration.builder()
-    .borderColor(ColorCode.BLUE)
-    .build();
-```
-
-#### Custom Parser
-
-Provide a custom configured parser for markup processing:
-```java
-ParserConfiguration parserConfig = ParserConfiguration
-    .builder()
-    .delimiter(' ')
-    .build();
-
-BoxConfiguration config = BoxConfiguration.builder()
-    .parser(Clique.parser(parserConfig))
-    .build();
-```
-
 ### Full Configuration Example
 ```java
 BoxConfiguration config = BoxConfiguration.builder()
