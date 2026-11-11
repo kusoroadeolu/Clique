@@ -4,7 +4,6 @@ import io.github.kusoroadeolu.clique.exceptions.NoSuchThemeException;
 import io.github.kusoroadeolu.clique.internal.CompositeColor;
 import io.github.kusoroadeolu.clique.internal.documentation.Stable;
 import io.github.kusoroadeolu.clique.internal.loader.ThemeLoader;
-import io.github.kusoroadeolu.clique.internal.utils.MiscUtils;
 import io.github.kusoroadeolu.clique.spi.AnsiCode;
 
 import java.util.*;

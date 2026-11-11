@@ -3,6 +3,8 @@ package io.github.kusoroadeolu.clique.internal;
 import io.github.kusoroadeolu.clique.internal.documentation.InternalApi;
 import io.github.kusoroadeolu.clique.internal.utils.CharWidth;
 
+import java.util.Objects;
+
 @InternalApi(since = "3.2.0")
 public final class Cell {
     private final String text;
@@ -38,5 +40,18 @@ public final class Cell {
                 ", text='" + text + '\'' +
                 ", width=" + width +
                 ']';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Cell cell = (Cell) o;
+        return width == cell.width && Objects.equals(text, cell.text) && Objects.equals(styledText, cell.styledText);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(width, text, styledText);
     }
 }

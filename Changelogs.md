@@ -280,3 +280,87 @@ _(no changes noted)_
 
 ## clique-spi [2.0.3] - 2026-07-31
 _(no changes noted)_
+
+## Clique [4.1.0] - 2026-11-11
+### Changed
+- `Tree` now uses identity equality. `equals()` and `hashCode()` were removed, so structurally identical trees are no longer equal
+- A `Tree` with its own `TreeConfiguration` that is added to a parent now adopts the parent's configuration recursively, matching `add(String)`
+- `Tree#add(Tree)` now throws `UnsupportedOperationException` for any cycle, not just self-nesting, so the exception message changed
+- Tables no longer end `get()` with a trailing newline. `Tree`, `ItemList` and `Frame` trailing newline behavior is now consistent and documented in `component.md`
+- `Table#removeRow`, `Table#removeCell` and `Table#updateCell` now throw `IndexOutOfBoundsException` for invalid indices instead of `IllegalArgumentException`
+- Calling `headers()` twice, or `row()` before `headers()`, now throws `IllegalStateException`
+- Rows with more cells than headers now ignore the extra cells, and short rows are padded with `nullReplacement`
+- `Tree` and `ItemList` now parse each label independently, so a stray `[` only affects its own label
+- `Box` and table output is no longer cached and is recomputed on every `get()`/`render()`
+- `Clique#registerTheme(String)` now throws for unknown themes, consistent with `StyleContext#fromTheme`
+- Table classes were rewritten internally. All five table types share a single `get()` in `AbstractTable`, column widths are computed at render time, and `WidthAwareList` was removed.
+The public API is unchanged
+
+### Fixed
+**Tree / ItemList**
+- Fixed `Tree#add(Tree)` removing the wrong sibling on re-parenting when siblings were `equals()`. It now removes by identity
+- Fixed cycles such as `a.add(b); b.add(a)` causing a `StackOverflowError` in `get()`
+- Fixed infinite recursion in `Tree#hashCode()` and `Tree#toString()` on non-root nodes
+- Fixed `ItemList` not detecting cycles through ancestors (a in b in a)
+- Fixed brackets in separate labels merging into one bogus tag
+
+**Table**
+- Fixed columns keeping their old width after a long cell was replaced with a shorter one
+- Fixed `RoundedBoxDrawTable` applying border colors twice
+- Fixed calling `headers()` twice corrupting the table
+- Fixed table padding being asymmetric, so left-aligned text no longer touches the left border
+- Fixed two tables with identical content not being `equals()`
+
+**Box / Frame / Divider**
+- Fixed `Box` autosize going stale after the first render. It is now computed per render
+- Fixed `Box#content(String)` not clearing alignment set by a previous `content(String, TextAlign)`
+- Fixed `Frame#get()` calling `component.get()` multiple times per nested component, which caused exponential cost with nested frames and inconsistent widths for dynamic components
+- Fixed `Frame` re-parsing component output, so escaped text like `\[red]` now stays literal
+- Fixed `Frame` with an explicit width, `titleWidth == givenWidth` and `LEFT`/`RIGHT` alignment throwing `IllegalArgumentException`. It now throws `InvalidDimensionException`
+- Fixed `Divider` title and line width using `String.length()`. It now uses `CharWidth`, so emoji and CJK titles render at the requested width
+- Fixed whitespace-only `Divider` titles being measured as 0 width
+- Fixed `Divider#dividerColor(String)` ignoring the builder's configured parser
+- Fixed `Divider` `equals`, `hashCode` and `toString` ignoring `titleAlign`
+- Fixed `Divider#dividerColor(AnsiCode...)` not copying its input array
+
+**ProgressBar**
+- Fixed off-by-one percent from floating point truncation (e.g. 29/100 rendering as 28%). `percent()` and `barText()` now use integer math
+- Fixed `BLOCKS` and `CLASSIC` presets throwing `UnidentifiedStyleException` under `enableStrictParsing()`. Rendered output is unchanged
+
+**Output / ANSI**
+- Fixed reset codes (`ESC[0m`) leaking when colors are disabled (`NO_COLOR`, `disableCliqueColors()`) in `StyleBuilder`, `formatAndReset`, `Frame`, `BoxUtils`, `Box`, `ItemList` and `Ink`
+- Fixed `Ink`, `Gradient` and `Hyperlink` ignoring `ansiEnabled()`
+- Fixed `stripAnsi` not handling OSC 8 hyperlinks, which counted hyperlink URLs toward width in tables and frames
+- Fixed `Gradient` computing `t` from raw length instead of visible characters, so the end color is now reached
+- Fixed `Gradient` corrupting surrogate pairs and emoji. It now iterates by code point
+
+**Width / layout**
+- Fixed whitespace-only text having the wrong width. `getOriginalString` no longer returns `""` for blank input, which fixes misaligned table cells, box lines and frame nodes
+
+**Parsing**
+- Fixed `ParserUtils#getAnsiCodes` not quoting the delimiter, so custom delimiters like `'|'`, `'.'` and `'*'` now work in `borderColor("...")` and similar methods
+- Fixed style name lookup being inconsistently case-sensitive. `borderColor("Red")` and `Ink.of("Red")` now behave the same as `[Red]` in markup
+
+**Equality / immutability**
+- Fixed `StyleBuilder#equals` and `hashCode`, and added them to `Cell`, `BorderChars`, `FrameNode` and `Hyperlink`, so `Table`, `Box`, `Frame` and `Ink` equality is no longer identity-based
+- Fixed `TableConfiguration` and `ProgressBarConfiguration` leaking builder state. They now defensively copy `columnAlignment` and `styles`, so reusing a builder after `build()` no longer mutates existing configs
+- Fixed `TableConfigurationBuilder#columnAlignment(Map)` throwing `UnsupportedOperationException` when combined with `columnAlignment(int, CellAlign)` on an immutable map
+- Fixed `EasingConfiguration` validation messages for `duration`, `threshold` and `frames` not matching what is accepted
+
+**Modules**
+- `module-info` now declares `requires transitive clique.spi`, since `AnsiCode`, `RGBAnsiCode` and `CliqueTheme` are part of the public API
+- Moved `UnidentifiedStyleException`, `InvalidDimensionException` and `NoSuchThemeException` to the exported `io.github.kusoroadeolu.clique.exceptions` package so modular users can catch them
+
+### Docs
+- Documented that an unmatched `[` stops all later tags in the same string from being parsed, and that literal brackets are escaped with `\[`
+- Corrected the `MarkupParser` javadoc and `Tokenizer` comment on bracket behavior
+- Added notes on strict parsing with dynamic content and on escaping brackets in `ProgressBar` format strings
+- Corrected `frame.md` examples (`frameAlign(...)`, `FrameAlign` in `nest()`)
+- Removed the nonexistent `Clique.enableCliqueColors(false)` from `markup-reference.md`
+- Corrected `component.md`: `Box.get()` does not cache its output
+- Corrected the `TreeConfiguration` javadoc
+- Noted in the `Divider#title()` javadoc that it can throw under strict parsing at call time, and corrected its length rule
+- Other documentation and java doc fixes
+
+## clique-spi [2.0.4] - 2026-11-11
+_(no changes noted)_

@@ -1,8 +1,6 @@
 package io.github.kusoroadeolu.clique.components;
 
-import io.github.kusoroadeolu.clique.Clique;
 import io.github.kusoroadeolu.clique.configuration.BoxConfiguration;
-import io.github.kusoroadeolu.clique.configuration.BoxType;
 import io.github.kusoroadeolu.clique.configuration.TextAlign;
 import io.github.kusoroadeolu.clique.parser.MarkupParser;
 import org.junit.jupiter.api.Test;

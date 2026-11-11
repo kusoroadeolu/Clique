@@ -30,12 +30,6 @@ public class WidthAwareList {
         if (len > longest) longest = len;
     }
 
-
-    //Gets the styled text from the table
-    public String getStyledText(int pos) {
-        return cells.get(pos).styledText();
-    }
-
     public Cell get(int pos) {
         return cells.get(pos);
     }

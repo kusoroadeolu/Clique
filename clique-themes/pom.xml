@@ -7,7 +7,7 @@
     <parent>
         <groupId>io.github.kusoroadeolu</groupId>
         <artifactId>clique</artifactId>
-        <version>4.0.2</version>
+        <version>4.1.0</version>
     </parent>
 
     <name>clique-themes</name>
@@ -21,5 +21,30 @@
             <artifactId>clique-spi</artifactId>
         </dependency>
     </dependencies>
+
+    <properties>
+        <gpg.skip>true</gpg.skip>
+        <maven.javadoc.skip>true</maven.javadoc.skip>
+        <maven.source.skip>true</maven.source.skip>
+    </properties>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.sonatype.central</groupId>
+                <artifactId>central-publishing-maven-plugin</artifactId>
+                <configuration>
+                    <skipPublishing>true</skipPublishing>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-deploy-plugin</artifactId>
+                <configuration>
+                    <skip>true</skip>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 
 </project>

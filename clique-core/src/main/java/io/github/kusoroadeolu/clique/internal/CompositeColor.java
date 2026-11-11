@@ -26,4 +26,17 @@ public class CompositeColor implements AnsiCode {
     public String ansiSequence() {
         return ansiSequence;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+
+        CompositeColor that = (CompositeColor) o;
+        return ansiSequence.equals(that.ansiSequence);
+    }
+
+    @Override
+    public int hashCode() {
+        return ansiSequence.hashCode();
+    }
 }

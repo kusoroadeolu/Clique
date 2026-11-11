@@ -3,6 +3,8 @@ package io.github.kusoroadeolu.clique.internal;
 import io.github.kusoroadeolu.clique.configuration.BoxType;
 import io.github.kusoroadeolu.clique.internal.documentation.InternalApi;
 
+import java.util.function.UnaryOperator;
+
 @InternalApi(since = "3.2.0")
 public record BorderChars(String hLine, String vLine, String topLeft, String topRight, String bottomLeft,
                           String bottomRight) {
@@ -16,7 +18,7 @@ public record BorderChars(String hLine, String vLine, String topLeft, String top
         };
     }
 
-    public BorderChars map(java.util.function.UnaryOperator<String> fn) {
+    public BorderChars map(UnaryOperator<String> fn) {
         return new BorderChars(
                 fn.apply(hLine), fn.apply(vLine),
                 fn.apply(topLeft), fn.apply(topRight),

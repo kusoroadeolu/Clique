@@ -7,8 +7,6 @@ import io.github.kusoroadeolu.clique.spi.AnsiCode;
 import java.util.Arrays;
 import java.util.Objects;
 
-import static io.github.kusoroadeolu.clique.internal.utils.Constants.ZERO;
-
 /**
  * Immutable configuration for a {@link io.github.kusoroadeolu.clique.components.Divider}.
  *
